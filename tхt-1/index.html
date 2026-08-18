@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title> txt </title>
+<title>TXT-Generator Mini App</title>
 
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
@@ -13,8 +13,15 @@
     box-sizing: border-box;
 }
 
+html,
 body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
     background: #0d0d10;
     color: #f5f5f5;
     font-family: Arial, sans-serif;
@@ -27,7 +34,7 @@ body {
 }
 
 h1 {
-    margin-bottom: 5px;
+    margin: 0 0 5px;
 }
 
 .subtitle {
@@ -82,15 +89,6 @@ button:hover {
     background: #5b2929;
 }
 
-.success {
-    background: #203b28;
-    border-color: #365f40;
-}
-
-.success:hover {
-    background: #2c5135;
-}
-
 textarea,
 select,
 input[type="text"] {
@@ -105,7 +103,7 @@ input[type="text"] {
 
 textarea:focus,
 select:focus,
-input[type="text"]:focus {
+input:focus {
     border-color: #777;
 }
 
@@ -140,6 +138,26 @@ textarea {
     min-height: 18px;
     margin-top: 10px;
     font-size: 12px;
+}
+
+/* FILE */
+
+.file-button {
+    display: inline-block;
+    background: #29292f;
+    color: white;
+    border: 1px solid #44444c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.file-button:hover {
+    background: #3b3b43;
+}
+
+#fileInput {
+    display: none;
 }
 
 /* MODAL */
@@ -325,42 +343,6 @@ textarea {
     font-family: Consolas, monospace;
 }
 
-/* FILE */
-
-.file-input {
-    display: none;
-}
-
-.file-label {
-    display: inline-block;
-    background: #29292f;
-    color: white;
-    border: 1px solid #44444c;
-    border-radius: 8px;
-    padding: 10px 14px;
-    cursor: pointer;
-}
-
-.file-label:hover {
-    background: #3b3b43;
-}
-
-/* TAG HELP */
-
-.tag-preview {
-    margin-top: 12px;
-    padding: 12px;
-    background: #101014;
-    border: 1px solid #303038;
-    border-radius: 10px;
-    color: #999;
-    font-family: Consolas, monospace;
-    font-size: 12px;
-    white-space: pre-wrap;
-}
-
-/* MOBILE */
-
 @media(max-width:750px) {
 
     .verse-options,
@@ -388,21 +370,67 @@ textarea {
 <h1>🎵 </h1>
 
 <div class="subtitle">
-Конструктор текста песни с автоматическим переводом тегов на английский
+Конструктор текста песни
+</div>
+
+<!-- БЫСТРЫЕ ДЕЙСТВИЯ -->
+
+<div class="panel">
+
+<h2>⚡ Быстрые действия</h2>
+
+<div class="description">
+Можно загрузить готовый TXT-файл, проверить его на русские теги
+и автоматически преобразовать музыкальные теги в английский формат.
+</div>
+
+<div class="buttons">
+
+<label class="file-button">
+📂 Загрузить готовый текст
+<input
+    type="file"
+    id="fileInput"
+    accept=".txt,text/plain"
+    onchange="loadTextFile(event)"
+>
+</label>
+
+<button
+    class="primary"
+    onclick="loadExample()">
+🧪 Загрузить пример
+</button>
+
+<button onclick="translateTags()">
+🇬🇧 Перевести теги на английский
+</button>
+
+<button
+    class="danger"
+    onclick="clearEditor()">
+🗑 Удалить текст
+</button>
+
+</div>
+
+<div class="hint" style="margin-top:10px;margin-bottom:0">
+При загрузке TXT-файла теги автоматически преобразуются в английский.
+Обычный русский текст песни не переводится.
+</div>
+
 </div>
 
 
-<!-- ==================================================
-     БЫСТРОЕ СОЗДАНИЕ
-================================================== -->
+<!-- БЫСТРОЕ СОЗДАНИЕ -->
 
 <div class="panel">
 
 <h2>⚡ Быстрое создание</h2>
 
 <div class="description">
-Создавайте куплеты и припевы. Все служебные теги автоматически
-формируются на английском языке.
+Создавайте несколько куплетов или припевов в одном окне.
+Теги автоматически создаются на английском языке.
 </div>
 
 <div class="buttons">
@@ -413,8 +441,7 @@ textarea {
 ➕ Куплеты
 </button>
 
-<button
-    onclick="openChorusBuilder()">
+<button onclick="openChorusBuilder()">
 🎤 Припевы
 </button>
 
@@ -423,67 +450,7 @@ textarea {
 </div>
 
 
-<!-- ==================================================
-     ЗАГРУЗКА И ПЕРЕВОД
-================================================== -->
-
-<div class="panel">
-
-<h2>📂 Готовый текст</h2>
-
-<div class="description">
-Можно загрузить готовый TXT-файл. После загрузки программа
-автоматически найдёт теги в квадратных скобках и переведёт
-русские обозначения на английские.
-</div>
-
-<div class="buttons">
-
-<label class="file-label">
-📂 Загрузить готовый текст
-<input
-    id="fileInput"
-    class="file-input"
-    type="file"
-    accept=".txt,text/plain"
-    onchange="loadTextFile(event)">
-</label>
-
-<button
-    class="success"
-    onclick="translateAllTags()">
-🌐 Перевести теги на английский
-</button>
-
-<button
-    onclick="loadTestSong()">
-🧪 Загрузить пример
-</button>
-
-</div>
-
-<div class="tag-preview">
-Примеры:
-
-[Verse 1: MALE voice — Бас — Рэп]
-→ [Verse 1: Bass MALE rap]
-
-[Verse 2: FEMALE voice — Мелодичный — Рэп]
-→ [Verse 2: Melodic FEMALE rap]
-
-[Verse 3: MALE voice — Мощный — Рэп]
-→ [Verse 3: Powerful MALE rap]
-
-[Виниловые царапины]
-→ [vinyl scratches]
-</div>
-
-</div>
-
-
-<!-- ==================================================
-     ДРУГИЕ СЕКЦИИ
-================================================== -->
+<!-- ДРУГИЕ СЕКЦИИ -->
 
 <div class="panel">
 
@@ -534,6 +501,8 @@ textarea {
 </div>
 
 
+<!-- МУЗЫКАЛЬНЫЕ ВСТАВКИ -->
+
 <div class="quick-insert">
 
 <div class="quick-insert-title">
@@ -565,9 +534,7 @@ textarea {
 </div>
 
 
-<!-- ==================================================
-     ОБЩИЙ ТЕКСТ
-================================================== -->
+<!-- ОБЩИЙ ТЕКСТ -->
 
 <div class="panel">
 
@@ -576,7 +543,7 @@ textarea {
 <textarea
     id="songText"
     spellcheck="false"
-    placeholder="Здесь будет собираться текст песни..."
+    placeholder="Здесь будет текст песни..."
 ></textarea>
 
 <div class="stats">
@@ -619,9 +586,14 @@ textarea {
 </button>
 
 <button
+    onclick="translateTags()">
+🇬🇧 Английские теги
+</button>
+
+<button
     class="danger"
     onclick="clearEditor()">
-🗑 Очистить
+🗑 Удалить
 </button>
 
 </div>
@@ -640,9 +612,7 @@ Esc — закрыть окно
 </div>
 
 
-<!-- ==================================================
-     СОХРАНЁННЫЕ
-================================================== -->
+<!-- СОХРАНЁННЫЕ -->
 
 <div class="panel">
 
@@ -658,9 +628,7 @@ Esc — закрыть окно
 </div>
 
 
-<!-- ==================================================
-     MODAL ОБЫЧНОЙ СЕКЦИИ
-================================================== -->
+<!-- MODAL ОБЫЧНОЙ СЕКЦИИ -->
 
 <div
     id="textModal"
@@ -707,12 +675,11 @@ Esc — закрыть окно
 </div>
 
 </div>
+
 </div>
 
 
-<!-- ==================================================
-     MODAL КУПЛЕТОВ
-================================================== -->
+<!-- MODAL КУПЛЕТОВ -->
 
 <div
     id="verseModal"
@@ -738,11 +705,14 @@ Esc — закрыть окно
 
 Для каждого куплета можно выбрать:
 
-<br>• MALE / FEMALE / BOTH
-<br>• rap / voice / spoken voice
-<br>• Clean / Beatboxing / Powerful / Melodic / Bass
-<br>• Instrumental — до, после или без
-<br>• количество Instrumental
+<br>
+• MALE / FEMALE / BOTH
+<br>
+• rap / voice / spoken voice
+<br>
+• Clean / Beatboxing / Powerful / Melodic / Bass
+<br>
+• Instrumental — до, после или без
 
 </div>
 
@@ -786,12 +756,10 @@ Esc — закрыть окно
 
 </div>
 
-
 <div
     id="verseList"
     class="verse-list">
 </div>
-
 
 <div class="actions">
 
@@ -808,12 +776,11 @@ Esc — закрыть окно
 </div>
 
 </div>
+
 </div>
 
 
-<!-- ==================================================
-     MODAL ПРИПЕВА
-================================================== -->
+<!-- MODAL ПРИПЕВА -->
 
 <div
     id="chorusModal"
@@ -834,7 +801,6 @@ Esc — закрыть окно
 </button>
 
 </div>
-
 
 <label>
 Тип припева
@@ -931,47 +897,47 @@ Chorus: Clean FEMALE voice
 </div>
 
 </div>
+
 </div>
 
 
 <script>
 
-/* ==================================================
+/* =====================================================
    VK BRIDGE
-================================================== */
+===================================================== */
 
-async function initVK() {
+async function initApp() {
 
     try {
 
         if (
-            typeof vkBridge !== "undefined"
+            window.vkBridge &&
+            typeof vkBridge.send === "function"
         ) {
 
-            await vkBridge.send(
-                "VKWebAppInit"
-            );
+            await vkBridge.send("VKWebAppInit");
 
             console.log(
                 "VK Bridge инициализирован"
             );
         }
 
-    } catch (e) {
+    } catch (error) {
 
         console.error(
             "Ошибка VK Bridge:",
-            e
+            error
         );
     }
 }
 
-initVK();
+initApp();
 
 
-/* ==================================================
+/* =====================================================
    ОСНОВНЫЕ ПЕРЕМЕННЫЕ
-================================================== */
+===================================================== */
 
 const songText =
     document.getElementById("songText");
@@ -983,760 +949,471 @@ let statusTimer;
 let draftTimer;
 
 
-/* ==================================================
-   СЛОВАРЬ ПЕРЕВОДА
-================================================== */
+/* =====================================================
+   ПОЛНЫЙ СЛОВАРЬ ПЕРЕВОДА ТЕГОВ
+===================================================== */
 
-const RU_TO_EN = {
+const tagTranslations = {
 
     /* Секции */
 
-    "вступление":
-        "Intro",
+    "вступление": "Intro",
+    "интро": "Intro",
 
-    "интро":
-        "Intro",
+    "аутро": "Outro",
+    "концовка": "Outro",
 
-    "куплет":
-        "Verse",
+    "куплет": "Verse",
+    "куплеты": "Verse",
 
-    "припев":
-        "Chorus",
+    "припев": "Chorus",
+    "припевы": "Chorus",
 
-    "предприпев":
-        "Pre-Chorus",
+    "пре-припев": "Pre-Chorus",
+    "предприпев": "Pre-Chorus",
 
-    "пре-припев":
-        "Pre-Chorus",
+    "бридж": "Bridge",
 
-    "бридж":
-        "Bridge",
+    "хук": "Hook",
 
-    "переход":
-        "Bridge",
+    "музыкальная пауза": "Music Break",
+    "муз пауза": "Music Break",
 
-    "хук":
-        "Hook",
+    /* Музыка */
 
-    "аутро":
-        "Outro",
+    "инструментал": "Instrumental",
 
-    "окончание":
-        "Outro",
+    "битбокс": "Beatboxing",
+    "битбоксинг": "Beatboxing",
 
-
-    /* Пол */
-
-    "мужской":
-        "MALE",
-
-    "мужской голос":
-        "MALE voice",
-
-    "мужской вокал":
-        "MALE voice",
-
-    "женский":
-        "FEMALE",
-
-    "женский голос":
-        "FEMALE voice",
-
-    "женский вокал":
-        "FEMALE voice",
-
-    "оба":
-        "BOTH",
-
-    "оба голоса":
-        "BOTH voice",
-
-    "обa голоса":
-        "BOTH voice",
-
-
-    /* Тип */
-
-    "рэп":
-        "rap",
-
-    "реп":
-        "rap",
-
-    "рэп голос":
-        "rap",
-
-    "речитатив":
-        "spoken voice",
-
-    "речь":
-        "spoken voice",
-
-    "разговорный голос":
-        "spoken voice",
-
-    "вокал":
-        "voice",
-
-    "голос":
-        "voice",
-
+    "виниловые царапины": "vinyl scratches",
 
     /* Подача */
 
-    "чистый":
-        "Clean",
+    "чистый": "Clean",
+    "чистая": "Clean",
+    "чистое": "Clean",
 
-    "чистый голос":
-        "Clean",
+    "мощный": "Powerful",
+    "мощная": "Powerful",
+    "мощное": "Powerful",
 
-    "битбокс":
-        "Beatboxing",
+    "мелодичный": "Melodic",
+    "мелодичная": "Melodic",
+    "мелодичное": "Melodic",
 
-    "битбоксинг":
-        "Beatboxing",
+    "бас": "Bass",
+    "басовый": "Bass",
+    "басовая": "Bass",
 
-    "мощный":
-        "Powerful",
+    "глубокий": "Deep",
+    "глубокая": "Deep",
 
-    "мелодичный":
-        "Melodic",
+    "мягкий": "Soft",
+    "мягкая": "Soft",
 
-    "мелодический":
-        "Melodic",
+    "агрессивный": "Aggressive",
+    "агрессивная": "Aggressive",
 
-    "бас":
-        "Bass",
+    "эмоциональный": "Emotional",
+    "эмоциональная": "Emotional",
 
-    "басовый":
-        "Bass",
+    "шепот": "Whisper",
+    "шёпот": "Whisper",
 
-    "глубокий":
-        "Deep",
+    "быстрый": "Fast",
+    "быстрая": "Fast",
 
-    "мягкий":
-        "Soft",
+    "медленный": "Slow",
+    "медленная": "Slow",
 
-    "агрессивный":
-        "Aggressive",
+    /* Тип */
 
-    "эмоциональный":
-        "Emotional",
+    "рэп": "Rap",
+    "рэп": "Rap",
 
-    "шепот":
-        "Whisper",
+    "голос": "Voice",
 
-    "шёпот":
-        "Whisper",
+    "разговорный голос": "Spoken Voice",
+    "разговорная речь": "Spoken Voice",
 
-    "быстрый":
-        "Fast",
+    /* Пол */
 
-    "медленный":
-        "Slow",
+    "мужской": "MALE",
+    "мужчина": "MALE",
 
+    "женский": "FEMALE",
+    "женщина": "FEMALE",
 
-    /* Музыкальные */
+    "оба": "BOTH",
+    "оба голоса": "BOTH",
 
-    "инструментал":
-        "Instrumental",
+    /* Музыкальные эффекты */
 
-    "инструментальная часть":
-        "Instrumental",
-
-    "музыкальная пауза":
-        "Music Break",
-
-    "муз пауза":
-        "Music Break",
-
-    "битбокс":
-        "Beatboxing",
-
-    "виниловые царапины":
-        "vinyl scratches",
-
-    "виниловая царапина":
-        "vinyl scratches",
-
-    "скретч винила":
-        "vinyl scratches",
-
-    "скретч":
-        "vinyl scratches",
-
-    "музыка":
-        "Music",
-
-    "проигрыш":
-        "Music Break"
+    "виниловая царапина": "vinyl scratches"
 };
 
 
-/* ==================================================
-   ПЕРЕВОД ОДНОГО СЛОВА / ФРАЗЫ
-================================================== */
+/* =====================================================
+   ПЕРЕВОД ОДНОГО СЛОВА
+===================================================== */
 
-function translatePhrase(text) {
+function translateRussianWord(word) {
 
-    let result = text.trim();
+    const clean =
+        word
+            .trim()
+            .toLowerCase();
 
-    if (!result) {
-        return result;
+    if (
+        tagTranslations[clean]
+    ) {
+
+        return tagTranslations[clean];
     }
 
+    return word;
+}
+
+
+/* =====================================================
+   ПЕРЕВОД СОДЕРЖИМОГО ТЕГА
+===================================================== */
+
+function translateTagContent(content) {
+
+    let result =
+        content.trim();
+
+
     /*
-       Сначала переводим длинные фразы,
-       потом короткие.
+       Сначала переводим специальные
+       полные теги.
     */
 
-    const keys =
-        Object.keys(RU_TO_EN)
-            .sort(
-                (a, b) =>
-                    b.length - a.length
+    const exact =
+        tagTranslations[
+            result.toLowerCase()
+        ];
+
+    if (exact) {
+
+        return exact;
+    }
+
+
+    /*
+       Куплет:
+       [Куплет 2: FEMALE voice — Мелодичный — Рэп]
+    */
+
+    let match =
+        result.match(
+            /^(?:Куплет|Verse)\s+(\d+)\s*:\s*(.*)$/i
+        );
+
+    if (match) {
+
+        const number =
+            match[1];
+
+        const details =
+            translateDetails(
+                match[2]
             );
 
-    keys.forEach(
-        key => {
+        return (
+            "Verse " +
+            number +
+            ": " +
+            details
+        );
+    }
 
-            const value =
-                RU_TO_EN[key];
 
-            const escaped =
-                key.replace(
-                    /[.*+?^${}()|[\]\\]/g,
-                    "\\$&"
+    /*
+       Припев:
+       [Припев: Мощный MALE voice]
+    */
+
+    match =
+        result.match(
+            /^(?:Припев|Chorus)\s*:\s*(.*)$/i
+        );
+
+    if (match) {
+
+        return (
+            "Chorus: " +
+            translateDetails(
+                match[1]
+            )
+        );
+    }
+
+
+    /*
+       Bridge
+    */
+
+    match =
+        result.match(
+            /^(?:Бридж|Bridge)\s*:\s*(.*)$/i
+        );
+
+    if (match) {
+
+        return (
+            "Bridge: " +
+            translateDetails(
+                match[1]
+            )
+        );
+    }
+
+
+    /*
+       Pre-Chorus
+    */
+
+    match =
+        result.match(
+            /^(?:Пре-припев|Предприпев|Pre-Chorus)\s*[:—-]?\s*(.*)$/i
+        );
+
+    if (match) {
+
+        const details =
+            match[1].trim();
+
+        return details
+            ? "Pre-Chorus — " +
+              translateDetails(details)
+            : "Pre-Chorus";
+    }
+
+
+    /*
+       Verse без номера
+    */
+
+    if (
+        /^куплет$/i.test(result)
+    ) {
+
+        return "Verse";
+    }
+
+
+    /*
+       Обычный тег.
+    */
+
+    return translateDetails(result);
+}
+
+
+/* =====================================================
+   ПЕРЕВОД ДЕТАЛЕЙ ТЕГА
+===================================================== */
+
+function translateDetails(text) {
+
+    let result =
+        text.trim();
+
+
+    /*
+       Разбираем длинные фразы
+       до отдельных слов.
+    */
+
+    const replacements = [
+        [
+            /разговорным\s+голосом/gi,
+            "spoken voice"
+        ],
+        [
+            /разговорный\s+голос/gi,
+            "spoken voice"
+        ],
+        [
+            /разговорная\s+речь/gi,
+            "spoken voice"
+        ],
+        [
+            /мужской\s+голос/gi,
+            "MALE voice"
+        ],
+        [
+            /женский\s+голос/gi,
+            "FEMALE voice"
+        ],
+        [
+            /оба\s+голоса/gi,
+            "BOTH voice"
+        ]
+    ];
+
+
+    replacements.forEach(
+        item => {
+
+            result =
+                result.replace(
+                    item[0],
+                    item[1]
                 );
+        }
+    );
+
+
+    /*
+       Переводим слова.
+    */
+
+    Object.keys(
+        tagTranslations
+    )
+    .sort(
+        (a, b) =>
+            b.length - a.length
+    )
+    .forEach(
+        russian => {
+
+            const english =
+                tagTranslations[
+                    russian
+                ];
 
             const regex =
                 new RegExp(
-                    "(^|\\s|—|-|:)" +
-                    escaped +
-                    "(?=\\s|$|—|-|:)",
-                    "giu"
+                    "\\b" +
+                    escapeRegExp(russian) +
+                    "\\b",
+                    "gi"
                 );
 
             result =
                 result.replace(
                     regex,
-                    "$1" + value
+                    english
                 );
         }
     );
 
-    return result;
-}
-
-
-/* ==================================================
-   ПЕРЕВОД ТЕГА VERSE
-================================================== */
-
-function translateVerseTag(tag) {
 
     /*
-       Пример:
-
-       [Verse 2: FEMALE voice — Мелодичный — Рэп]
-
-       превращается в:
-
-       [Verse 2: Melodic FEMALE rap]
-    */
-
-    const inner =
-        tag.slice(1, -1).trim();
-
-    let match =
-        inner.match(
-            /^(?:verse|куплет)\s*(\d+)\s*:\s*(.+)$/iu
-        );
-
-    if (!match) {
-        return null;
-    }
-
-    const number =
-        match[1];
-
-    let settings =
-        match[2]
-            .trim()
-            .replace(
-                /[—–]/g,
-                "-"
-            );
-
-    /*
-       Разделяем все части.
-    */
-
-    let parts =
-        settings
-            .split(/\s*-\s*|\s*—\s*/)
-            .map(
-                x => x.trim()
-            )
-            .filter(Boolean);
-
-    /*
-       Если тире нет, пробуем перевести
-       обычную смешанную строку.
-    */
-
-    if (parts.length === 1) {
-
-        settings =
-            translatePhrase(
-                settings
-            );
-
-        /*
-           FEMALE voice — Мелодичный — Рэп
-           обычно уже содержит тире,
-           но для безопасности разбираем
-           и через пробелы.
-        */
-
-        const gender =
-            settings.match(
-                /\b(MALE|FEMALE|BOTH)\b/i
-            );
-
-        const type =
-            settings.match(
-                /\b(rap|spoken voice|voice)\b/i
-            );
-
-        const styles =
-            settings.match(
-                /\b(Clean|Beatboxing|Powerful|Melodic|Bass|Deep|Soft|Aggressive|Emotional|Whisper|Fast|Slow)\b/i
-            );
-
-        if (gender) {
-
-            let style =
-                styles
-                    ? styles[1]
-                    : "";
-
-            let voiceType =
-                type
-                    ? type[1]
-                    : "voice";
-
-            if (style) {
-
-                return (
-                    "[Verse " +
-                    number +
-                    ": " +
-                    style +
-                    " " +
-                    gender[1].toUpperCase() +
-                    " " +
-                    voiceType.toLowerCase() +
-                    "]"
-                );
-            }
-        }
-
-        return (
-            "[Verse " +
-            number +
-            ": " +
-            settings +
-            "]"
-        );
-    }
-
-
-    let gender = "";
-    let type = "";
-    let style = "";
-
-
-    parts.forEach(
-        part => {
-
-            const translated =
-                translatePhrase(
-                    part
-                );
-
-            if (
-                /^(MALE|FEMALE|BOTH)$/i
-                    .test(translated)
-            ) {
-
-                gender =
-                    translated
-                        .toUpperCase();
-
-                return;
-            }
-
-            if (
-                /^(MALE|FEMALE|BOTH)\s+voice$/i
-                    .test(translated)
-            ) {
-
-                gender =
-                    translated
-                        .split(/\s+/)[0]
-                        .toUpperCase();
-
-                return;
-            }
-
-            if (
-                /^(rap|voice|spoken voice)$/i
-                    .test(translated)
-            ) {
-
-                type =
-                    translated
-                        .toLowerCase();
-
-                return;
-            }
-
-            if (
-                /^(Clean|Beatboxing|Powerful|Melodic|Bass|Deep|Soft|Aggressive|Emotional|Whisper|Fast|Slow)$/i
-                    .test(translated)
-            ) {
-
-                style =
-                    translated;
-
-                return;
-            }
-
-            /*
-               Иногда часть может быть:
-
-               FEMALE voice
-            */
-
-            const genderMatch =
-                translated.match(
-                    /\b(MALE|FEMALE|BOTH)\b/i
-                );
-
-            if (genderMatch) {
-
-                gender =
-                    genderMatch[1]
-                        .toUpperCase();
-            }
-
-            const typeMatch =
-                translated.match(
-                    /\b(rap|spoken voice|voice)\b/i
-                );
-
-            if (typeMatch) {
-
-                type =
-                    typeMatch[1]
-                        .toLowerCase();
-            }
-
-            const styleMatch =
-                translated.match(
-                    /\b(Clean|Beatboxing|Powerful|Melodic|Bass|Deep|Soft|Aggressive|Emotional|Whisper|Fast|Slow)\b/i
-                );
-
-            if (styleMatch) {
-
-                style =
-                    styleMatch[1];
-            }
-        }
-    );
-
-
-    /*
-       Если нашли все необходимые параметры.
-    */
-
-    if (!gender) {
-        gender = "MALE";
-    }
-
-    if (!type) {
-        type = "voice";
-    }
-
-    if (!style) {
-        style = "";
-    }
-
-
-    return (
-        "[Verse " +
-        number +
-        ": " +
-        (style
-            ? style + " "
-            : "") +
-        gender +
-        " " +
-        type +
-        "]"
-    );
-}
-
-
-/* ==================================================
-   ПЕРЕВОД CHORUS
-================================================== */
-
-function translateChorusTag(tag) {
-
-    const inner =
-        tag.slice(1, -1).trim();
-
-    const match =
-        inner.match(
-            /^(?:chorus|припев)\s*:?\s*(.+)$/iu
-        );
-
-    if (!match) {
-        return null;
-    }
-
-    let settings =
-        translatePhrase(
-            match[1]
-        );
-
-    settings =
-        settings
-            .replace(
-                /мужской/giu,
-                "MALE"
-            )
-            .replace(
-                /женский/giu,
-                "FEMALE"
-            )
-            .replace(
-                /оба/giu,
-                "BOTH"
-            );
-
-    /*
-       Нормализуем варианты:
-       MALE voice
-       FEMALE voice
-       BOTH voice
-    */
-
-    const gender =
-        settings.match(
-            /\b(MALE|FEMALE|BOTH)\b/i
-        );
-
-    const style =
-        settings.match(
-            /\b(Bass|Melodic|Powerful|Clean|Deep|Soft|Aggressive|Emotional|Whisper|Fast|Slow)\b/i
-        );
-
-    if (style && gender) {
-
-        return (
-            "[Chorus: " +
-            style[1] +
-            " " +
-            gender[1].toUpperCase() +
-            " voice]"
-        );
-    }
-
-    if (gender) {
-
-        return (
-            "[Chorus: " +
-            gender[1].toUpperCase() +
-            " voice]"
-        );
-    }
-
-    return (
-        "[Chorus: " +
-        settings +
-        "]"
-    );
-}
-
-
-/* ==================================================
-   ПЕРЕВОД ЛЮБОГО ТЕГА
-================================================== */
-
-function translateTag(tag) {
-
-    const original =
-        tag;
-
-    const inner =
-        tag.slice(1, -1).trim();
-
-    if (!inner) {
-        return original;
-    }
-
-
-    /* Verse */
-
-    const verse =
-        translateVerseTag(tag);
-
-    if (verse) {
-        return verse;
-    }
-
-
-    /* Chorus */
-
-    const chorus =
-        translateChorusTag(tag);
-
-    if (chorus) {
-        return chorus;
-    }
-
-
-    /* Простые специальные теги */
-
-    const normalized =
-        inner
-            .toLowerCase()
-            .trim();
-
-
-    const simpleMap = {
-
-        "вступление":
-            "[Intro]",
-
-        "интро":
-            "[Intro]",
-
-        "аутро":
-            "[Outro]",
-
-        "окончание":
-            "[Outro]",
-
-        "инструментал":
-            "[Instrumental]",
-
-        "музыкальная пауза":
-            "[Music Break]",
-
-        "муз пауза":
-            "[Music Break]",
-
-        "битбокс":
-            "[Beatboxing]",
-
-        "битбоксинг":
-            "[Beatboxing]",
-
-        "виниловые царапины":
-            "[vinyl scratches]",
-
-        "виниловая царапина":
-            "[vinyl scratches]",
-
-        "скретч винила":
-            "[vinyl scratches]",
-
-        "скретч":
-            "[vinyl scratches]",
-
-        "хук":
-            "[Hook]",
-
-        "бридж":
-            "[Bridge]",
-
-        "переход":
-            "[Bridge]"
-    };
-
-
-    if (
-        simpleMap[normalized]
-    ) {
-
-        return simpleMap[
-            normalized
-        ];
-    }
-
-
-    /*
-       Общий перевод содержимого тега.
-    */
-
-    let result =
-        translatePhrase(
-            inner
-        );
-
-
-    /*
-       Перевод названий секций.
+       Отдельно переводим
+       английские варианты
+       в правильный регистр.
     */
 
     result =
-        result
-            .replace(
-                /^Куплет/iu,
-                "Verse"
-            )
-            .replace(
-                /^Припев/iu,
-                "Chorus"
-            )
-            .replace(
-                /^Бридж/iu,
-                "Bridge"
-            )
-            .replace(
-                /^Хук/iu,
-                "Hook"
-            )
-            .replace(
-                /^Вступление/iu,
-                "Intro"
-            )
-            .replace(
-                /^Аутро/iu,
-                "Outro"
-            );
+        result.replace(
+            /\brap\b/gi,
+            "rap"
+        );
 
+    result =
+        result.replace(
+            /\bvoice\b/gi,
+            "voice"
+        );
 
-    return "[" + result + "]";
+    result =
+        result.replace(
+            /\bspoken voice\b/gi,
+            "spoken voice"
+        );
+
+    result =
+        result.replace(
+            /\bmale\b/gi,
+            "MALE"
+        );
+
+    result =
+        result.replace(
+            /\bfemale\b/gi,
+            "FEMALE"
+        );
+
+    result =
+        result.replace(
+            /\bboth\b/gi,
+            "BOTH"
+        );
+
+    return result
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .trim();
 }
 
 
-/* ==================================================
-   ПЕРЕВОД ВСЕХ ТЕГОВ
-================================================== */
+/* =====================================================
+   ESCAPE REGEX
+===================================================== */
 
-function translateAllTags(
-    showMessage = true
-) {
+function escapeRegExp(text) {
 
-    const text =
-        songText.value;
+    return text.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&"
+    );
+}
 
-    if (!text.trim()) {
+
+/* =====================================================
+   ГЛАВНАЯ ФУНКЦИЯ:
+   ПЕРЕВОД ВСЕХ ТЕГОВ В ТЕКСТЕ
+===================================================== */
+
+function translateTagsInText(text) {
+
+    if (!text) {
+        return text;
+    }
+
+
+    /*
+       Находим всё, что находится
+       между [ и ].
+    */
+
+    return text.replace(
+        /\[([^\]]+)\]/g,
+        function(
+            fullTag,
+            content
+        ) {
+
+            const translated =
+                translateTagContent(
+                    content
+                );
+
+            return "[" +
+                translated +
+                "]";
+        }
+    );
+}
+
+
+/* =====================================================
+   КНОПКА ПЕРЕВОДА ТЕГОВ
+===================================================== */
+
+function translateTags() {
+
+    if (
+        !songText.value.trim()
+    ) {
 
         showStatus(
             "Текст пуст."
@@ -1746,50 +1423,191 @@ function translateAllTags(
     }
 
 
-    /*
-       Очень важно:
+    const oldText =
+        songText.value;
 
-       /\[[^\]]*\]/g
-
-       находит ЛЮБОЙ текст
-       внутри квадратных скобок.
-
-       Поэтому обрабатываются даже
-       неизвестные заранее варианты.
-    */
-
-    const translated =
-        text.replace(
-            /\[[^\]]*\]/g,
-            tag => translateTag(tag)
+    const newText =
+        translateTagsInText(
+            oldText
         );
 
 
     songText.value =
-        translated;
+        newText;
 
     updateCounters();
 
     saveDraft();
 
-
-    if (showMessage) {
-
-        showStatus(
-            "Все теги переведены на английский."
-        );
-    }
+    showStatus(
+        "Все поддерживаемые теги переведены на английский."
+    );
 }
 
 
-/* ==================================================
+/* =====================================================
+   ПРИМЕР ТЕКСТА
+===================================================== */
+
+function loadExample() {
+
+    const example = `[Вступление]
+
+[Инструментал]
+
+[Куплет 1: MALE voice — Бас — Рэп]
+Ночь опускается на город,
+Я слышу ритм в пустых дворах.
+Мы оставляем все тревоги,
+Пока огонь горит в глазах.
+
+[Пре-припев: FEMALE voice — Мелодичный]
+И если снова станет трудно,
+Мы не свернём с этого пути.
+Пускай звучит наш голос громче,
+Нам ещё многое пройти.
+
+[Припев: BOTH voice — Мощный]
+Мы зажигаем этот город,
+И музыка ведёт вперёд.
+Пускай сегодня станет повод
+Начать сначала новый взлёт.
+
+[Куплет 2: FEMALE voice — Мелодичный — Рэп]
+Я собираю мысли в строчки,
+И каждый такт ведёт меня.
+Мы ставим прошлое на паузу,
+Оставив страхи позади.
+
+[Виниловые царапины]
+
+[Припев: BOTH voice]
+Мы зажигаем этот город,
+И музыка ведёт вперёд.
+
+[Куплет 3: MALE voice — Мощный — Рэп]
+Бит становится всё громче,
+Сердце держит этот темп.
+Мы идём только вперёд,
+И назад дороги нет.
+
+[Бридж: BOTH voice]
+Это наш момент.
+Это наш новый день.
+
+[Музыкальная пауза]
+
+[Аутро]`;
+
+
+    /*
+       ВАЖНО:
+       После загрузки примера
+       сразу переводим теги.
+    */
+
+    songText.value =
+        translateTagsInText(
+            example
+        );
+
+    updateCounters();
+
+    saveDraft();
+
+    showStatus(
+        "Пример загружен. Теги автоматически переведены."
+    );
+}
+
+
+/* =====================================================
+   ЗАГРУЗКА TXT
+===================================================== */
+
+function loadTextFile(event) {
+
+    const file =
+        event.target.files &&
+        event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            let text =
+                e.target.result ||
+                "";
+
+
+            /*
+               Сразу автоматически
+               переводим теги.
+            */
+
+            text =
+                translateTagsInText(
+                    text
+                );
+
+
+            songText.value =
+                text;
+
+
+            updateCounters();
+
+            saveDraft();
+
+
+            showStatus(
+                "Файл загружен. Теги автоматически переведены на английский."
+            );
+
+
+            /*
+               Можно снова загрузить
+               тот же файл.
+            */
+
+            event.target.value =
+                "";
+        };
+
+
+    reader.onerror =
+        function() {
+
+            showStatus(
+                "Не удалось прочитать файл."
+            );
+        };
+
+
+    reader.readAsText(
+        file,
+        "UTF-8"
+    );
+}
+
+
+/* =====================================================
    INTRO / OUTRO
-================================================== */
+===================================================== */
 
 function ensureIntroOutro() {
 
     let text =
         songText.value.trim();
+
 
     if (!text) {
 
@@ -1800,6 +1618,17 @@ function ensureIntroOutro() {
 
         return;
     }
+
+
+    /*
+       Перед обработкой
+       приводим теги к английскому.
+    */
+
+    text =
+        translateTagsInText(
+            text
+        );
 
 
     let lines =
@@ -1820,7 +1649,9 @@ function ensureIntroOutro() {
 
     while (
         lines.length &&
-        lines[lines.length - 1]
+        lines[
+            lines.length - 1
+        ]
             .trim()
             .toLowerCase()
             === "[outro]"
@@ -1841,7 +1672,9 @@ function ensureIntroOutro() {
 
     while (
         lines.length &&
-        !lines[lines.length - 1].trim()
+        !lines[
+            lines.length - 1
+        ].trim()
     ) {
 
         lines.pop();
@@ -1856,13 +1689,17 @@ function ensureIntroOutro() {
 
         result.push("");
 
-        result.push(...lines);
+        result.push(
+            ...lines
+        );
     }
 
 
     result.push("");
 
-    result.push("[Outro]");
+    result.push(
+        "[Outro]"
+    );
 
 
     songText.value =
@@ -1872,9 +1709,9 @@ function ensureIntroOutro() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ДОБАВЛЕНИЕ БЛОКА
-================================================== */
+===================================================== */
 
 function appendBlock(block) {
 
@@ -1884,10 +1721,14 @@ function appendBlock(block) {
         songText.value;
 
     const outroIndex =
-        text.lastIndexOf("[Outro]");
+        text.lastIndexOf(
+            "[Outro]"
+        );
 
 
-    if (outroIndex === -1) {
+    if (
+        outroIndex === -1
+    ) {
 
         songText.value =
             text.trimEnd() +
@@ -1918,15 +1759,26 @@ function appendBlock(block) {
     }
 
 
+    /*
+       На всякий случай
+       переводим теги блока.
+    */
+
+    songText.value =
+        translateTagsInText(
+            songText.value
+        );
+
+
     updateCounters();
 
     saveDraftDelayed();
 }
 
 
-/* ==================================================
+/* =====================================================
    ВСТАВКА В КУРСОР
-================================================== */
+===================================================== */
 
 function insertAtCursor(text) {
 
@@ -1935,11 +1787,13 @@ function insertAtCursor(text) {
             "songText"
         );
 
+
     const start =
         textarea.selectionStart;
 
     const end =
         textarea.selectionEnd;
+
 
     const before =
         textarea.value.substring(
@@ -1957,16 +1811,22 @@ function insertAtCursor(text) {
     let suffix = "";
 
 
-    if (before.length > 0) {
+    if (
+        before.length > 0
+    ) {
 
         if (
-            before.endsWith("\n\n")
+            before.endsWith(
+                "\n\n"
+            )
         ) {
 
             prefix = "";
 
         } else if (
-            before.endsWith("\n")
+            before.endsWith(
+                "\n"
+            )
         ) {
 
             prefix = "\n";
@@ -1978,16 +1838,22 @@ function insertAtCursor(text) {
     }
 
 
-    if (after.length > 0) {
+    if (
+        after.length > 0
+    ) {
 
         if (
-            after.startsWith("\n\n")
+            after.startsWith(
+                "\n\n"
+            )
         ) {
 
             suffix = "";
 
         } else if (
-            after.startsWith("\n")
+            after.startsWith(
+                "\n"
+            )
         ) {
 
             suffix = "\n";
@@ -1999,12 +1865,16 @@ function insertAtCursor(text) {
     }
 
 
-    textarea.value =
+    const newText =
         before +
         prefix +
         text +
         suffix +
         after;
+
+
+    textarea.value =
+        newText;
 
 
     const newPosition =
@@ -2026,6 +1896,7 @@ function insertAtCursor(text) {
 
     saveDraftDelayed();
 
+
     showStatus(
         text +
         " добавлено."
@@ -2033,9 +1904,9 @@ function insertAtCursor(text) {
 }
 
 
-/* ==================================================
+/* =====================================================
    STATUS
-================================================== */
+===================================================== */
 
 function showStatus(message) {
 
@@ -2044,12 +1915,15 @@ function showStatus(message) {
             "status"
         );
 
+
     box.textContent =
         message;
+
 
     clearTimeout(
         statusTimer
     );
+
 
     statusTimer =
         setTimeout(
@@ -2059,14 +1933,14 @@ function showStatus(message) {
                     "";
 
             },
-            3000
+            3500
         );
 }
 
 
-/* ==================================================
+/* =====================================================
    СЧЁТЧИКИ
-================================================== */
+===================================================== */
 
 function updateCounters() {
 
@@ -2084,8 +1958,7 @@ function updateCounters() {
         "wordCount"
     ).textContent =
         text.trim()
-            ? text
-                .trim()
+            ? text.trim()
                 .split(/\s+/)
                 .length
             : 0;
@@ -2100,9 +1973,9 @@ function updateCounters() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ОБЫЧНАЯ СЕКЦИЯ
-================================================== */
+===================================================== */
 
 function openTextModal(tag) {
 
@@ -2113,7 +1986,8 @@ function openTextModal(tag) {
     document.getElementById(
         "textModalTitle"
     ).textContent =
-        "Добавить " + tag;
+        "Добавить " +
+        tag;
 
 
     document.getElementById(
@@ -2156,6 +2030,7 @@ function closeTextModal() {
             "active"
         );
 
+
     currentTag =
         "";
 }
@@ -2195,13 +2070,14 @@ function addModalText() {
 }
 
 
-/* ==================================================
+/* =====================================================
    КУПЛЕТЫ
-================================================== */
+===================================================== */
 
 function openVerseBuilder() {
 
     ensureIntroOutro();
+
 
     document
         .getElementById(
@@ -2210,6 +2086,7 @@ function openVerseBuilder() {
         .classList.add(
             "active"
         );
+
 
     renderVerses();
 }
@@ -2227,9 +2104,9 @@ function closeVerseBuilder() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ВАРИАНТЫ
-================================================== */
+===================================================== */
 
 const genderOptions = [
     "MALE",
@@ -2261,9 +2138,9 @@ const styleOptions = [
 ];
 
 
-/* ==================================================
+/* =====================================================
    SELECT
-================================================== */
+===================================================== */
 
 function makeSelect(
     options,
@@ -2284,11 +2161,13 @@ function makeSelect(
                     "option"
                 );
 
+
             option.value =
                 value;
 
             option.textContent =
                 value;
+
 
             if (
                 value === selected
@@ -2297,6 +2176,7 @@ function makeSelect(
                 option.selected =
                     true;
             }
+
 
             select.appendChild(
                 option
@@ -2309,9 +2189,9 @@ function makeSelect(
 }
 
 
-/* ==================================================
+/* =====================================================
    ОТРИСОВКА КУПЛЕТОВ
-================================================== */
+===================================================== */
 
 function renderVerses() {
 
@@ -2344,6 +2224,7 @@ function renderVerses() {
                 "div"
             );
 
+
         card.className =
             "verse-card";
 
@@ -2353,11 +2234,15 @@ function renderVerses() {
                 "div"
             );
 
+
         title.className =
             "verse-title";
 
+
         title.textContent =
-            "🎤 Verse " + i;
+            "🎤 Verse " +
+            i;
+
 
         card.appendChild(
             title
@@ -2368,6 +2253,7 @@ function renderVerses() {
             document.createElement(
                 "div"
             );
+
 
         options.className =
             "verse-options";
@@ -2380,16 +2266,20 @@ function renderVerses() {
                 "div"
             );
 
+
         const genderLabel =
             document.createElement(
                 "span"
             );
 
+
         genderLabel.className =
             "small-label";
 
+
         genderLabel.textContent =
             "Кто поёт";
+
 
         genderBox.appendChild(
             genderLabel
@@ -2404,8 +2294,10 @@ function renderVerses() {
                     : "FEMALE"
             );
 
+
         gender.className =
             "verse-gender";
+
 
         genderBox.appendChild(
             gender
@@ -2419,16 +2311,20 @@ function renderVerses() {
                 "div"
             );
 
+
         const typeLabel =
             document.createElement(
                 "span"
             );
 
+
         typeLabel.className =
             "small-label";
 
+
         typeLabel.textContent =
             "Тип";
+
 
         typeBox.appendChild(
             typeLabel
@@ -2441,8 +2337,10 @@ function renderVerses() {
                 "rap"
             );
 
+
         type.className =
             "verse-type";
+
 
         typeBox.appendChild(
             type
@@ -2456,16 +2354,20 @@ function renderVerses() {
                 "div"
             );
 
+
         const styleLabel =
             document.createElement(
                 "span"
             );
 
+
         styleLabel.className =
             "small-label";
 
+
         styleLabel.textContent =
             "Голос / подача";
+
 
         styleBox.appendChild(
             styleLabel
@@ -2478,8 +2380,10 @@ function renderVerses() {
                 "Clean"
             );
 
+
         style.className =
             "verse-style";
+
 
         styleBox.appendChild(
             style
@@ -2498,6 +2402,7 @@ function renderVerses() {
             styleBox
         );
 
+
         card.appendChild(
             options
         );
@@ -2510,6 +2415,7 @@ function renderVerses() {
                 "div"
             );
 
+
         instrumentalBox.className =
             "instrumental-box";
 
@@ -2519,12 +2425,15 @@ function renderVerses() {
                 "div"
             );
 
+
         instrumentalTitle.className =
             "instrumental-title";
+
 
         instrumentalTitle.textContent =
             "🎵 Instrumental для Verse " +
             i;
+
 
         instrumentalBox.appendChild(
             instrumentalTitle
@@ -2536,27 +2445,30 @@ function renderVerses() {
                 "div"
             );
 
+
         instrumentalOptions.className =
             "instrumental-options";
 
-
-        /* POSITION */
 
         const positionBox =
             document.createElement(
                 "div"
             );
 
+
         const positionLabel =
             document.createElement(
                 "span"
             );
 
+
         positionLabel.className =
             "small-label";
 
+
         positionLabel.textContent =
             "Положение";
+
 
         positionBox.appendChild(
             positionLabel
@@ -2567,6 +2479,7 @@ function renderVerses() {
             document.createElement(
                 "select"
             );
+
 
         position.className =
             "instrumental-position-select";
@@ -2585,11 +2498,13 @@ function renderVerses() {
                         "option"
                     );
 
+
                 option.value =
                     item[0];
 
                 option.textContent =
                     item[1];
+
 
                 position.appendChild(
                     option
@@ -2610,16 +2525,20 @@ function renderVerses() {
                 "div"
             );
 
+
         const countLabel =
             document.createElement(
                 "span"
             );
 
+
         countLabel.className =
             "small-label";
 
+
         countLabel.textContent =
             "Количество";
+
 
         countBox.appendChild(
             countLabel
@@ -2630,6 +2549,7 @@ function renderVerses() {
             document.createElement(
                 "select"
             );
+
 
         instrumentalCount.className =
             "instrumental-count";
@@ -2646,11 +2566,13 @@ function renderVerses() {
                     "option"
                 );
 
+
             option.value =
                 n;
 
             option.textContent =
                 n;
+
 
             instrumentalCount.appendChild(
                 option
@@ -2670,16 +2592,20 @@ function renderVerses() {
                 "div"
             );
 
+
         const exampleLabel =
             document.createElement(
                 "span"
             );
 
+
         exampleLabel.className =
             "small-label";
 
+
         exampleLabel.textContent =
             "Результат";
+
 
         exampleBox.appendChild(
             exampleLabel
@@ -2691,14 +2617,18 @@ function renderVerses() {
                 "div"
             );
 
+
         example.style.color =
             "#aaa";
+
 
         example.style.fontSize =
             "12px";
 
+
         example.textContent =
             "Без Instrumental";
+
 
         exampleBox.appendChild(
             example
@@ -2709,6 +2639,7 @@ function renderVerses() {
 
             const pos =
                 position.value;
+
 
             const amount =
                 Number(
@@ -2759,6 +2690,7 @@ function renderVerses() {
             updateExample
         );
 
+
         instrumentalCount.addEventListener(
             "change",
             updateExample
@@ -2788,11 +2720,14 @@ function renderVerses() {
                 "div"
             );
 
+
         hint.className =
             "instrumental-hint";
 
+
         hint.textContent =
             "Выберите «Нет», если Instrumental не нужен.";
+
 
         instrumentalBox.appendChild(
             hint
@@ -2811,14 +2746,19 @@ function renderVerses() {
                 "span"
             );
 
+
         textLabel.className =
             "small-label";
+
 
         textLabel.style.marginTop =
             "14px";
 
+
         textLabel.textContent =
-            "Текст Verse " + i;
+            "Текст Verse " +
+            i;
+
 
         card.appendChild(
             textLabel
@@ -2830,13 +2770,16 @@ function renderVerses() {
                 "textarea"
             );
 
+
         textarea.className =
             "verse-text";
+
 
         textarea.placeholder =
             "Введите текст куплета " +
             i +
             "...";
+
 
         card.appendChild(
             textarea
@@ -2850,9 +2793,9 @@ function renderVerses() {
 }
 
 
-/* ==================================================
-   СОЗДАНИЕ VOICE TAG
-================================================== */
+/* =====================================================
+   VOICE TAG
+===================================================== */
 
 function makeVoiceTag(
     gender,
@@ -2870,9 +2813,9 @@ function makeVoiceTag(
 }
 
 
-/* ==================================================
+/* =====================================================
    INSTRUMENTAL
-================================================== */
+===================================================== */
 
 function createInstrumental(
     amount
@@ -2888,9 +2831,9 @@ function createInstrumental(
 }
 
 
-/* ==================================================
+/* =====================================================
    ДОБАВЛЕНИЕ КУПЛЕТОВ
-================================================== */
+===================================================== */
 
 function addVerses() {
 
@@ -3011,7 +2954,9 @@ function addVerses() {
     );
 
 
-    if (!blocks.length) {
+    if (
+        !blocks.length
+    ) {
 
         showStatus(
             "Введите текст хотя бы одного куплета."
@@ -3038,13 +2983,14 @@ function addVerses() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ПРИПЕВЫ
-================================================== */
+===================================================== */
 
 function openChorusBuilder() {
 
     ensureIntroOutro();
+
 
     document
         .getElementById(
@@ -3141,9 +3087,9 @@ function addChoruses() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ГОТОВАЯ СТРУКТУРА
-================================================== */
+===================================================== */
 
 function generateStructure() {
 
@@ -3155,7 +3101,7 @@ function generateStructure() {
 [Verse 1: Bass MALE rap]
 Напишите текст первого куплета
 
-[Pre-Chorus: FEMALE voice]
+[Pre-Chorus — Female]
 Напишите текст пре-припева
 
 [Chorus: BOTH voice]
@@ -3191,143 +3137,9 @@ function generateStructure() {
 }
 
 
-/* ==================================================
-   ПРИМЕР ПЕСНИ ДЛЯ ТЕСТА
-================================================== */
-
-function loadTestSong() {
-
-    songText.value =
-`[Вступление]
-
-[Инструментал]
-
-[Куплет 1: МУЖСКОЙ голос — Бас — Рэп]
-Ночь опускается на город,
-Неон отражается в окне.
-Я снова слышу этот голос,
-Который шепчет обо мне.
-
-[Предприпев: Женский голос]
-И если сердце не уснёт,
-Мы снова встретим этот свет.
-
-[Припев: ОБА голоса]
-Мы летим вперёд,
-Нас уже не остановить.
-Этот новый день зовёт,
-Мы должны его прожить.
-
-[Куплет 2: ЖЕНСКИЙ голос — Мелодичный — Рэп]
-Я собираю мысли снова,
-Оставив прошлое в пути.
-И каждый новый шаг готовый
-Мне помогает дальше идти.
-
-[Инструментал]
-
-[Припев: ОБА голоса]
-Мы летим вперёд,
-Нас уже не остановить.
-Этот новый день зовёт,
-Мы должны его прожить.
-
-[Куплет 3: МУЖСКОЙ голос — Мощный — Рэп]
-Теперь мой голос стал сильнее,
-Я больше не боюсь огня.
-Я становлюсь ещё смелее,
-И этот мир внутри меня.
-
-[Бридж: ОБА голоса]
-Не отпускай,
-Не исчезай,
-Мы вместе до конца.
-
-[Виниловые царапины]
-
-[Аутро]`;
-
-
-    updateCounters();
-
-    saveDraft();
-
-
-    showStatus(
-        "Тестовая песня загружена. Теперь нажмите «Перевести теги на английский»."
-    );
-}
-
-
-/* ==================================================
-   ЗАГРУЗКА TXT
-================================================== */
-
-function loadTextFile(event) {
-
-    const file =
-        event.target.files[0];
-
-
-    if (!file) {
-        return;
-    }
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload =
-        function(e) {
-
-            songText.value =
-                e.target.result || "";
-
-
-            updateCounters();
-
-            saveDraft();
-
-
-            /*
-               Сразу переводим теги.
-            */
-
-            translateAllTags(
-                false
-            );
-
-
-            showStatus(
-                "Файл загружен, теги переведены на английский."
-            );
-        };
-
-
-    reader.onerror =
-        function() {
-
-            showStatus(
-                "Не удалось прочитать файл."
-            );
-        };
-
-
-    reader.readAsText(
-        file,
-        "UTF-8"
-    );
-
-
-    event.target.value =
-        "";
-}
-
-
-/* ==================================================
+/* =====================================================
    КОПИРОВАНИЕ
-================================================== */
+===================================================== */
 
 async function copySong() {
 
@@ -3345,10 +3157,10 @@ async function copySong() {
 
     /*
        Перед копированием
-       переводим теги.
+       гарантируем английские теги.
     */
 
-    translateAllTags(false);
+    translateTagsInEditorSilently();
 
 
     try {
@@ -3380,9 +3192,26 @@ async function copySong() {
 }
 
 
-/* ==================================================
+/* =====================================================
+   ТИХИЙ ПЕРЕВОД
+===================================================== */
+
+function translateTagsInEditorSilently() {
+
+    songText.value =
+        translateTagsInText(
+            songText.value
+        );
+
+    updateCounters();
+
+    saveDraft();
+}
+
+
+/* =====================================================
    СОХРАНЕНИЕ
-================================================== */
+===================================================== */
 
 function getSavedSongs() {
 
@@ -3412,13 +3241,10 @@ function getSavedSongs() {
 
 function saveSong() {
 
-    /*
-       Всегда сохраняем английские теги.
-    */
-
-    translateAllTags(false);
-
     ensureIntroOutro();
+
+
+    translateTagsInEditorSilently();
 
 
     if (
@@ -3473,9 +3299,9 @@ function saveSong() {
 }
 
 
-/* ==================================================
+/* =====================================================
    СОХРАНЁННЫЕ
-================================================== */
+===================================================== */
 
 function renderSavedSongs() {
 
@@ -3493,7 +3319,9 @@ function renderSavedSongs() {
         getSavedSongs();
 
 
-    if (!songs.length) {
+    if (
+        !songs.length
+    ) {
 
         container.innerHTML =
             '<div class="saved-empty">' +
@@ -3514,6 +3342,7 @@ function renderSavedSongs() {
                         "div"
                     );
 
+
                 item.className =
                     "saved-item";
 
@@ -3529,8 +3358,10 @@ function renderSavedSongs() {
                         "div"
                     );
 
+
                 title.className =
                     "saved-title";
+
 
                 title.textContent =
                     song.title;
@@ -3541,8 +3372,10 @@ function renderSavedSongs() {
                         "div"
                     );
 
+
                 date.className =
                     "saved-date";
+
 
                 date.textContent =
                     song.date;
@@ -3562,6 +3395,7 @@ function renderSavedSongs() {
                         "div"
                     );
 
+
                 actions.className =
                     "saved-actions";
 
@@ -3571,8 +3405,10 @@ function renderSavedSongs() {
                         "button"
                     );
 
+
                 open.textContent =
                     "📂 Открыть";
+
 
                 open.onclick =
                     () =>
@@ -3586,8 +3422,10 @@ function renderSavedSongs() {
                         "button"
                     );
 
+
                 remove.textContent =
                     "🗑";
+
 
                 remove.onclick =
                     () =>
@@ -3622,9 +3460,9 @@ function renderSavedSongs() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ОТКРЫТЬ СОХРАНЁННУЮ
-================================================== */
+===================================================== */
 
 function openSavedSong(id) {
 
@@ -3641,15 +3479,10 @@ function openSavedSong(id) {
 
 
     songText.value =
-        song.text || "";
+        translateTagsInText(
+            song.text || ""
+        );
 
-
-    /*
-       На всякий случай переводим
-       старые сохранения.
-    */
-
-    translateAllTags(false);
 
     ensureIntroOutro();
 
@@ -3657,14 +3490,14 @@ function openSavedSong(id) {
 
 
     showStatus(
-        "Песня загружена."
+        "Песня загружена. Теги переведены."
     );
 }
 
 
-/* ==================================================
-   УДАЛЕНИЕ
-================================================== */
+/* =====================================================
+   УДАЛЕНИЕ СОХРАНЁННОЙ
+===================================================== */
 
 function deleteSavedSong(id) {
 
@@ -3677,6 +3510,7 @@ function deleteSavedSong(id) {
             "Удалить сохранённую песню?"
         )
     ) {
+
         return;
     }
 
@@ -3705,18 +3539,19 @@ function deleteSavedSong(id) {
 }
 
 
-/* ==================================================
+/* =====================================================
    ОЧИСТКА
-================================================== */
+===================================================== */
 
 function clearEditor() {
 
     if (
         songText.value.trim() &&
         !confirm(
-            "Очистить весь текст?"
+            "Удалить весь текущий текст?"
         )
     ) {
+
         return;
     }
 
@@ -3731,25 +3566,20 @@ function clearEditor() {
 
 
     showStatus(
-        "Текст очищен."
+        "Текст удалён."
     );
 }
 
 
-/* ==================================================
-   TXT
-================================================== */
+/* =====================================================
+   DOWNLOAD TXT
+===================================================== */
 
 function downloadTXT() {
 
-    /*
-       Перед скачиванием
-       переводим все теги.
-    */
-
-    translateAllTags(false);
-
     ensureIntroOutro();
+
+    translateTagsInEditorSilently();
 
 
     const blob =
@@ -3779,6 +3609,7 @@ function downloadTXT() {
     link.href =
         url;
 
+
     link.download =
         "song.txt";
 
@@ -3805,9 +3636,9 @@ function downloadTXT() {
 }
 
 
-/* ==================================================
+/* =====================================================
    ЧЕРНОВИК
-================================================== */
+===================================================== */
 
 function saveDraft() {
 
@@ -3875,8 +3706,15 @@ function restoreDraft() {
 
             if (restore) {
 
+                /*
+                   При восстановлении
+                   также переводим теги.
+                */
+
                 songText.value =
-                    draft.text;
+                    translateTagsInText(
+                        draft.text
+                    );
 
             } else {
 
@@ -3897,22 +3735,15 @@ function restoreDraft() {
     }
 
 
-    /*
-       При восстановлении тоже
-       исправляем старые русские теги.
-    */
-
-    translateAllTags(false);
-
     ensureIntroOutro();
 
     updateCounters();
 }
 
 
-/* ==================================================
+/* =====================================================
    ИЗМЕНЕНИЕ ТЕКСТА
-================================================== */
+===================================================== */
 
 songText.addEventListener(
     "input",
@@ -3925,9 +3756,9 @@ songText.addEventListener(
 );
 
 
-/* ==================================================
+/* =====================================================
    КЛАВИАТУРА
-================================================== */
+===================================================== */
 
 document.addEventListener(
     "keydown",
@@ -3976,9 +3807,9 @@ document.addEventListener(
 );
 
 
-/* ==================================================
+/* =====================================================
    ЗАКРЫТИЕ MODAL
-================================================== */
+===================================================== */
 
 document
     .querySelectorAll(
@@ -4006,12 +3837,13 @@ document
     );
 
 
-/* ==================================================
+/* =====================================================
    ЗАПУСК
-================================================== */
+===================================================== */
 
 songText.value =
     "[Intro]\n\n[Outro]";
+
 
 updateCounters();
 
