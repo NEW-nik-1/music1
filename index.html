@@ -1,32 +1,2038 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUZER play VK Mini App</title>
 
-    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>AI Music Generators</title>
+
+
+<!-- =====================================================
+     VK BRIDGE
+===================================================== -->
+
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+
+
+<style>
+
+/* =====================================================
+   ОСНОВНЫЕ НАСТРОЙКИ
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+
+    --green: #b6ff00;
+    --green-bright: #d7ff3f;
+    --green-soft: #b9d79b;
+
+    --bg: #020302;
+
+    --text: #e8ffd0;
+    --muted: #657050;
+
+    --border: rgba(182,255,0,.16);
+}
+
+
+* {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+
+    min-height: 100%;
+}
+
+
+body {
+
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+    color:
+        var(--text);
+
+    background:
+
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(182,255,0,.075),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 20% 50%,
+            rgba(182,255,0,.035),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 80% 50%,
+            rgba(182,255,0,.035),
+            transparent 25%
+        ),
+
+        #020302;
+
+    overflow-x: hidden;
+}
+
+
+/* =====================================================
+   ФОНОВАЯ СЕТКА
+===================================================== */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(182,255,0,.022) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(182,255,0,.022) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        42px 42px;
+
+    pointer-events: none;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 95%
+        );
+}
+
+
+/* =====================================================
+   ВЕРХНЯЯ ПОЛОСА
+===================================================== */
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    background:
+
+        repeating-linear-gradient(
+            135deg,
+            var(--green) 0px,
+            var(--green) 12px,
+            #111 12px,
+            #111 24px
+        );
+
+    opacity: .7;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   ФОНОВОЕ СВЕЧЕНИЕ
+===================================================== */
+
+.glow {
+
+    position: fixed;
+
+    width: 430px;
+    height: 430px;
+
+    border-radius: 50%;
+
+    background:
+        var(--green);
+
+    filter:
+        blur(160px);
+
+    opacity: .035;
+
+    pointer-events: none;
+}
+
+
+.glow-left {
+
+    left: -280px;
+    top: 20%;
+}
+
+
+.glow-right {
+
+    right: -280px;
+    bottom: 20%;
+}
+
+
+/* =====================================================
+   СТРАНИЦА
+===================================================== */
+
+.page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px 20px;
+}
+
+
+.center {
+
+    width:
+        min(430px, 100%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+/* =====================================================
+   ЛОГО
+===================================================== */
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    color:
+        var(--green-bright);
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 16px
+        rgba(182,255,0,.12);
+}
+
+
+.logo-icon {
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #273c08,
+            #090d05
+        );
+
+    border:
+        1px solid
+        rgba(182,255,0,.3);
+
+    box-shadow:
+
+        0 0 18px
+        rgba(182,255,0,.09);
+
+    color:
+        var(--green);
+
+    font-size: 19px;
+}
+
+
+/* =====================================================
+   СТАТУС
+===================================================== */
+
+.ai-status {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 17px;
+
+    color:
+        #b9d79b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+.status-dot {
+
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+
+        0 0 7px
+        var(--green),
+
+        0 0 14px
+        rgba(182,255,0,.45);
+
+    animation:
+        statusPulse 1.8s ease-in-out infinite;
+}
+
+
+@keyframes statusPulse {
+
+    0%,
+    100% {
+        opacity: .3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+/* =====================================================
+   КОНТЕЙНЕР КНОПОК
+===================================================== */
+
+.buttons {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* =====================================================
+   КНОПКА AI
+===================================================== */
+
+.ai-button {
+
+    width: 100%;
+
+    height: 57px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 7px 9px;
+
+    color:
+        var(--text);
+
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        rgba(182,255,0,.13);
+
+    background:
+        rgba(182,255,0,.035);
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition:
+
+        background-color .18s ease,
+
+        border-color .18s ease,
+
+        color .18s ease;
+}
+
+
+.ai-button:hover {
+
+    background:
+        rgba(182,255,0,.085);
+
+    border-color:
+        rgba(182,255,0,.28);
+
+    color:
+        #f0ffd9;
+}
+
+
+/* =====================================================
+   ИКОНКА
+===================================================== */
+
+.icon {
+
+    width: 41px;
+    height: 41px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 12px;
+
+    border-radius: 10px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #1c2a09,
+            #080b05
+        );
+
+    border:
+        1px solid
+        rgba(182,255,0,.16);
+
+    color:
+        var(--green);
+
+    font-size: 18px;
+
+    filter:
+        grayscale(.3);
+}
+
+
+/* =====================================================
+   ТЕКСТ КНОПКИ
+===================================================== */
+
+.info {
+
+    flex: 1;
+
+    min-width: 0;
+
+    text-align: left;
+}
+
+
+.name {
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 3px;
+
+    color:
+        #dcf8bd;
+}
+
+
+.desc {
+
+    color:
+        #657050;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   СТРЕЛКА
+===================================================== */
+
+.arrow {
+
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(182,255,0,.055);
+
+    color:
+        #708052;
+
+    font-size: 15px;
+
+    transition:
+
+        background-color .18s ease,
+
+        color .18s ease;
+}
+
+
+.ai-button:hover .arrow {
+
+    background:
+        rgba(182,255,0,.12);
+
+    color:
+        var(--green);
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+
+    margin-top: 18px;
+
+    color:
+        #4e5c3c;
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+.footer::after {
+
+    content:
+        "  ☢  SYSTEM ONLINE  ☢";
+
+    color:
+        #53633c;
+}
+
+
+/* =====================================================
+   КНОПКА ПОМОЩЬ
+===================================================== */
+
+.help-button {
+
+    position: fixed;
+
+    right: 18px;
+    bottom: 18px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(182,255,0,.45);
+
+    background:
+        rgba(5,10,3,.92);
+
+    color:
+        var(--green);
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    z-index: 1000;
+
+    box-shadow:
+
+        0 0 10px
+        rgba(182,255,0,.12);
+
+    transition:
+
+        transform .2s ease,
+
+        background-color .2s ease,
+
+        box-shadow .2s ease;
+}
+
+
+.help-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: -5px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(182,255,0,.16);
+
+    animation:
+        helpPulse 2.4s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+
+.help-button:hover {
+
+    transform:
+        scale(1.08);
+
+    background:
+        rgba(182,255,0,.10);
+
+    box-shadow:
+
+        0 0 18px
+        rgba(182,255,0,.22);
+}
+
+
+@keyframes helpPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(.9);
+
+        opacity: .2;
+    }
+
+    50% {
+
+        transform:
+            scale(1.18);
+
+        opacity: .8;
+    }
+}
+
+
+/* =====================================================
+   ОКНО ПОМОЩИ
+===================================================== */
+
+.help-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    backdrop-filter:
+        blur(6px);
+
+    -webkit-backdrop-filter:
+        blur(6px);
+
+    z-index: 2000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity .22s ease,
+        visibility .22s ease;
+}
+
+
+.help-overlay.active {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =====================================================
+   ПАНЕЛЬ ПОМОЩИ
+===================================================== */
+
+.help-panel {
+
+    width:
+        min(430px, 100%);
+
+    max-height:
+        calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    padding: 15px;
+
+    border-radius: 16px;
+
+    border:
+        1px solid
+        rgba(182,255,0,.22);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(13,20,7,.98),
+            rgba(3,6,3,.98)
+        );
+
+    box-shadow:
+
+        0 20px 70px
+        rgba(0,0,0,.7),
+
+        0 0 30px
+        rgba(182,255,0,.06);
+
+    transform:
+        translateY(12px)
+        scale(.97);
+
+    transition:
+        transform .22s ease;
+}
+
+
+.help-overlay.active .help-panel {
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =====================================================
+   ЗАГОЛОВОК ПОМОЩИ
+===================================================== */
+
+.help-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+}
+
+
+.help-title {
+
+    color:
+        var(--green-bright);
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.help-close {
+
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background:
+        rgba(182,255,0,.07);
+
+    color:
+        #91a66c;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition:
+        .18s ease;
+}
+
+
+.help-close:hover {
+
+    color:
+        var(--green);
+
+    background:
+        rgba(182,255,0,.13);
+}
+
+
+/* =====================================================
+   ВИДЕО
+===================================================== */
+
+.video-box {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background:
+        #000;
+
+    border:
+        1px solid
+        rgba(182,255,0,.14);
+}
+
+
+.video-box iframe {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    border: 0;
+}
+
+
+/* =====================================================
+   ОПИСАНИЕ
+===================================================== */
+
+.help-description {
+
+    margin-top: 12px;
+
+    color:
+        #94a77a;
+
+    font-size: 9px;
+
+    line-height: 1.55;
+
+    text-align: left;
+}
+
+
+.help-steps {
+
+    margin-top: 11px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 6px;
+}
+
+
+.help-step {
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(182,255,0,.035);
+
+    border:
+        1px solid
+        rgba(182,255,0,.08);
+}
+
+
+.help-step-number {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color:
+        var(--green);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.help-step-text {
+
+    color:
+        #a7b98d;
+
+    font-size: 8px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+===================================================== */
+
+@media(max-width: 500px) {
+
+    .page {
+
+        padding:
+            28px 15px 35px;
+    }
+
+
+    .center {
+
+        width: 100%;
+    }
+
+
+    .logo {
+
+        font-size: 16px;
+    }
+
+
+    .ai-status {
+
+        font-size: 11px;
+
+        letter-spacing:
+            1.7px;
+    }
+
+
+    .ai-button {
+
+        height: 56px;
+    }
+
+
+    .help-button {
+
+        right: 14px;
+        bottom: 14px;
+
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .help-panel {
+
+        padding: 12px;
+    }
+}
+
+
+/* =====================================================
+   ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ
+===================================================== */
+
+@media(max-width: 360px) {
+
+    .ai-status {
+
+        font-size: 10px;
+
+        letter-spacing:
+            1.3px;
+    }
+
+
+    .ai-button {
+
+        height: 54px;
+    }
+
+
+    .icon {
+
+        width: 39px;
+        height: 39px;
+
+        margin-right: 9px;
+    }
+
+
+    .name {
+
+        font-size: 12px;
+    }
+
+
+    .desc {
+
+        font-size: 7px;
+    }
+
+
+    .help-steps {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media(prefers-reduced-motion: reduce) {
+
+    .status-dot,
+    .help-button::before {
+
+        animation: none;
+    }
+}
+
+</style>
+
 </head>
-<body style="margin:0;padding:0;overflow:hidden;">
 
-    <iframe
-        id="...."
-        src="https://myneuralnetworks.ru/music_generator"
-        style="width:100vw;height:100vh;border:none;">
-    </iframe>
 
-    <script>
-        async function initApp() {
-            try {
-                await vkBridge.send('VKWebAppInit');
-                console.log('VK Bridge инициализирован');
-            } catch (e) {
-                console.error('Ошибка VK Bridge:', e);
-            }
+<body>
+
+
+<!-- =====================================================
+     ФОНОВЫЕ ЭФФЕКТЫ
+===================================================== -->
+
+<div class="glow glow-left"></div>
+<div class="glow glow-right"></div>
+
+
+<!-- =====================================================
+     ОСНОВНАЯ СТРАНИЦА
+===================================================== -->
+
+<div class="page">
+
+<section class="center">
+
+
+    <!-- =================================================
+         ЛОГО
+    ================================================== -->
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ☢
+        </div>
+
+        AI MUSIC GENERATORS
+
+    </div>
+
+
+    <!-- =================================================
+         СТАТУС
+    ================================================== -->
+
+    <div class="ai-status">
+
+        <span class="status-dot"></span>
+
+        AI MUSIC SYSTEM
+
+    </div>
+
+
+    <!-- =================================================
+         КНОПКИ
+    ================================================== -->
+
+    <div class="buttons">
+
+
+        <!-- SUNO -->
+
+        <a
+            class="ai-button"
+            href="https://suno.com"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                🎤
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    Suno
+                </div>
+
+                <div class="desc">
+                    AI GENERATOR / SONG CREATION
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- MY NEURAL NETWORKS -->
+
+        <a
+            class="ai-button"
+            href="https://myneuralnetworks.ru/music_generator"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                🧠
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    My Neural Networks
+                </div>
+
+                <div class="desc">
+                    NEURAL MUSIC GENERATOR
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- BREV AI -->
+
+        <a
+            class="ai-button"
+            href="https://brev.ai/ru/app"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                🎶
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    Brev AI
+                </div>
+
+                <div class="desc">
+                    AI MUSIC CREATION
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- MUSIC HERO -->
+
+        <a
+            class="ai-button"
+            href="https://musichero.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                ⚡
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    MusicHero AI
+                </div>
+
+                <div class="desc">
+                    AI MUSIC GENERATOR
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- AI SONG GENERATOR -->
+
+        <a
+            class="ai-button"
+            href="https://aisonggenerator.ai/create"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                ✨
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    AI Song Generator
+                </div>
+
+                <div class="desc">
+                    CREATE AI SONGS
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- LYRICS INTO SONG -->
+
+        <a
+            class="ai-button"
+            href="https://lyricsintosong.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                ✍
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    Lyrics Into Song
+                </div>
+
+                <div class="desc">
+                    LYRICS TO MUSIC
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- TOMUSIC AI -->
+
+        <a
+            class="ai-button"
+            href="https://tomusic.ai/music/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                🎵
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    ToMusic AI
+                </div>
+
+                <div class="desc">
+                    AI MUSIC GENERATOR
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- MUSIC GENERATOR AI -->
+
+        <a
+            class="ai-button"
+            href="https://musicgeneratorai.com"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+                ♪
+            </div>
+
+            <div class="info">
+
+                <div class="name">
+                    Music Generator AI
+                </div>
+
+                <div class="desc">
+                    AI MUSIC GENERATOR
+                </div>
+
+            </div>
+
+            <div class="arrow">
+                →
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <div class="footer">
+
+        CREATE · GENERATE · MUSIC · AI
+
+    </div>
+
+
+</section>
+
+</div>
+
+
+<!-- =====================================================
+     КНОПКА ПОМОЩЬ
+===================================================== -->
+
+<button
+    class="help-button"
+    id="helpButton"
+    type="button"
+    aria-label="Помощь"
+    title="Как создать песню"
+>
+
+    ?
+
+</button>
+
+
+<!-- =====================================================
+     ОКНО ПОМОЩИ
+===================================================== -->
+
+<div
+    class="help-overlay"
+    id="helpOverlay"
+    aria-hidden="true"
+>
+
+
+    <div
+        class="help-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="helpTitle"
+    >
+
+
+        <!-- =============================================
+             ЗАГОЛОВОК
+        ============================================== -->
+
+        <div class="help-header">
+
+            <div
+                class="help-title"
+                id="helpTitle"
+            >
+
+                🎵 КАК СОЗДАТЬ ПЕСНЮ
+
+            </div>
+
+
+            <button
+                class="help-close"
+                id="helpClose"
+                type="button"
+                aria-label="Закрыть"
+            >
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <!-- =============================================
+             ВИДЕО
+        ============================================== -->
+
+        <div class="video-box">
+
+            <iframe
+                src="https://www.youtube.com/embed/zkSmRLjBud4"
+                title="Как создать песню в нейросети Suno"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                loading="lazy"
+            >
+            </iframe>
+
+        </div>
+
+
+        <!-- =============================================
+             ОПИСАНИЕ
+        ============================================== -->
+
+        <div class="help-description">
+
+            Короткое руководство:
+            от идеи и текста песни до выбора музыкального
+            стиля, генерации и получения готового трека.
+
+        </div>
+
+
+        <!-- =============================================
+             ЭТАПЫ
+        ============================================== -->
+
+        <div class="help-steps">
+
+
+            <div class="help-step">
+
+                <span class="help-step-number">
+                    01 · ТЕКСТ
+                </span>
+
+                <span class="help-step-text">
+                    Придумайте тему и создайте текст песни.
+                </span>
+
+            </div>
+
+
+            <div class="help-step">
+
+                <span class="help-step-number">
+                    02 · СТИЛЬ
+                </span>
+
+                <span class="help-step-text">
+                    Выберите жанр, настроение, голос и звучание.
+                </span>
+
+            </div>
+
+
+            <div class="help-step">
+
+                <span class="help-step-number">
+                    03 · ГЕНЕРАЦИЯ
+                </span>
+
+                <span class="help-step-text">
+                    Передайте текст и стиль нейросети.
+                </span>
+
+            </div>
+
+
+            <div class="help-step">
+
+                <span class="help-step-number">
+                    04 · ГОТОВО
+                </span>
+
+                <span class="help-step-text">
+                    Прослушайте результат и сохраните песню.
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   VK BRIDGE
+===================================================== */
+
+if (
+    typeof vkBridge !== "undefined"
+) {
+
+    try {
+
+        vkBridge.send(
+            "VKWebAppInit"
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "VK Bridge unavailable"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   AUDIO CONTEXT
+===================================================== */
+
+let audioContext = null;
+
+
+/* =====================================================
+   ИНИЦИАЛИЗАЦИЯ AUDIO
+===================================================== */
+
+function initAudio() {
+
+    if (!audioContext) {
+
+        audioContext = new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+    }
+
+
+    if (
+        audioContext.state === "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
+
+}
+
+
+/* =====================================================
+   ЗВУК НАЖАТИЯ
+===================================================== */
+
+function playClick() {
+
+    try {
+
+        initAudio();
+
+
+        const now =
+            audioContext.currentTime;
+
+
+        const master =
+            audioContext.createGain();
+
+
+        master.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+
+        master.gain.exponentialRampToValueAtTime(
+            0.045,
+            now + 0.003
+        );
+
+
+        master.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.11
+        );
+
+
+        master.connect(
+            audioContext.destination
+        );
+
+
+        /* =============================================
+           CLICK
+        ============================================== */
+
+        const click =
+            audioContext.createOscillator();
+
+
+        const clickGain =
+            audioContext.createGain();
+
+
+        click.type =
+            "triangle";
+
+
+        click.frequency.setValueAtTime(
+            1250,
+            now
+        );
+
+
+        click.frequency.exponentialRampToValueAtTime(
+            400,
+            now + 0.035
+        );
+
+
+        clickGain.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+
+        clickGain.gain.exponentialRampToValueAtTime(
+            0.55,
+            now + 0.002
+        );
+
+
+        clickGain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.045
+        );
+
+
+        click.connect(
+            clickGain
+        );
+
+
+        clickGain.connect(
+            master
+        );
+
+
+        click.start(now);
+
+
+        click.stop(
+            now + 0.05
+        );
+
+
+        /* =============================================
+           SCI-FI PING
+        ============================================== */
+
+        const ping =
+            audioContext.createOscillator();
+
+
+        const pingGain =
+            audioContext.createGain();
+
+
+        ping.type =
+            "sine";
+
+
+        ping.frequency.setValueAtTime(
+            1850,
+            now
+        );
+
+
+        ping.frequency.exponentialRampToValueAtTime(
+            760,
+            now + 0.08
+        );
+
+
+        pingGain.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+
+        pingGain.gain.exponentialRampToValueAtTime(
+            0.12,
+            now + 0.006
+        );
+
+
+        pingGain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.09
+        );
+
+
+        ping.connect(
+            pingGain
+        );
+
+
+        pingGain.connect(
+            master
+        );
+
+
+        ping.start(now);
+
+
+        ping.stop(
+            now + 0.10
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Audio unavailable"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   AI КНОПКИ
+===================================================== */
+
+const buttons =
+    document.querySelectorAll(
+        ".ai-button"
+    );
+
+
+buttons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        playClick
+    );
+
+});
+
+
+buttons.forEach(button => {
+
+    button.addEventListener(
+        "touchstart",
+        initAudio,
+        {
+            passive: true
+        }
+    );
+
+});
+
+
+/* =====================================================
+   HELP
+===================================================== */
+
+const helpButton =
+    document.getElementById(
+        "helpButton"
+    );
+
+
+const helpOverlay =
+    document.getElementById(
+        "helpOverlay"
+    );
+
+
+const helpClose =
+    document.getElementById(
+        "helpClose"
+    );
+
+
+/* =====================================================
+   ОТКРЫТЬ ПОМОЩЬ
+===================================================== */
+
+function openHelp() {
+
+    playClick();
+
+
+    helpOverlay.classList.add(
+        "active"
+    );
+
+
+    helpOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =====================================================
+   ЗАКРЫТЬ ПОМОЩЬ
+===================================================== */
+
+function closeHelp() {
+
+    helpOverlay.classList.remove(
+        "active"
+    );
+
+
+    helpOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =====================================================
+   КНОПКА HELP
+===================================================== */
+
+helpButton.addEventListener(
+    "click",
+    openHelp
+);
+
+
+/* =====================================================
+   КНОПКА CLOSE
+===================================================== */
+
+helpClose.addEventListener(
+    "click",
+    closeHelp
+);
+
+
+/* =====================================================
+   КЛИК ПО ФОНУ
+===================================================== */
+
+helpOverlay.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target ===
+            helpOverlay
+        ) {
+
+            closeHelp();
+
         }
 
-        initApp();
-    </script>
+    }
+);
+
+
+/* =====================================================
+   ESC
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape" &&
+            helpOverlay.classList.contains(
+                "active"
+            )
+        ) {
+
+            closeHelp();
+
+        }
+
+    }
+);
+
+
+</script>
+
 
 </body>
 </html>
+```
