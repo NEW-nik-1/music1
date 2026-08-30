@@ -922,7 +922,7 @@ body::after {
 }
 
 
-.video-box iframe {
+.video-box video {
 
     width: 100%;
     height: 100%;
@@ -930,6 +930,10 @@ body::after {
     display: block;
 
     border: 0;
+
+    object-fit: contain;
+
+    background: #000;
 }
 
 
@@ -1719,15 +1723,20 @@ body {
 
         <div class="video-box">
 
-            <iframe
+            <video
                 id="helpVideo"
-                src="https://new-nik-1.github.io/music1/VIDEOS-1.mp4"
-                title="Как создать песню в нейросети Suno"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                loading="lazy"
+                controls
+                preload="metadata"
+                playsinline
+                aria-label="Как создать песню в нейросети Suno"
             >
-            </iframe>
+                <source
+                    src="https://new-nik-1.github.io/music1/VIDEOS-1.mp4"
+                    type="video/mp4"
+                >
+
+                Ваш браузер не поддерживает видео.
+            </video>
 
         </div>
 
@@ -2131,26 +2140,21 @@ function openHelp() {
 
     playClick();
 
-    /* Получаем текущий iframe после закрытия/пересоздания */
+    /* Видео не запускается автоматически.
+       Воспроизведение начинается только после нажатия Play. */
     helpVideo =
         document.getElementById(
             "helpVideo"
         );
 
-    /* Полностью загружаем видео заново при открытии */
-    helpVideo.src =
-        "https://new-nik-1.github.io/music1/VIDEOS-1.mp4";
-
     helpOverlay.classList.add(
         "active"
     );
-
 
     helpOverlay.setAttribute(
         "aria-hidden",
         "false"
     );
-
 
     document.body.style.overflow =
         "hidden";
@@ -2164,53 +2168,29 @@ function openHelp() {
 
 function closeHelp() {
 
-    /* =================================================
-       ПОЛНОСТЬЮ ОСТАНОВИТЬ И УДАЛИТЬ ВИДЕОПЛЕЕР
-    ================================================== */
+    /* Останавливаем видео при закрытии окна */
+    helpVideo =
+        document.getElementById(
+            "helpVideo"
+        );
 
-    helpVideo.src = "";
+    if (helpVideo) {
 
-    /* Принудительно удаляем активный iframe из DOM,
-       чтобы видео гарантированно остановилось */
-    helpVideo.remove();
+        helpVideo.pause();
 
-    const videoBox =
-        document.querySelector(".video-box");
+        helpVideo.currentTime =
+            0;
 
-    const newVideo =
-        document.createElement("iframe");
-
-    newVideo.id =
-        "helpVideo";
-
-    newVideo.title =
-        "Как создать песню в нейросети Suno";
-
-    newVideo.allow =
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-
-    newVideo.setAttribute(
-        "allowfullscreen",
-        ""
-    );
-
-    newVideo.loading =
-        "lazy";
-
-    videoBox.appendChild(
-        newVideo
-    );
+    }
 
     helpOverlay.classList.remove(
         "active"
     );
 
-
     helpOverlay.setAttribute(
         "aria-hidden",
         "true"
     );
-
 
     document.body.style.overflow =
         "";
