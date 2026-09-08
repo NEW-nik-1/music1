@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio Mastering Portable Console</title>
+<style>
+:root{--cyan:#35cfff;--green:#48ff8a;--blue:#1688ff;--line:#287fd0;--panel:rgba(1,8,18,.95);--muted:#88a9c7}
+*{box-sizing:border-box}html,body{margin:0;background:#03060b;color:#e8f6ff;font-family:Arial,sans-serif;width:100%;height:100%;overflow:hidden}body{min-width:900px;overflow:hidden}
+#app{position:relative;width:min(90vw,1600px);min-width:900px;margin:auto;aspect-ratio:1680/920;background:#05070d url('studio-background.png') center/100% 100% no-repeat;overflow:hidden;isolation:isolate}
+button,select{font:inherit;color:#eaf8ff;background:linear-gradient(#10243c,#06111f);border:1px solid #2b7dc4;border-radius:7px;cursor:pointer;box-shadow:inset 0 0 9px rgba(31,130,230,.18)}button:hover{filter:brightness(1.18)}button:disabled{opacity:.4;cursor:not-allowed}select{padding:.28em .45em}#file{display:none}
+#toast{position:absolute;z-index:50;left:50%;top:2.2%;transform:translateX(-50%);display:none;padding:.55em 1em;border:1px solid var(--cyan);border-radius:8px;background:rgba(0,8,18,.96);font-size:clamp(9px,.75vw,13px)}
+/* live meters only cover the colored display strips already present in the artwork */
+.meter{position:absolute;z-index:4;top:10.8%;width:25.2%;height:4.7%;display:flex;gap:.16%;padding:.35% .55%;background:rgba(0,7,12,.88);border-radius:4px}.meter.left{left:6.2%}.meter.right{right:6.2%}.meter i{flex:1;align-self:stretch;background:#0a2a18;border-radius:1px}.meter i.on:nth-child(-n+12){background:#21ed67;box-shadow:0 0 4px #12d958}.meter i.on:nth-child(n+13):nth-child(-n+17){background:#ffe52d;box-shadow:0 0 4px #e9c900}.meter i.on:nth-child(n+18){background:#ff3d35;box-shadow:0 0 5px #e61d16}
+#peak{position:absolute;z-index:5;left:40.5%;top:9.1%;width:19%;height:7.3%;display:flex;align-items:flex-end;justify-content:center;gap:2.2%;padding:.45% 1%;background:rgba(0,8,14,.84);border-radius:5px}.peak span{width:5.8%;height:20%;background:#19321c}.peak span.on{background:#45ee70;box-shadow:0 0 7px #19de55}.peak span.hot{background:#ff3d35}.meterText{position:absolute;z-index:6;left:42%;top:14.5%;width:16%;text-align:center;font-size:clamp(7px,.62vw,11px);color:#d5e8f6;pointer-events:none}
+/* deck drop zones: invisible, artwork remains visible */
+#drop,#deckB{position:absolute;z-index:8;top:27%;width:28.5%;height:28%;border-radius:8px}#drop{left:4.5%;cursor:pointer}#deckB{right:4.5%;pointer-events:none}.deck-label{display:none}
+/* real players replace the printed transport buttons on the artwork */
+.playerPanel{position:absolute;z-index:10;top:58.2%;width:29.2%;height:14.4%;padding:.55% .7%;background:linear-gradient(180deg,rgba(2,8,17,.98),rgba(4,14,27,.98));border:1px solid rgba(57,154,235,.7);border-radius:8px;box-shadow:inset 0 0 16px rgba(0,92,180,.18)}#deckAPlayer{left:4.2%}#deckBPlayer{right:4.2%}.playerTitle{text-align:center;font-weight:700;font-size:clamp(9px,.83vw,14px);letter-spacing:.05em}.playerTitle.a{color:#65d7ff}.playerTitle.b{color:#61ffad}.wave{display:block;width:100%;height:25%;margin:.2% 0}.transport{height:44%;display:grid;grid-template-columns:repeat(4,1fr);gap:1.4%}.transport button{font-size:clamp(14px,1.55vw,25px);font-weight:bold}.timeline{height:22%;display:grid;grid-template-columns:auto 1fr auto;gap:2%;align-items:center;font-size:clamp(8px,.68vw,12px);color:#9edfff}.timeline input{width:100%;accent-color:#28bfff}.timeline.b input{accent-color:#43ee89}.fileStatus{position:absolute;z-index:11;top:54.6%;width:28.5%;text-align:center;font-size:clamp(8px,.68vw,12px);color:#c2e8ff;text-shadow:0 1px 3px #000}.fileStatus.a{left:4.5%}.fileStatus.b{right:4.5%;color:#a9ffd1}
+/* central information screen replaces the printed comparison text */
+#centerScreen{position:absolute;z-index:12;left:36.75%;top:22.5%;width:26.5%;height:35.2%;padding:.7% .8%;background:rgba(1,9,20,.96);border:1px solid #258bda;border-radius:5px;box-shadow:inset 0 0 18px rgba(0,99,194,.2)}#centerTitle{text-align:center;color:#7edcff;font-weight:800;font-size:clamp(10px,1vw,17px);letter-spacing:.05em;border-bottom:1px solid #1e78bb;padding-bottom:.3em}.screenGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:2%;height:58%;padding-top:2%}.screenBox{min-width:0;border:1px solid rgba(49,145,218,.48);border-radius:5px;padding:3%;background:rgba(4,19,38,.7)}.screenBox h3{margin:0 0 .35em;color:#67d2ff;font-size:clamp(8px,.72vw,12px)}#name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(8px,.72vw,12px)}#info{font-size:clamp(7px,.63vw,11px);line-height:1.35;color:#d5e9f7;margin-top:.25em}.metricsAB{display:grid;grid-template-columns:repeat(3,1fr);gap:2%;margin-top:3%;font-size:clamp(6px,.52vw,9px);color:#8fb5d2}.metricsAB b{display:block;color:#fff;font-size:clamp(7px,.62vw,11px);margin-top:2px}.compareRow{display:flex;gap:3%;margin-bottom:4%}.compareRow button{flex:1;padding:.35em;font-size:clamp(7px,.65vw,11px)}#compareStatus{font-size:clamp(7px,.6vw,10px);line-height:1.3;color:#b8d9ed}.featureMini{font-size:clamp(6px,.54vw,9px);line-height:1.42;color:#bfe7ff}.featureMini span:before{content:'✓ ';color:#48ff84}.featureMini span{display:block}.masterMetrics{position:absolute;left:3%;right:3%;bottom:2.5%;display:grid;grid-template-columns:repeat(5,1fr);gap:1.3%}.metric{padding:.28em .15em;text-align:center;border-radius:4px;background:#061326;border:1px solid rgba(42,121,189,.45)}.metric .label{color:#76a9cf;font-size:clamp(5px,.48vw,8px)}.metric .value{font-weight:bold;font-size:clamp(6px,.58vw,10px);margin-top:1px}
+/* master control sits directly on the large blue knob */
+#master{position:absolute;z-index:14;left:41.65%;top:58.9%;width:16.7%;height:16.9%;border-radius:50%;background:rgba(0,35,74,.20);border:2px solid rgba(77,207,255,.75);color:#fff;font-weight:800;font-size:clamp(10px,1vw,17px);text-shadow:0 0 7px #18a8ff;box-shadow:inset 0 0 18px rgba(21,139,255,.25)}#master:hover{background:rgba(4,57,111,.28)}#status{position:absolute;z-index:15;left:35%;top:56.0%;width:30%;text-align:center;font-size:clamp(8px,.72vw,13px);font-weight:700;color:#c6edff;text-shadow:0 1px 4px #000}.progressTrack{position:absolute;z-index:15;left:36%;top:57.7%;width:28%;height:10px;background:rgba(2,14,28,.96);border:1px solid #258bda;border-radius:8px;overflow:hidden;box-shadow:0 0 10px rgba(20,140,255,.35)}#bar{height:100%;width:0;background:linear-gradient(90deg,#22bfff,#43ff8b);box-shadow:0 0 10px #36caff;transition:width .12s}#barText{position:absolute;left:0;right:0;top:-.35em;display:block;text-align:center;color:#fff;font-weight:800;font-size:clamp(7px,.65vw,11px);text-shadow:0 1px 3px #000}
+/* simplified save panel: only final-file controls remain */
+#bottom{position:absolute;z-index:16;left:3.2%;right:3.2%;top:77.1%;height:11.8%;display:grid;grid-template-columns:1.25fr 1.25fr 1.1fr 1fr 1fr;gap:.6%;align-items:stretch}
+#bottom .saveCard{min-width:0;padding:.35em;background:rgba(2,13,27,.96);border:1px solid #2b7dc4;border-radius:7px;display:flex;flex-direction:column;justify-content:center;gap:.18em;text-align:center}
+#bottom button{font-weight:800;text-transform:uppercase;font-size:clamp(7px,.68vw,11px);padding:.45em;background:linear-gradient(#10243c,#06111f)}
+#bottom .qualityTitle,#bottom .saveTitle{font-size:clamp(6px,.54vw,9px);color:#8fbddd;text-transform:uppercase}
+#quality{width:100%;font-size:clamp(7px,.63vw,11px)}
+#qualityInfo{font-size:clamp(6px,.53vw,9px);color:#bcecff;min-height:1.2em}
+#exportStatus{position:absolute;z-index:17;left:20%;right:20%;top:89.5%;height:3.2%;text-align:center;font-size:clamp(6px,.58vw,10px);color:#aee7ff;text-shadow:0 1px 3px #000}
+#exportProgress{position:absolute;z-index:17;left:20%;right:20%;top:93%;height:1.4%;background:rgba(0,15,28,.9);border:1px solid rgba(55,153,225,.6);border-radius:6px;overflow:hidden}
+#exportProgressBar{height:100%;width:0;background:linear-gradient(90deg,#1bb8ff,#45ff8d);box-shadow:0 0 9px #22c8ff;transition:width .1s}
+#settings,#export{display:none}
+#decisions,#result{display:none}
+.good{color:#64ff9c}
+@media(max-width:1050px){body{min-width:900px}#bottom{gap:2px}.screenGrid{gap:1%}}
+</style>
+</head>
+<body><div id="app">
+<div id="toast"></div>
+<div class="meter left" id="meterL"></div><div class="meter right" id="meterR"></div>
+<div class="peak" id="peak"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="meterText">L &nbsp; PEAK &nbsp; R</div>
+
+<div id="drop"><input id="file" type="file" accept=".wav,.mp3,audio/wav,audio/mpeg"></div>
+<div id="deckB"></div>
+<div id="fileStatus" class="fileStatus a">Нажмите на кассету Деки A для загрузки WAV / MP3</div>
+<div id="afterStatus" class="fileStatus b">Дека B: мастер ещё не создан</div>
+
+<section id="deckAPlayer" class="playerPanel">
+  <div class="playerTitle a">ПЛЕЕР • ДО МАСТЕРИНГА</div>
+  <canvas id="waveA" class="wave"></canvas>
+  <div id="deckAControls" class="transport"><button id="aPrev">⏮</button><button id="aPause">Ⅱ</button><button id="aPlay">▶</button><button id="aNext">⏭</button></div>
+  <div class="timeline"><span id="aTime">0:00</span><input id="aSeek" type="range" min="0" max="1000" value="0"><span id="aDur">0:00</span></div>
+</section>
+<section id="deckBPlayer" class="playerPanel">
+  <div class="playerTitle b">ПЛЕЕР • ПОСЛЕ МАСТЕРИНГА</div>
+  <canvas id="waveB" class="wave"></canvas>
+  <div id="deckBControls" class="transport"><button id="bPrev">⏮</button><button id="bPause">Ⅱ</button><button id="bPlay">▶</button><button id="bNext">⏭</button></div>
+  <div class="timeline b"><span id="bTime">0:00</span><input id="bSeek" type="range" min="0" max="1000" value="0"><span id="bDur">0:00</span></div>
+</section>
+<audio id="originalPlayer"></audio><audio id="player"></audio>
+
+<section id="centerScreen">
+  <div id="centerTitle">СТУДИЙНЫЙ АВТОМАСТЕРИНГ • ДО / ПОСЛЕ</div>
+  <div class="screenGrid">
+    <div class="screenBox">
+      <h3>ИНФОРМАЦИЯ О ТРЕКЕ</h3><div id="name">—</div><div id="info">Файл не загружен</div>
+      <div class="metricsAB"><div>ДО LUFS<b id="beforeLufs">—</b></div><div>TP<b id="beforeTp">—</b></div><div>RMS<b id="beforeRms">—</b></div></div>
+      <div class="metricsAB"><div>ПОСЛЕ LUFS<b id="afterLufs">—</b></div><div>TP<b id="afterTp">—</b></div><div>RMS<b id="afterRms">—</b></div></div>
+    </div>
+    <div class="screenBox">
+      <h3>СРАВНЕНИЕ ТРЕКОВ</h3>
+      <div class="compareRow"><button id="compareOriginal">ДО</button><button id="compareMastered" disabled>ПОСЛЕ</button><button id="ab" disabled>A↔B</button></div>
+      <div id="compareStatus">Загрузите трек в Деку A.</div>
+      <div class="featureMini"><span>Auto-EQ и баланс частот</span><span>Многополосная компрессия</span><span>True Peak лимитер</span><span>Нормализация громкости</span><span>Спектральный анализ</span></div>
+    </div>
+  </div>
+  <div id="metrics" class="masterMetrics">
+    <div class="metric"><div class="label">LUFS</div><div id="lufs" class="value">—</div></div>
+    <div class="metric"><div class="label">TRUE PEAK</div><div id="tp" class="value">—</div></div>
+    <div class="metric"><div class="label">RMS</div><div id="rms" class="value">—</div></div>
+    <div class="metric"><div class="label">CREST</div><div id="crest" class="value">—</div></div>
+    <div class="metric"><div class="label">SAMPLE RATE</div><div id="sr" class="value">—</div></div>
+  </div>
+</section>
+
+<div id="status">Готов. Загрузите трек в Деку A.</div><div class="progressTrack"><div id="bar"><span id="barText"></span></div></div>
+<button id="master">СТУДИЙНЫЙ<br>АВТОМАСТЕРИНГ</button>
+
+<div id="bottom">
+  <div class="saveCard">
+    <div class="saveTitle">Готовый мастер</div>
+    <button id="saveWav" disabled>СОХРАНИТЬ WAV</button>
+    <div class="qualityTitle">WAV • без потерь</div>
+  </div>
+  <div class="saveCard">
+    <div class="saveTitle">Готовый мастер</div>
+    <button id="saveMp3" disabled>СОХРАНИТЬ MP3</button>
+    <div class="qualityTitle">MP3 • сжатый файл</div>
+  </div>
+  <div class="saveCard">
+    <div class="qualityTitle">Качество</div>
+    <select id="quality">
+      <option value="low">НИЗКОЕ</option>
+      <option value="medium" selected>СРЕДНЕЕ</option>
+      <option value="high">ВЫСОКОЕ</option>
+    </select>
+    <div id="qualityInfo">320 kbps • 48.0 kHz</div>
+  </div>
+  <div class="saveCard">
+    <div class="qualityTitle">Формат WAV</div>
+    <div id="wavInfo">PCM 16-bit</div>
+    <div class="qualityTitle">частота</div>
+    <div id="wavRateInfo">48.0 kHz</div>
+  </div>
+  <div class="saveCard">
+    <div class="qualityTitle">Формат MP3</div>
+    <div id="mp3Info">128 kbps</div>
+    <div class="qualityTitle">частота</div>
+    <div id="mp3RateInfo">48.0 kHz</div>
+  </div>
+</div>
+<div id="settings"><select id="target"><option value="-14">-14 LUFS</option><option value="-12" selected>-12 LUFS</option><option value="-10">-10 LUFS</option></select></div>
+<div id="result"><div id="decisions"></div></div>
+<div id="exportStatus">После мастеринга здесь появится статус сохранения файла.</div>
+<div id="exportProgress"><div id="exportProgressBar"></div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<script src="app.js"></script>
+</body></html>
