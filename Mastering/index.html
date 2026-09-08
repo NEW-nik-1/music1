@@ -1,0 +1,1546 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mastering </title>
+
+<style>
+:root{
+  --cyan:#35cfff;
+  --green:#48ff8a;
+  --blue:#1688ff;
+  --line:#287fd0;
+  --panel:rgba(1,8,18,.95);
+  --muted:#88a9c7
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,body{
+  margin:0;
+  background:#03060b;
+  color:#e8f6ff;
+  font-family:Arial,sans-serif;
+  width:100%;
+  height:100%;
+  overflow:hidden
+}
+
+body{
+  min-width:900px;
+  overflow:hidden
+}
+
+#app{
+  position:relative;
+  width:min(90vw,1600px);
+  min-width:900px;
+  margin:auto;
+  aspect-ratio:1680/920;
+  background:
+    radial-gradient(ellipse at 50% 2%,rgba(36,92,155,.28),transparent 24%),
+    radial-gradient(ellipse at 15% 100%,rgba(0,106,170,.18),transparent 28%),
+    radial-gradient(ellipse at 85% 100%,rgba(0,80,150,.16),transparent 28%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px),
+    linear-gradient(180deg,#0b111b 0%,#050a12 48%,#02050a 100%);
+  border:1px solid rgba(80,150,215,.72);
+  box-shadow:0 0 0 2px rgba(0,0,0,.8),inset 0 0 45px rgba(0,0,0,.8),0 12px 40px rgba(0,0,0,.55);
+  overflow:hidden;
+  isolation:isolate
+}
+
+/* Lightweight CSS-only studio hardware: no PNG/JPEG request. */
+#app::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:.3%;
+  right:.3%;
+  top:5.8%;
+  height:14.8%;
+  border:1px solid rgba(107,167,225,.72);
+  border-radius:6px;
+  background:
+    linear-gradient(90deg,transparent 0 34%,rgba(20,76,125,.24) 34% 66%,transparent 66%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 4px),
+    linear-gradient(#0b111a,#03070d);
+  box-shadow:inset 0 0 18px #000,0 0 8px rgba(35,133,220,.22);
+  pointer-events:none
+}
+
+#app::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:.3%;
+  right:.3%;
+  top:22%;
+  bottom:10%;
+  border:1px solid rgba(70,135,195,.5);
+  border-radius:6px;
+  background:
+    linear-gradient(90deg,rgba(5,12,20,.96) 0 35.2%,rgba(17,29,48,.75) 35.2% 64.8%,rgba(5,12,20,.96) 64.8%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px);
+  box-shadow:inset 0 0 35px #000;
+  pointer-events:none
+}
+
+#drop::before,#deckB::before{
+  content:"";
+  position:absolute;
+  inset:1.5% 1%;
+  z-index:-1;
+  border:1px solid rgba(135,175,205,.85);
+  border-radius:10px;
+  clip-path:polygon(3% 0,97% 0,100% 8%,100% 92%,97% 100%,3% 100%,0 92%,0 8%);
+  background:
+    /* cassette screw holes */
+    radial-gradient(circle at 8% 18%,#02050a 0 1.7%,#78899a 1.9% 2.5%,transparent 2.7%),
+    radial-gradient(circle at 92% 18%,#02050a 0 1.7%,#78899a 1.9% 2.5%,transparent 2.7%),
+    radial-gradient(circle at 8% 82%,#02050a 0 1.7%,#78899a 1.9% 2.5%,transparent 2.7%),
+    radial-gradient(circle at 92% 82%,#02050a 0 1.7%,#78899a 1.9% 2.5%,transparent 2.7%),
+    /* tape window */
+    linear-gradient(90deg,transparent 0 31%,rgba(0,0,0,.8) 31% 69%,transparent 69%),
+    linear-gradient(180deg,transparent 0 39%,rgba(2,6,11,.95) 39% 61%,transparent 61%),
+    /* center label */
+    linear-gradient(180deg,rgba(220,230,238,.16),rgba(85,105,125,.1)),
+    linear-gradient(#1b2530,#070c12);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.025),
+    inset 0 0 20px #000,
+    0 0 14px rgba(0,0,0,.85);
+}
+
+#drop::after,#deckB::after{
+  content:"";
+  position:absolute;
+  left:27%;
+  top:67%;
+  width:46%;
+  height:8%;
+  border:1px solid rgba(125,150,170,.5);
+  border-radius:4px 4px 8px 8px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.16),transparent 45%),
+    linear-gradient(90deg,transparent 0 12%,#080d13 12% 88%,transparent 88%);
+  box-shadow:inset 0 0 7px #000;
+}
+
+#deckB::after{
+  border-color:rgba(70,170,240,.55);
+}
+
+.cassette-brand{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:45%;
+  transform:translate(-50%,-50%);
+  width:27%;
+  padding:.25em .15em;
+  text-align:center;
+  border:1px solid rgba(180,205,220,.28);
+  border-radius:3px;
+  background:rgba(8,14,21,.72);
+  color:rgba(220,235,245,.58);
+  font-size:clamp(6px,.52vw,9px);
+  font-weight:800;
+  letter-spacing:.12em;
+  text-shadow:0 1px 2px #000;
+  pointer-events:none
+}
+#drop .cassette-brand{color:rgba(255,205,198,.7)}
+
+/* Вся лицевая сторона Деки A — единая зона открытия системного выбора файла. */
+#drop::before,#drop::after,
+#drop .reel,#drop .cassette-brand,#drop .cassette-label,#drop .deck-side-label{
+  pointer-events:none;
+}
+#drop .chooseFileBtn{pointer-events:auto}
+
+#deckB .cassette-brand{color:rgba(180,225,255,.72)}
+
+/* Cassette reels: pure CSS, animated only during playback. */
+.cassette-label{
+  position:absolute;
+  top:3.5%;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:5;
+  font-weight:800;
+  font-size:clamp(10px,1vw,16px);
+  letter-spacing:.12em;
+  color:#dff7ff;
+  text-shadow:0 0 8px rgba(53,207,255,.55);
+  pointer-events:none
+}
+#drop .cassette-label{color:#ffddd8}
+#deckB .cassette-label{color:#d9f8ff}
+.reel{
+  position:absolute;
+  z-index:3;
+  top:31%;
+  width:22%;
+  aspect-ratio:1;
+  border-radius:50%;
+  border:2px solid rgba(210,225,240,.72);
+  background:
+    radial-gradient(circle,#05080d 0 10%,#8a9aaa 10.5% 13%,#202b38 13.5% 31%,#9eacba 31.5% 34%,#1a222d 34.5% 60%,#697989 60.5% 63%,#090d13 63.5%);
+  box-shadow:inset 0 0 8px #000,0 0 7px rgba(130,180,220,.25);
+  transform-origin:50% 50%
+}
+.reel.left{left:21%}
+.reel.right{right:21%}
+.reel::before{
+  content:"";
+  position:absolute;
+  inset:34%;
+  border-radius:50%;
+  border:2px dashed rgba(220,235,245,.8)
+}
+.reel::after{
+  content:"";
+  position:absolute;
+  left:48%;
+  top:16%;
+  width:4%;
+  height:68%;
+  border-radius:4px;
+  background:rgba(230,245,255,.65);
+  box-shadow:0 0 5px rgba(230,245,255,.35)
+}
+.playing .reel{
+  animation:reelSpin .82s linear infinite
+}
+@keyframes reelSpin{to{transform:rotate(360deg)}}
+.deck-side-label{
+  position:absolute;
+  z-index:5;
+  bottom:5%;
+  left:50%;
+  transform:translateX(-50%);
+  padding:.18em .55em;
+  border:1px solid rgba(120,185,230,.5);
+  border-radius:4px;
+  background:rgba(0,8,16,.75);
+  font-size:clamp(8px,.72vw,12px);
+  font-weight:800;
+  letter-spacing:.08em;
+  color:#bfeaff;
+  pointer-events:none
+}
+
+button,select{
+  font:inherit;
+  color:#eaf8ff;
+  background:linear-gradient(#10243c,#06111f);
+  border:1px solid #2b7dc4;
+  border-radius:7px;
+  cursor:pointer;
+  box-shadow:inset 0 0 9px rgba(31,130,230,.18)
+}
+
+select{
+  color:#000;
+  background:#9a9a9a;
+  border-color:#555;
+  box-shadow:none
+}
+
+select option{
+  color:#000;
+  background:#9a9a9a
+}
+
+button:hover{
+  filter:brightness(1.18)
+}
+
+button:disabled{
+  opacity:.4;
+  cursor:not-allowed
+}
+
+select{
+  padding:.28em .45em
+}
+
+#file{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+.generatorSites{
+  position:absolute;
+  z-index:25;
+  left:50%;
+  top:8.2%;
+  transform:translateX(-50%);
+  width:26%;
+  display:flex;
+  flex-direction:column;
+  gap:.22em;
+  align-items:stretch
+}
+
+.generatorSites label{
+  text-align:center;
+  color:#c9d2da;
+  font-size:clamp(7px,.58vw,10px);
+  font-weight:800;
+  letter-spacing:.07em
+}
+
+.generatorSites select{
+  width:100%;
+  min-height:2.1em;
+  padding:.25em .45em;
+  color:#000;
+  background:#9a9a9a;
+  border:1px solid #555;
+  border-radius:6px;
+  font-weight:700;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.25)
+}
+
+.generatorSites select option{
+  color:#000;
+  background:#9a9a9a
+}
+
+.chooseFileBtn{
+  position:absolute;
+  z-index:30;
+  left:50%;
+  bottom:7%;
+  transform:translateX(-50%);
+  min-width:52%;
+  padding:.55em .8em;
+  border:1px solid #2abfff;
+  border-radius:6px;
+  background:rgba(0,20,40,.94);
+  color:#dff6ff;
+  font-weight:800;
+  font-size:clamp(8px,.68vw,12px);
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(42,191,255,.22);
+}
+
+.chooseFileBtn:hover{
+  filter:brightness(1.2);
+}
+
+#toast{
+  position:absolute;
+  z-index:50;
+  left:50%;
+  top:2.2%;
+  transform:translateX(-50%);
+  display:none;
+  padding:.55em 1em;
+  border:1px solid var(--cyan);
+  border-radius:8px;
+  background:rgba(0,8,18,.96);
+  font-size:clamp(9px,.75vw,13px)
+}
+
+/* deck drop zones */
+#drop,
+#deckB{
+  position:absolute;
+  z-index:8;
+  top:27%;
+  width:28.5%;
+  height:28%;
+  border-radius:8px
+}
+
+#drop{
+  left:4.5%;
+  cursor:pointer
+}
+
+#deckB{
+  right:4.5%;
+  pointer-events:none
+}
+
+.deck-label{
+  display:none
+}
+
+/* players */
+.playerPanel{
+  position:absolute;
+  z-index:10;
+  top:58.2%;
+  width:29.2%;
+  height:14.4%;
+  padding:.55% .7%;
+  background:linear-gradient(
+    180deg,
+    rgba(2,8,17,.98),
+    rgba(4,14,27,.98)
+  );
+  border:1px solid rgba(57,154,235,.7);
+  border-radius:8px;
+  box-shadow:inset 0 0 16px rgba(0,92,180,.18)
+}
+
+#deckAPlayer{
+  left:4.2%
+}
+
+#deckBPlayer{
+  right:4.2%
+}
+
+.playerTitle{
+  text-align:center;
+  font-weight:700;
+  font-size:clamp(9px,.83vw,14px);
+  letter-spacing:.05em
+}
+
+.playerTitle.a{
+  color:#65d7ff
+}
+
+.playerTitle.b{
+  color:#61ffad
+}
+
+.wave{
+  display:block;
+  width:100%;
+  height:25%;
+  margin:.2% 0
+}
+
+.transport{
+  height:44%;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1.4%
+}
+
+.transport button{
+  font-size:clamp(14px,1.55vw,25px);
+  font-weight:bold
+}
+
+.timeline{
+  height:22%;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:2%;
+  align-items:center;
+  font-size:clamp(8px,.68vw,12px);
+  color:#9edfff
+}
+
+.timeline input{
+  width:100%;
+  accent-color:#28bfff
+}
+
+.timeline.b input{
+  accent-color:#43ee89
+}
+
+.fileStatus{
+  position:absolute;
+  z-index:11;
+  top:54.6%;
+  width:28.5%;
+  text-align:center;
+  font-size:clamp(8px,.68vw,12px);
+  color:#c2e8ff;
+  text-shadow:0 1px 3px #000
+}
+
+.fileStatus.a{
+  left:4.5%
+}
+
+.fileStatus.b{
+  right:4.5%;
+  color:#a9ffd1
+}
+
+/* center screen */
+#centerScreen{
+  position:absolute;
+  z-index:12;
+  left:35.25%;
+  top:21.8%;
+  width:29.5%;
+  height:37.8%;
+  padding:1% 1.05%;
+  background:rgba(1,9,20,.96);
+  border:1px solid #258bda;
+  border-radius:5px;
+  box-shadow:inset 0 0 18px rgba(0,99,194,.2)
+}
+
+#centerTitle{
+  text-align:center;
+  color:#7edcff;
+  font-weight:800;
+  font-size:clamp(11px,1.05vw,18px);
+  letter-spacing:.05em;
+  border-bottom:1px solid #1e78bb;
+  padding-bottom:.3em
+}
+
+.screenGrid{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:2%;
+  height:62%;
+  padding-top:2.2%
+}
+
+.screenBox{
+  min-width:0;
+  border:1px solid rgba(49,145,218,.48);
+  border-radius:5px;
+  padding:3%;
+  background:rgba(4,19,38,.7)
+}
+
+.screenBox h3{
+  margin:0 0 .35em;
+  color:#67d2ff;
+  font-size:clamp(8px,.72vw,12px)
+}
+
+#name{
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:clamp(8px,.72vw,12px)
+}
+
+#info{
+  font-size:clamp(9px,.78vw,13px);
+  line-height:1.38;
+  color:#d5e9f7;
+  margin-top:.25em
+}
+
+.metricsAB{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2%;
+  margin-top:3%;
+  font-size:clamp(7px,.58vw,10px);
+  color:#9fc4df
+}
+
+.metricsAB b{
+  display:block;
+  color:#fff;
+  font-size:clamp(8px,.68vw,12px);
+  margin-top:2px
+}
+
+.compareRow{
+  display:flex;
+  gap:3%;
+  margin-bottom:4%
+}
+
+.compareRow button{
+  flex:1;
+  padding:.35em;
+  font-size:clamp(7px,.65vw,11px)
+}
+
+#compareStatus{
+  font-size:clamp(8px,.66vw,11px);
+  line-height:1.38;
+  color:#b8d9ed
+}
+
+.featureMini{
+  font-size:clamp(7px,.59vw,10px);
+  line-height:1.5;
+  color:#bfe7ff
+}
+
+.featureMini span:before{
+  content:'✓ ';
+  color:#48ff84
+}
+
+.featureMini span{
+  display:block
+}
+
+.masterMetrics{
+  position:absolute;
+  left:3%;
+  right:3%;
+  bottom:1.4%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:1.3%
+}
+
+.metric{
+  padding:.28em .15em;
+  text-align:center;
+  border-radius:4px;
+  background:#061326;
+  border:1px solid rgba(42,121,189,.45)
+}
+
+.metric .label{
+  color:#76a9cf;
+  font-size:clamp(6px,.55vw,9px)
+}
+
+.metric .value{
+  font-weight:bold;
+  font-size:clamp(7px,.62vw,11px);
+  margin-top:1px
+}
+
+/* master */
+#master{
+  position:absolute;
+  z-index:14;
+  left:45.25%;
+  top:63.2%;
+  width:9.5%;
+  height:9.8%;
+  border-radius:50%;
+  background:rgba(0,35,74,.20);
+  border:2px solid rgba(77,207,255,.75);
+  color:#fff;
+  font-weight:800;
+  font-size:clamp(7px,.62vw,11px);
+  text-shadow:0 0 7px #18a8ff;
+  box-shadow:inset 0 0 18px rgba(21,139,255,.25)
+}
+
+#master:hover{
+  background:rgba(4,57,111,.28)
+}
+
+#status{
+  position:absolute;
+  z-index:15;
+  left:35%;
+  top:58.2%;
+  width:30%;
+  text-align:center;
+  font-size:clamp(8px,.72vw,13px);
+  font-weight:700;
+  color:#c6edff;
+  text-shadow:0 1px 4px #000
+}
+
+.progressTrack{
+  position:absolute;
+  z-index:15;
+  left:36%;
+  top:60.0%;
+  width:28%;
+  height:10px;
+  background:rgba(2,14,28,.96);
+  border:1px solid #258bda;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 0 10px rgba(20,140,255,.35)
+}
+
+#bar{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#22bfff,#43ff8b);
+  box-shadow:0 0 10px #36caff;
+  transition:width .12s
+}
+
+#barText{
+  position:absolute;
+  left:0;
+  right:0;
+  top:-.35em;
+  display:block;
+  text-align:center;
+  color:#fff;
+  font-weight:800;
+  font-size:clamp(7px,.65vw,11px);
+  text-shadow:0 1px 3px #000
+}
+
+/* bottom */
+#bottom{
+  position:absolute;
+  z-index:16;
+  left:3.2%;
+  right:3.2%;
+  top:77.1%;
+  height:11.8%;
+  display:grid;
+  grid-template-columns:1.25fr 1.25fr 1.1fr 1fr 1fr;
+  gap:.6%;
+  align-items:stretch
+}
+
+#bottom .saveFormat{
+  width:100%;
+  margin-bottom:6px;
+  padding:8px 10px;
+  border:1px solid #777;
+  border-radius:6px;
+  background:#bdbdbd;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.saveCard{
+  min-width:0;
+  padding:.35em;
+  background:rgba(2,13,27,.96);
+  border:1px solid #2b7dc4;
+  border-radius:7px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:.18em;
+  text-align:center
+}
+
+#bottom button{
+  font-weight:800;
+  text-transform:uppercase;
+  font-size:clamp(7px,.68vw,11px);
+  padding:.45em;
+  background:linear-gradient(#10243c,#06111f)
+}
+
+#bottom .qualityTitle,
+#bottom .saveTitle{
+  font-size:clamp(6px,.54vw,9px);
+  color:#8fbddd;
+  text-transform:uppercase
+}
+
+#quality{
+  width:100%;
+  font-size:clamp(7px,.63vw,11px)
+}
+
+#qualityInfo{
+  font-size:clamp(6px,.53vw,9px);
+  color:#bcecff;
+  min-height:1.2em
+}
+
+#exportStatus{
+  position:absolute;
+  z-index:17;
+  left:20%;
+  right:20%;
+  top:89.5%;
+  height:3.2%;
+  text-align:center;
+  font-size:clamp(6px,.58vw,10px);
+  color:#aee7ff;
+  text-shadow:0 1px 3px #000
+}
+
+#exportProgress{
+  position:absolute;
+  z-index:17;
+  left:20%;
+  right:20%;
+  top:93%;
+  height:1.4%;
+  background:rgba(0,15,28,.9);
+  border:1px solid rgba(55,153,225,.6);
+  border-radius:6px;
+  overflow:hidden
+}
+
+#exportProgressBar{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#1bb8ff,#45ff8d);
+  box-shadow:0 0 9px #22c8ff;
+  transition:width .1s
+}
+
+#settings,
+#export{
+  display:none
+}
+
+#decisions,
+#result{
+  display:none
+}
+
+.good{
+  color:#64ff9c
+}
+
+@media(max-width:1050px){
+  body{
+    min-width:900px
+  }
+
+  #bottom{
+    gap:2px
+  }
+
+  .screenGrid{
+    gap:1%
+  }
+}
+
+/* ===== Track tag editor ===== */
+#editTagsBtn{
+  margin-top:.65em;
+  padding:.45em .8em;
+  border:1px solid rgba(53,207,255,.7);
+  border-radius:999px;
+  background:rgba(8,32,54,.9);
+  color:#bdeeff;
+  font-weight:700;
+  font-size:clamp(9px,.68vw,12px);
+  cursor:pointer;
+  box-shadow:inset 0 0 10px rgba(53,207,255,.08);
+}
+#editTagsBtn:hover{filter:brightness(1.18)}
+#tagModal{
+  position:fixed; inset:0; z-index:1000; display:none;
+  align-items:center; justify-content:center;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(5px);
+}
+#tagModal.open{display:flex}
+.tagDialog{
+  width:min(560px,92vw); max-height:90vh; overflow:auto;
+  padding:22px; border:1px solid #258bda; border-radius:12px;
+  background:linear-gradient(180deg,#071728,#020912);
+  box-shadow:0 0 35px rgba(0,120,220,.28), inset 0 0 20px rgba(0,90,180,.12);
+}
+.tagDialog h2{margin:0 0 6px;color:#75dcff;font-size:18px}
+.tagDialog .tagHint{margin:0 0 16px;color:#9cc7df;font-size:12px}
+.tagGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tagField{display:flex;flex-direction:column;gap:5px}
+.tagField.full{grid-column:1/-1}
+.tagField label{font-size:11px;color:#9fdcff;font-weight:700}
+.tagField input{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid #245b83;border-radius:6px;background:#03101c;color:#e9f8ff;outline:none}
+.tagField input:focus{border-color:#35cfff;box-shadow:0 0 0 2px rgba(53,207,255,.1)}
+.tagActions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.tagActions button{padding:9px 15px;border-radius:7px;border:1px solid #286b96;background:#071d2f;color:#dff7ff;font-weight:700;cursor:pointer}
+#saveTags{background:#0b3a48;border-color:#35cfff;color:#8fe6ff}
+@media(max-width:620px){.tagGrid{grid-template-columns:1fr}.tagField.full{grid-column:auto}}
+/* ===== Full ID3 metadata / Track ID ===== */
+.tagGrid.three{grid-template-columns:1fr 1fr 1fr}
+.tagField small{font-size:9px;color:#6f9ab5}
+.trackIdRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+#tagTrackId{font-family:monospace;letter-spacing:.03em}
+#randomTrackId{height:38px;padding:0 12px;white-space:nowrap}
+@media(max-width:620px){.tagGrid.three{grid-template-columns:1fr}.trackIdRow{grid-template-columns:1fr}}
+
+
+
+/* ===== Compact UI overrides ===== */
+.generatorSites{
+  left:auto; right:2.4%; top:8.2%; transform:none; width:auto;
+  display:block
+}
+.generatorSites label{display:none}
+.generatorSites select{
+  width:112px; min-height:1.65em; height:1.65em;
+  padding:2px 22px 2px 7px;
+  font-size:10px; line-height:1.2;
+  border-radius:4px;
+  background:#999; color:#000;
+  border:1px solid #555
+}
+.generatorSites select option{background:#999;color:#000}
+
+/* ===== Компактные индикаторы рядом с меню сайтов ===== */
+.progressTrack{
+  left:auto; right:calc(2.4% + 124px); top:8.1%;
+  bottom:auto; width:105px; height:7px;
+  border-radius:5px
+}
+#barText{
+  top:-1.25em;
+  font-size:9px;
+  color:#fff;
+  font-weight:900
+}
+#status{
+  left:auto; right:calc(2.4% + 124px); top:5.9%;
+  width:105px; height:auto;
+  text-align:center;
+  font-size:9px;
+  line-height:1.15;
+  color:#fff;
+  font-weight:900;
+  text-shadow:0 1px 4px #000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+#exportStatus{
+  left:auto; right:calc(2.4% + 124px); top:11.0%;
+  width:105px; height:auto;
+  text-align:center;
+  font-size:9px;
+  line-height:1.15;
+  color:#fff;
+  font-weight:900;
+  text-shadow:0 1px 4px #000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+#exportProgress{
+  left:auto; right:calc(2.4% + 124px); top:13.0%;
+  bottom:auto; width:105px; height:5px;
+  border-radius:4px
+}
+
+
+/* ===== ULTRA COMPACT INTERFACE ===== */
+html,body{font-size:12px}
+body{min-width:760px}
+#app{
+  width:min(96vw,1500px);
+  min-width:760px;
+  aspect-ratio:1680/820;
+}
+#app::before{top:5.2%;height:14%;box-shadow:inset 0 0 10px #000}
+#app::after{top:20.5%;bottom:8%;box-shadow:inset 0 0 18px #000}
+.cassette-label{font-size:clamp(9px,.78vw,13px)}
+.cassette-brand{font-size:clamp(6px,.46vw,8px);padding:.18em .1em}
+.deck-side-label{font-size:clamp(7px,.58vw,10px);padding:.12em .4em}
+#drop,#deckB{top:25.5%;height:27%;}
+.playerPanel{top:54.8%;height:14.2%;padding:.35% .5%;border-radius:5px}
+.fileStatus{top:51.8%;font-size:clamp(7px,.56vw,10px)}
+#centerScreen{top:20.4%;height:35.5%;padding:.65% .75%;}
+#centerTitle{font-size:clamp(10px,.82vw,14px);padding-bottom:.2em}
+.screenGrid{height:63%;padding-top:1.3%;gap:1.2%}
+.screenBox{padding:2%;border-radius:4px}
+.screenBox h3{font-size:clamp(7px,.58vw,10px);margin-bottom:.2em}
+#info{font-size:clamp(8px,.62vw,11px);line-height:1.25}
+.metricsAB{margin-top:2%;font-size:clamp(6px,.48vw,8px)}
+.metricsAB b{font-size:clamp(7px,.56vw,10px)}
+.featureMini{font-size:clamp(6px,.48vw,8px);line-height:1.28}
+.masterMetrics{bottom:1%;gap:.8%}
+.metric{padding:.18em .1em;border-radius:3px}
+.metric .label{font-size:clamp(5px,.44vw,8px)}
+.metric .value{font-size:clamp(6px,.5vw,9px)}
+#master{top:60.7%;width:9%;height:8.4%;font-size:clamp(7px,.54vw,10px);}
+#status{top:56.1%;font-size:clamp(7px,.58vw,10px)}
+.progressTrack{top:57.8%;height:7px}
+#bottom{top:71.8%;height:13.4%;left:2.5%;right:2.5%;gap:.45%}
+.saveCard{padding:.22em;gap:.1em;border-radius:5px}
+#bottom .saveFormat{margin-bottom:2px;padding:4px 6px;border-radius:4px;font-size:clamp(7px,.55vw,10px)}
+#bottom button{font-size:clamp(7px,.55vw,10px);padding:.32em}
+#bottom .qualityTitle,#bottom .saveTitle{font-size:clamp(5px,.44vw,8px)}
+#quality{font-size:clamp(7px,.52vw,10px);padding:.2em .35em}
+#qualityInfo{font-size:clamp(5px,.43vw,8px)}
+#exportStatus{top:86.7%;height:3%;font-size:clamp(6px,.48vw,9px)}
+#exportProgress{top:90.1%;height:1%;}
+.generatorSites{top:6.5%;right:1.8%;}
+.generatorSites select{width:96px;min-height:1.45em;height:1.45em;padding:1px 18px 1px 5px;font-size:9px;border-radius:4px}
+.progressTrack{left:auto;right:calc(1.8% + 106px);top:6.7%;width:90px;height:6px}
+#barText{font-size:8px;top:-1.25em}
+#status{left:auto;right:calc(1.8% + 106px);top:4.9%;width:90px;font-size:8px;line-height:1.1}
+#exportStatus{left:auto;right:calc(1.8% + 106px);top:8.9%;width:90px;font-size:8px;line-height:1.1}
+#exportProgress{left:auto;right:calc(1.8% + 106px);top:11.0%;width:90px;height:5px}
+.tagDialog{width:min(500px,90vw);padding:14px;border-radius:8px}
+.tagDialog h2{font-size:16px}.tagDialog .tagHint{margin-bottom:10px;font-size:11px}
+.tagGrid{gap:7px}.tagField{gap:3px}.tagField input{padding:7px 8px}
+.tagActions{gap:5px;margin-top:10px}.tagActions button{padding:7px 11px}
+
+
+/* ===== COMPACT TOP EXPORT BAR / NO EMPTY FOOTER ===== */
+#app{aspect-ratio:1680/735;}
+#app::after{bottom:5.5%;}
+
+/* Export controls are now a compact top toolbar. */
+#bottom{
+  top:2.2%;
+  left:2.5%;
+  right:18%;
+  height:10.5%;
+  grid-template-columns:1.15fr 1.05fr .9fr .9fr;
+  gap:.45%;
+}
+.saveCard{
+  padding:.18em .3em;
+  gap:.08em;
+  border-radius:4px;
+  min-width:0;
+}
+#bottom .saveFormat{margin-bottom:1px;padding:3px 5px;border-radius:3px}
+#bottom button{font-size:clamp(7px,.52vw,10px);padding:.28em}
+#bottom .qualityTitle,#bottom .saveTitle{font-size:clamp(5px,.40vw,8px)}
+#quality{font-size:clamp(7px,.48vw,9px);padding:.12em .25em}
+#qualityInfo{font-size:clamp(5px,.39vw,7px)}
+
+/* Keep the navigation in the same top band, without overlap. */
+.generatorSites{top:2.2%;right:1.8%;}
+.generatorSites label{display:block;font-size:clamp(5px,.40vw,8px);margin-bottom:2px}
+.generatorSites select{width:116px;height:1.5em;font-size:9px}
+
+/* Pull the working area up and let it use the shortened chassis. */
+#drop,#deckB{top:20.0%;height:27.5%;}
+#centerScreen{top:15.0%;height:36.5%;}
+.playerPanel{top:54.0%;height:17.0%;}
+#deckAPlayer{top:54.0%;}
+#deckBPlayer{top:54.0%;}
+#master{top:61.0%;}
+#status{top:52.7%;}
+.progressTrack{top:54.2%;}
+
+/* Status/export progress now live as a tiny footer line rather than a large empty zone. */
+#exportStatus{left:2.5%;right:2.5%;top:91.2%;height:2.4%;font-size:clamp(6px,.45vw,8px)}
+#exportProgress{left:2.5%;right:2.5%;top:94.0%;height:.9%}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+  <div id="toast"></div>
+
+  <div id="generatorSites" class="generatorSites">
+    <label for="generatorSite">САЙТЫ ГЕНЕРАЦИИ ПЕСЕН</label>
+    <select id="generatorSite" aria-label="Переход на сайты генерации песен">
+      <option value="">ВЫБРАТЬ САЙТ</option>
+      <option value="https://treblo.com">Treblo</option>
+      <option value="https://musick.ai/">Musick AI</option>
+      <option value="https://www.musiccreator.ai/">MusicCreator AI</option>
+      <option value="https://www.openmusic.ai/">OpenMusic AI</option>
+      <option value="https://song-maker.ai/create-music">Song-Maker AI</option>
+      <option value="https://www.gsong.ai">GSong AI</option>
+      <option value="https://www.msong.ai/">MSong AI</option>
+      <option value="https://www.airapgen.com/">AirapGen</option>
+      <option value="https://www.csong.ai/">CSong AI</option>
+      <option value="https://www.textsong.ai/">TextSong AI</option>
+      <option value="https://www.aimusicgen.net/en">AIMusicGen</option>
+      <option value="https://tomusic.ai/music/">ToMusic AI</option>
+      <option value="https://myneuralnetworks.ru/music_generator?">My Neural Networks</option>
+      <option value="https://supermaker.ai/music/">SuperMaker AI</option>
+      <option value="https://musiceleven.ai/">MusicEleven AI</option>
+      <option value="https://memotune.com/ai-song-maker">MemoTune</option>
+      <option value="https://www.songmakerai.org/tools/ai-music-generator">SongMakerAI</option>
+      <option value="https://lyricsintosong.ai">Lyrics Into Song</option>
+      <option value="https://aisonggenerator.ai/create">AI Song Generator</option>
+      <option value="https://musicgeneratorai.com">MusicGeneratorAI</option>
+      <option value="https://aimusicgen.ai">AIMusicGen AI</option>
+      <option value="https://brev.ai/ru/app">Brev AI</option>
+      <option value="https://musichero.ai">MusicHero AI</option>
+      <option value="https://suno.com">Suno</option>
+    </select>
+  </div>
+
+  <!-- Нижняя панель -->
+  <div id="bottom">
+
+    <div class="saveCard">
+
+      <div class="saveTitle">
+        Готовый мастер
+      </div>
+
+      <select id="saveFormat" class="saveFormat" aria-label="Формат сохранения">
+        <option value="wav">WAV</option>
+        <option value="mp3">MP3</option>
+      </select>
+
+      <button id="saveAudio" disabled>
+        СОХРАНИТЬ
+      </button>
+
+      <div class="qualityTitle" id="saveFormatHint">
+        WAV • без потерь
+      </div>
+
+    </div>
+
+    <div class="saveCard">
+
+      <div class="qualityTitle">
+        Качество
+      </div>
+
+      <select id="quality" aria-label="Качество сохранения"></select>
+
+      <div id="qualityInfo">
+        PCM 16-bit • 44.1 kHz
+      </div>
+
+    </div>
+
+    <div class="saveCard">
+
+      <div class="qualityTitle">
+        Формат WAV
+      </div>
+
+      <div id="wavInfo">
+        PCM 16-bit
+      </div>
+
+      <div class="qualityTitle">
+        частота
+      </div>
+
+      <div id="wavRateInfo">
+        48.0 kHz
+      </div>
+
+    </div>
+
+    <div class="saveCard">
+
+      <div class="qualityTitle">
+        Формат MP3
+      </div>
+
+      <div id="mp3Info">
+        128 kbps
+      </div>
+
+      <div class="qualityTitle">
+        частота
+      </div>
+
+      <div id="mp3RateInfo">
+        44.1 kHz
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Дека A -->
+  <div id="drop">
+    <div class="cassette-label">ДЕКА A</div>
+    <div class="cassette-brand">STUDIO TAPE</div>
+    <div class="reel left"></div>
+    <div class="reel right"></div>
+    <div class="deck-side-label">A • ДО МАСТЕРИНГА</div>
+    <input
+      id="file"
+      type="file"
+      accept=".wav,.mp3,audio/wav,audio/mpeg,audio/x-wav,audio/mp3"
+      aria-label="Выбрать аудиотрек"
+    >
+    <button id="chooseFileBtn" type="button" class="chooseFileBtn">ЗАГРУЗИТЬ MP3 / WAV</button>
+  </div>
+
+  <!-- Дека B -->
+  <div id="deckB">
+    <div class="cassette-label">ДЕКА B</div>
+    <div class="cassette-brand">STUDIO TAPE</div>
+    <div class="reel left"></div>
+    <div class="reel right"></div>
+    <div class="deck-side-label">B • ПОСЛЕ МАСТЕРИНГА</div>
+  </div>
+
+  <div id="fileStatus" class="fileStatus a">
+    Нажмите на кассету Деки A для загрузки WAV / MP3
+  </div>
+
+  <div id="afterStatus" class="fileStatus b">
+    Дека B: мастер ещё не создан
+  </div>
+
+  <!-- Плеер до мастеринга -->
+  <section id="deckAPlayer" class="playerPanel">
+
+    <div class="playerTitle a">
+      ПЛЕЕР • ДО МАСТЕРИНГА
+    </div>
+
+    <canvas id="waveA" class="wave"></canvas>
+
+    <div id="deckAControls" class="transport">
+      <button id="aPrev">⏮</button>
+      <button id="aPause">Ⅱ</button>
+      <button id="aPlay">▶</button>
+      <button id="aNext">⏭</button>
+    </div>
+
+    <div class="timeline">
+      <span id="aTime">0:00</span>
+
+      <input
+        id="aSeek"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+      >
+
+      <span id="aDur">0:00</span>
+    </div>
+
+  </section>
+
+  <!-- Плеер после мастеринга -->
+  <section id="deckBPlayer" class="playerPanel">
+
+    <div class="playerTitle b">
+      ПЛЕЕР • ПОСЛЕ МАСТЕРИНГА
+    </div>
+
+    <canvas id="waveB" class="wave"></canvas>
+
+    <div id="deckBControls" class="transport">
+      <button id="bPrev">⏮</button>
+      <button id="bPause">Ⅱ</button>
+      <button id="bPlay">▶</button>
+      <button id="bNext">⏭</button>
+    </div>
+
+    <div class="timeline b">
+      <span id="bTime">0:00</span>
+
+      <input
+        id="bSeek"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+      >
+
+      <span id="bDur">0:00</span>
+    </div>
+
+  </section>
+
+
+
+  <!-- Редактор тегов трека -->
+  <div id="tagModal" aria-hidden="true">
+    <div class="tagDialog" role="dialog" aria-modal="true" aria-labelledby="tagModalTitle">
+      <h2 id="tagModalTitle">Теги трека</h2>
+      <p class="tagHint">Эти данные используются при отображении трека и добавляются в экспортируемые WAV / MP3.</p>
+      <div class="tagGrid">
+        <div class="tagField full"><label for="tagTrackId">Track ID</label><div class="trackIdRow"><input id="tagTrackId" autocomplete="off" placeholder="muzer-play-26-00000"><button id="randomTrackId" type="button">🎲 СЛУЧАЙНЫЙ ID</button></div><small>По умолчанию: muzer-play-26-00000. Кнопка создаёт новые 5 цифр.</small></div>
+        <div class="tagField"><label for="tagArtist">Исполнитель (Artist)</label><input id="tagArtist" autocomplete="off" placeholder="MUZER play"></div>
+        <div class="tagField"><label for="tagTitle">Название (Title)</label><input id="tagTitle" autocomplete="off" placeholder="Название"></div>
+        <div class="tagField"><label for="tagAlbum">Альбом (Album)</label><input id="tagAlbum" autocomplete="off" placeholder="Альбом"></div>
+        <div class="tagField"><label for="tagGenre">Жанр (Genre)</label><input id="tagGenre" autocomplete="off" placeholder="Electronic"></div>
+        <div class="tagField"><label for="tagYear">Год (Year)</label><input id="tagYear" inputmode="numeric" maxlength="4" placeholder="2026"></div>
+        <div class="tagField"><label for="tagPublisher">Издатель (Publisher)</label><input id="tagPublisher" autocomplete="off" placeholder="MUZER play"></div>
+        <div class="tagField"><label for="tagComposer">Автор (Composer)</label><input id="tagComposer" autocomplete="off" placeholder="MUZER play"></div>
+        <div class="tagField"><label for="tagCopyright">Авторские права (Copyright)</label><input id="tagCopyright" autocomplete="off" placeholder="© MUZER play"></div>
+        <div class="tagField"><label for="tagWebsite">Сайт артиста (Artist URL)</label><input id="tagWebsite" type="url" autocomplete="off" placeholder="https://example.com"></div>
+        <div class="tagField"><label for="tagTrackNumber">Track Number</label><input id="tagTrackNumber" autocomplete="off" placeholder="1"></div>
+        <div class="tagField"><label for="tagIsrc">ISRC</label><input id="tagIsrc" autocomplete="off" placeholder="ISRC"></div>
+        <div class="tagField full"><label for="tagComment">Комментарий (Comment)</label><input id="tagComment" autocomplete="off" placeholder="Комментарий"></div>
+      </div>
+      <div class="tagActions">
+        <button id="cancelTags" type="button">ОТМЕНА</button>
+        <button id="saveTags" type="button">СОХРАНИТЬ ТЕГИ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Аудио -->
+  <audio id="originalPlayer"></audio>
+  <audio id="player"></audio>
+
+  <!-- Центральный экран -->
+  <section id="centerScreen">
+
+    <div id="centerTitle">
+      СТУДИЙНЫЙ АВТОМАСТЕРИНГ • ДО / ПОСЛЕ
+    </div>
+
+    <div class="screenGrid">
+
+      <div class="screenBox">
+
+        <h3>ИНФОРМАЦИЯ О ТРЕКЕ</h3>
+
+        <div id="name">—</div>
+
+        <div id="info">
+          Файл не загружен
+        </div>
+
+        <button id="editTagsBtn" type="button">✎ РЕДАКТИРОВАТЬ ТЕГИ ТРЕКА</button>
+
+        <div class="metricsAB">
+
+          <div>
+            ДО LUFS
+            <b id="beforeLufs">—</b>
+          </div>
+
+          <div>
+            TP
+            <b id="beforeTp">—</b>
+          </div>
+
+          <div>
+            RMS
+            <b id="beforeRms">—</b>
+          </div>
+
+        </div>
+
+        <div class="metricsAB">
+
+          <div>
+            ПОСЛЕ LUFS
+            <b id="afterLufs">—</b>
+          </div>
+
+          <div>
+            TP
+            <b id="afterTp">—</b>
+          </div>
+
+          <div>
+            RMS
+            <b id="afterRms">—</b>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="screenBox">
+
+        <h3>СРАВНЕНИЕ ТРЕКОВ</h3>
+
+        <div class="compareRow">
+
+          <button id="compareOriginal">
+            ДО
+          </button>
+
+          <button id="compareMastered" disabled>
+            ПОСЛЕ
+          </button>
+
+          <button id="ab" disabled>
+            A↔B
+          </button>
+
+        </div>
+
+        <div id="compareStatus">
+          Загрузите трек в Деку A.
+        </div>
+
+        <div class="featureMini">
+
+          <span>
+            Auto-EQ и баланс частот
+          </span>
+
+          <span>
+            Многополосная компрессия
+          </span>
+
+          <span>
+            True Peak лимитер
+          </span>
+
+          <span>
+            Нормализация громкости
+          </span>
+
+          <span>
+            Спектральный анализ
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Основные метрики -->
+    <div id="metrics" class="masterMetrics">
+
+      <div class="metric">
+        <div class="label">LUFS</div>
+        <div id="lufs" class="value">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="label">TRUE PEAK</div>
+        <div id="tp" class="value">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="label">RMS</div>
+        <div id="rms" class="value">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="label">CREST</div>
+        <div id="crest" class="value">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="label">SAMPLE RATE</div>
+        <div id="sr" class="value">—</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Мастеринг -->
+  <div id="status">
+    Готов. Загрузите трек в Деку A.
+  </div>
+
+  <div class="progressTrack">
+    <div id="bar">
+      <span id="barText"></span>
+    </div>
+  </div>
+
+  <button id="master">
+    СТУДИЙНЫЙ
+    <br>
+    АВТОМАСТЕРИНГ
+  </button>
+
+  <!-- Скрытые настройки -->
+  <div id="settings">
+
+    <select id="target">
+
+      <option value="-14">
+        -14 LUFS
+      </option>
+
+      <option value="-12" selected>
+        -12 LUFS
+      </option>
+
+      <option value="-10">
+        -10 LUFS
+      </option>
+
+    </select>
+
+  </div>
+
+  <div id="result">
+
+    <div id="decisions"></div>
+
+  </div>
+
+  <!-- Экспорт -->
+  <div id="exportStatus">
+    После мастеринга здесь появится статус сохранения файла.
+  </div>
+
+  <div id="exportProgress">
+    <div id="exportProgressBar"></div>
+  </div>
+
+</div>
+
+<!-- LameJS для создания MP3 -->
+<script defer src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+
+<!-- VK Bridge -->
+
+<!-- Основной скрипт приложения -->
+<script defer src="app.js"></script>
+
+</body>
+</html><style>
+/* Progress area: every percentage/progress indicator is grouped directly under
+   the Studio Auto Mastering button. */
+#master{
+  top:61.0%;
+  width:10.5%;
+  height:8.2%;
+}
+#status{
+  left:31%;
+  width:38%;
+  top:69.7%;
+  min-height:1.3em;
+  font-size:clamp(8px,.66vw,12px);
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.progressTrack{
+  left:31%;
+  top:72.0%;
+  width:38%;
+  height:10px;
+}
+#barText{
+  top:-.1em;
+  font-size:clamp(8px,.63vw,11px);
+}
+#exportStatus{
+  left:31%;
+  right:auto;
+  width:38%;
+  top:73.8%;
+  height:1.7%;
+  font-size:clamp(8px,.63vw,11px);
+}
+#exportProgress{
+  left:31%;
+  right:auto;
+  width:38%;
+  top:75.8%;
+  height:8px;
+}
+#bottom{top:78.5%;}
+
+/* Slightly larger small UI text for readability. */
+.generatorSites label{font-size:clamp(8px,.64vw,11px)}
+.deck-side-label{font-size:clamp(9px,.78vw,13px)}
+.chooseFileBtn{font-size:clamp(9px,.75vw,13px)}
+.fileStatus{font-size:clamp(9px,.75vw,13px)}
+.screenBox h3{font-size:clamp(9px,.78vw,13px)}
+#name{font-size:clamp(9px,.78vw,13px)}
+#info{font-size:clamp(10px,.84vw,14px)}
+.metricsAB{font-size:clamp(8px,.64vw,11px)}
+.metricsAB b{font-size:clamp(9px,.74vw,13px)}
+.compareRow button{font-size:clamp(8px,.71vw,12px)}
+#compareStatus{font-size:clamp(9px,.72vw,12px)}
+.featureMini{font-size:clamp(8px,.66vw,11px)}
+.metric .label{font-size:clamp(7px,.61vw,10px)}
+.metric .value{font-size:clamp(8px,.69vw,12px)}
+#bottom button{font-size:clamp(8px,.74vw,12px)}
+#bottom .qualityTitle,#bottom .saveTitle{font-size:clamp(7px,.60vw,10px)}
+#quality{font-size:clamp(8px,.69vw,12px)}
+#qualityInfo{font-size:clamp(7px,.59vw,10px)}
+</style>
