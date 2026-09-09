@@ -1,13 +1,24 @@
-<!DOCTYPE html>
+```html
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=900, initial-scale=1.0">
-<title>Студийный Автомастеринг</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+
+<title>Mastering</title>
 
 <style>
+:root{
+  --cyan:#35cfff;
+  --green:#48ff8a;
+  --blue:#1688ff;
+  --line:#287fd0;
+  --panel:rgba(1,8,18,.95);
+  --muted:#88a9c7
+}
+
 *{
-  box-sizing:border-box;
+  box-sizing:border-box
 }
 
 html,
@@ -16,699 +27,1561 @@ body{
   padding:0;
   width:100%;
   height:100%;
+  min-width:0;
+  min-height:0;
   overflow:hidden;
-  background:#111;
-  font-family:Arial, Helvetica, sans-serif;
-  color:#fff;
+  background:#03060b;
+  color:#e8f6ff;
+  font-family:Arial,sans-serif;
 }
 
 body{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  overflow:hidden;
 }
 
 /* =========================================================
-   ОСНОВНОЙ ЭКРАН 900x600
-   ========================================================= */
+   MAIN APP
+========================================================= */
 
 #app{
   position:relative;
   width:900px;
   height:600px;
-  overflow:hidden;
+  min-width:0;
+  max-width:none;
+  margin:0 auto;
+
   background:
-    radial-gradient(circle at 50% 25%, #333 0%, #191919 35%, #0b0b0b 100%);
-  border:3px solid #555;
-  border-radius:14px;
+    radial-gradient(
+      ellipse at 50% 2%,
+      rgba(36,92,155,.28),
+      transparent 24%
+    ),
+    radial-gradient(
+      ellipse at 15% 100%,
+      rgba(0,106,170,.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 85% 100%,
+      rgba(0,80,150,.16),
+      transparent 28%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.018) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(
+      180deg,
+      #0b111b 0%,
+      #050a12 48%,
+      #02050a 100%
+    );
+
+  border:1px solid rgba(80,150,215,.72);
+
   box-shadow:
-    0 0 0 2px #111,
-    0 20px 60px rgba(0,0,0,.8),
-    inset 0 0 30px rgba(255,255,255,.05);
+    0 0 0 2px rgba(0,0,0,.8),
+    inset 0 0 45px rgba(0,0,0,.8),
+    0 12px 40px rgba(0,0,0,.55);
+
+  overflow:hidden;
+  isolation:isolate;
 }
 
 /* =========================================================
-   ОБЩИЕ СТИЛИ
-   ========================================================= */
+   BACKGROUND HARDWARE
+========================================================= */
 
-button{
-  font-family:inherit;
-  color:#fff;
-  background:linear-gradient(#444,#222);
-  border:1px solid #777;
-  border-radius:5px;
-  cursor:pointer;
-  font-weight:bold;
+#app::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:.3%;
+  right:.3%;
+  top:5.2%;
+  height:14%;
+  border:1px solid rgba(107,167,225,.72);
+  border-radius:6px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 34%,
+      rgba(20,76,125,.24) 34% 66%,
+      transparent 66%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.025) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(#0b111a,#03070d);
+
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 2px 4px rgba(0,0,0,.5);
+    inset 0 0 10px #000,
+    0 0 8px rgba(35,133,220,.22);
+
+  pointer-events:none;
+}
+
+#app::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:.3%;
+  right:.3%;
+  top:20.5%;
+  bottom:5.5%;
+
+  border:1px solid rgba(70,135,195,.5);
+  border-radius:6px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5,12,20,.96) 0 35.2%,
+      rgba(17,29,48,.75) 35.2% 64.8%,
+      rgba(5,12,20,.96) 64.8%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.018) 0 1px,
+      transparent 1px 4px
+    );
+
+  box-shadow:inset 0 0 18px #000;
+  pointer-events:none;
+}
+
+/* =========================================================
+   BUTTONS / SELECTS
+========================================================= */
+
+button,
+select{
+  font:inherit;
+  color:#eaf8ff;
+  background:linear-gradient(#10243c,#06111f);
+  border:1px solid #2b7dc4;
+  border-radius:7px;
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 0 9px rgba(31,130,230,.18);
+}
+
+select{
+  color:#000;
+  background:#9a9a9a;
+  border-color:#555;
+  box-shadow:none;
+}
+
+select option{
+  color:#000;
+  background:#9a9a9a;
 }
 
 button:hover{
-  background:linear-gradient(#555,#292929);
-}
-
-button:active{
-  transform:translateY(1px);
+  filter:brightness(1.18);
 }
 
 button:disabled{
-  opacity:.35;
+  opacity:.4;
   cursor:not-allowed;
 }
 
+button,
+select,
+input{
+  touch-action:manipulation;
+}
+
 /* =========================================================
-   ДЕКИ
-   ========================================================= */
+   FILE INPUT
+========================================================= */
+
+#file{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* =========================================================
+   GENERATOR SITES
+========================================================= */
+
+.generatorSites{
+  position:absolute;
+  z-index:25;
+
+  top:2.2%;
+  right:1.8%;
+
+  width:auto;
+  display:block;
+}
+
+.generatorSites label{
+  display:block;
+  margin-bottom:2px;
+
+  text-align:center;
+
+  color:#c9d2da;
+  font-size:clamp(8px,.64vw,11px);
+  font-weight:800;
+  letter-spacing:.07em;
+}
+
+.generatorSites select{
+  width:116px;
+  height:1.5em;
+  min-height:1.5em;
+
+  padding:1px 18px 1px 5px;
+
+  font-size:9px;
+  line-height:1.2;
+
+  border-radius:4px;
+
+  background:#999;
+  color:#000;
+  border:1px solid #555;
+}
+
+.generatorSites select option{
+  background:#999;
+  color:#000;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+#toast{
+  position:absolute;
+  z-index:50;
+
+  left:50%;
+  top:2.2%;
+
+  transform:translateX(-50%);
+
+  display:none;
+
+  padding:.55em 1em;
+
+  border:1px solid var(--cyan);
+  border-radius:8px;
+
+  background:rgba(0,8,18,.96);
+
+  font-size:clamp(9px,.75vw,13px);
+}
+
+/* =========================================================
+   CASSETTES
+========================================================= */
 
 #drop,
 #deckB{
   position:absolute;
+  z-index:8;
+
   top:20%;
   width:28.5%;
   height:27.5%;
-  border:2px solid #555;
-  border-radius:10px;
-  background:
-    linear-gradient(145deg,#303030,#111);
-  box-shadow:
-    inset 0 0 15px rgba(0,0,0,.8),
-    0 5px 15px rgba(0,0,0,.6);
+
+  border-radius:8px;
 }
 
 #drop{
-  left:3%;
+  left:4.5%;
+  cursor:pointer;
 }
 
 #deckB{
-  right:3%;
+  right:4.5%;
+  pointer-events:none;
 }
 
-.deckTitle{
+#drop::before,
+#deckB::before{
+  content:"";
   position:absolute;
-  top:4%;
-  left:5%;
-  right:5%;
-  text-align:center;
-  font-size:13px;
-  font-weight:bold;
-  color:#ddd;
-  letter-spacing:.08em;
+  inset:1.5% 1%;
+  z-index:-1;
+
+  border:1px solid rgba(135,175,205,.85);
+  border-radius:10px;
+
+  clip-path:polygon(
+    3% 0,
+    97% 0,
+    100% 8%,
+    100% 92%,
+    97% 100%,
+    3% 100%,
+    0 92%,
+    0 8%
+  );
+
+  background:
+    radial-gradient(
+      circle at 8% 18%,
+      #02050a 0 1.7%,
+      #78899a 1.9% 2.5%,
+      transparent 2.7%
+    ),
+    radial-gradient(
+      circle at 92% 18%,
+      #02050a 0 1.7%,
+      #78899a 1.9% 2.5%,
+      transparent 2.7%
+    ),
+    radial-gradient(
+      circle at 8% 82%,
+      #02050a 0 1.7%,
+      #78899a 1.9% 2.5%,
+      transparent 2.7%
+    ),
+    radial-gradient(
+      circle at 92% 82%,
+      #02050a 0 1.7%,
+      #78899a 1.9% 2.5%,
+      transparent 2.7%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 31%,
+      rgba(0,0,0,.8) 31% 69%,
+      transparent 69%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0 39%,
+      rgba(2,6,11,.95) 39% 61%,
+      transparent 61%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(220,230,238,.16),
+      rgba(85,105,125,.1)
+    ),
+    linear-gradient(#1b2530,#070c12);
+
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.025),
+    inset 0 0 20px #000,
+    0 0 14px rgba(0,0,0,.85);
+}
+
+#drop::after,
+#deckB::after{
+  content:"";
+  position:absolute;
+
+  left:27%;
+  top:67%;
+
+  width:46%;
+  height:8%;
+
+  border:1px solid rgba(125,150,170,.5);
+  border-radius:4px 4px 8px 8px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.16),
+      transparent 45%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 12%,
+      #080d13 12% 88%,
+      transparent 88%
+    );
+
+  box-shadow:inset 0 0 7px #000;
+}
+
+#deckB::after{
+  border-color:rgba(70,170,240,.55);
+}
+
+#drop::before,
+#drop::after,
+#drop .reel,
+#drop .cassette-brand,
+#drop .cassette-label,
+#drop .deck-side-label{
+  pointer-events:none;
 }
 
 /* =========================================================
-   КАССЕТА
-   ========================================================= */
+   CASSETTE LABELS
+========================================================= */
 
-.cassette{
+.cassette-label{
   position:absolute;
-  left:10%;
-  right:10%;
-  top:20%;
-  bottom:10%;
-  border:2px solid #777;
-  border-radius:7px;
-  background:
-    linear-gradient(135deg,#222,#111);
+  z-index:5;
+
+  top:3.5%;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  font-weight:800;
+
+  font-size:clamp(9px,.78vw,13px);
+
+  letter-spacing:.12em;
+
+  color:#dff7ff;
+
+  text-shadow:0 0 8px rgba(53,207,255,.55);
+
+  pointer-events:none;
 }
+
+#drop .cassette-label{
+  color:#ffddd8;
+}
+
+#deckB .cassette-label{
+  color:#d9f8ff;
+}
+
+.cassette-brand{
+  position:absolute;
+  z-index:4;
+
+  left:50%;
+  top:45%;
+
+  transform:translate(-50%,-50%);
+
+  width:27%;
+
+  padding:.18em .1em;
+
+  text-align:center;
+
+  border:1px solid rgba(180,205,220,.28);
+  border-radius:3px;
+
+  background:rgba(8,14,21,.72);
+
+  color:rgba(220,235,245,.58);
+
+  font-size:clamp(6px,.46vw,8px);
+  font-weight:800;
+
+  letter-spacing:.12em;
+
+  text-shadow:0 1px 2px #000;
+
+  pointer-events:none;
+}
+
+#drop .cassette-brand{
+  color:rgba(255,205,198,.7);
+}
+
+#deckB .cassette-brand{
+  color:rgba(180,225,255,.72);
+}
+
+.deck-side-label{
+  position:absolute;
+  z-index:5;
+
+  bottom:5%;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  padding:.12em .4em;
+
+  border:1px solid rgba(120,185,230,.5);
+  border-radius:4px;
+
+  background:rgba(0,8,16,.75);
+
+  font-size:clamp(9px,.78vw,13px);
+  font-weight:800;
+
+  letter-spacing:.08em;
+
+  color:#bfeaff;
+
+  pointer-events:none;
+}
+
+/* =========================================================
+   REELS
+========================================================= */
 
 .reel{
   position:absolute;
-  width:25%;
+  z-index:3;
+
+  top:31%;
+
+  width:22%;
   aspect-ratio:1;
-  top:27%;
-  border:3px solid #aaa;
+
   border-radius:50%;
+
+  border:2px solid rgba(210,225,240,.72);
+
   background:
-    radial-gradient(circle,#111 0 20%,#777 21% 27%,#222 28% 48%,#888 49% 53%,#222 54%);
-  box-shadow:0 0 8px #000;
+    radial-gradient(
+      circle,
+      #05080d 0 10%,
+      #8a9aaa 10.5% 13%,
+      #202b38 13.5% 31%,
+      #9eacba 31.5% 34%,
+      #1a222d 34.5% 60%,
+      #697989 60.5% 63%,
+      #090d13 63.5%
+    );
+
+  box-shadow:
+    inset 0 0 8px #000,
+    0 0 7px rgba(130,180,220,.25);
+
+  transform-origin:50% 50%;
 }
 
 .reel.left{
-  left:13%;
+  left:21%;
 }
 
 .reel.right{
-  right:13%;
+  right:21%;
 }
 
-.tapeWindow{
+.reel::before{
+  content:"";
   position:absolute;
-  left:31%;
-  right:31%;
-  top:38%;
-  height:24%;
-  border:1px solid #666;
-  background:#080808;
+  inset:34%;
+
+  border-radius:50%;
+  border:2px dashed rgba(220,235,245,.8);
 }
 
-.deckLabel{
+.reel::after{
+  content:"";
   position:absolute;
-  left:5%;
-  right:5%;
-  bottom:2%;
-  text-align:center;
-  color:#aaa;
-  font-size:10px;
+
+  left:48%;
+  top:16%;
+
+  width:4%;
+  height:68%;
+
+  border-radius:4px;
+
+  background:rgba(230,245,255,.65);
+
+  box-shadow:
+    0 0 5px rgba(230,245,255,.35);
+}
+
+.playing .reel{
+  animation:reelSpin .82s linear infinite;
+}
+
+@keyframes reelSpin{
+  to{
+    transform:rotate(360deg);
+  }
 }
 
 /* =========================================================
-   ЦЕНТРАЛЬНЫЙ ЭКРАН
-   ========================================================= */
+   FILE STATUS
+========================================================= */
+
+.fileStatus{
+  position:absolute;
+  z-index:11;
+
+  top:47.8%;
+
+  width:28.5%;
+
+  text-align:center;
+
+  font-size:clamp(9px,.75vw,13px);
+
+  color:#c2e8ff;
+
+  text-shadow:0 1px 3px #000;
+}
+
+.fileStatus.a{
+  left:4.5%;
+}
+
+.fileStatus.b{
+  right:4.5%;
+  color:#a9ffd1;
+}
+
+/* =========================================================
+   PLAYERS
+========================================================= */
+
+.playerPanel{
+  position:absolute;
+  z-index:10;
+
+  top:49.0%;
+
+  width:29.2%;
+  height:17.0%;
+
+  padding:.35% .5%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(2,8,17,.98),
+      rgba(4,14,27,.98)
+    );
+
+  border:1px solid rgba(57,154,235,.7);
+  border-radius:5px;
+
+  box-shadow:
+    inset 0 0 16px rgba(0,92,180,.18);
+}
+
+#deckAPlayer{
+  left:4.2%;
+}
+
+#deckBPlayer{
+  right:4.2%;
+}
+
+.playerTitle{
+  text-align:center;
+
+  font-weight:700;
+
+  font-size:clamp(9px,.83vw,14px);
+
+  letter-spacing:.05em;
+}
+
+.playerTitle.a{
+  color:#65d7ff;
+}
+
+.playerTitle.b{
+  color:#61ffad;
+}
+
+.wave{
+  display:block;
+
+  width:100%;
+  height:25%;
+
+  margin:.2% 0;
+}
+
+.transport{
+  height:44%;
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:1.4%;
+}
+
+.transport button{
+  font-size:clamp(14px,1.55vw,25px);
+  font-weight:bold;
+}
+
+.timeline{
+  height:22%;
+
+  display:grid;
+
+  grid-template-columns:auto 1fr auto;
+
+  gap:2%;
+
+  align-items:center;
+
+  font-size:clamp(8px,.68vw,12px);
+
+  color:#9edfff;
+}
+
+.timeline input{
+  width:100%;
+  accent-color:#28bfff;
+}
+
+.timeline.b input{
+  accent-color:#43ee89;
+}
+
+/* =========================================================
+   CENTRAL MASTERING SCREEN
+   УВЕЛИЧЕННАЯ ВЫСОТА
+========================================================= */
 
 #centerScreen{
   position:absolute;
   z-index:12;
 
-  /*
-    ПОДНЯЛИ ВЫШЕ И СДЕЛАЛИ ВЫШЕ,
-    НО НИЖНЯЯ ГРАНИЦА ОСТАЁТСЯ ДО PLAYER PANEL
-  */
   left:35.25%;
-  top:9.5%;
+
+  /*
+    Поднимаем окно немного выше,
+    чтобы увеличить доступную высоту.
+  */
+  top:14.0%;
+
+  /*
+    Было около 36%.
+    Теперь почти половина рабочей области.
+  */
   width:29.5%;
-  height:39%;
+  height:45.8%;
 
   padding:.8% .9%;
 
-  border:2px solid #666;
-  border-radius:9px;
+  background:rgba(1,9,20,.97);
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(45,45,45,.98),
-      rgba(13,13,13,.98)
-    );
+  border:1px solid #258bda;
+  border-radius:5px;
 
   box-shadow:
-    inset 0 0 18px rgba(0,0,0,.8),
-    0 5px 15px rgba(0,0,0,.65);
+    inset 0 0 18px rgba(0,99,194,.2),
+    0 0 12px rgba(0,90,180,.12);
 
   overflow:hidden;
 }
 
 #centerTitle{
-  height:12%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
   text-align:center;
-  font-size:11px;
-  font-weight:bold;
-  letter-spacing:.045em;
-  color:#eee;
 
-  border-bottom:1px solid #555;
+  color:#7edcff;
+
+  font-weight:800;
+
+  font-size:clamp(10px,.82vw,14px);
+
+  letter-spacing:.05em;
+
+  border-bottom:1px solid #1e78bb;
+
+  padding-bottom:.35em;
+
+  white-space:nowrap;
 }
 
 /* =========================================================
-   ВНУТРЕННИЕ БЛОКИ ЦЕНТРАЛЬНОГО ЭКРАНА
-   ========================================================= */
+   SCREEN GRID
+========================================================= */
 
 .screenGrid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:2.5%;
 
-  height:69%;
+  grid-template-columns:1.05fr .95fr;
+
+  gap:1.2%;
+
+  /*
+    Оставляем место снизу
+    под пять основных метрик.
+  */
+  height:67%;
+
   padding-top:1.5%;
 }
 
 .screenBox{
   min-width:0;
+
+  border:1px solid rgba(49,145,218,.48);
+  border-radius:4px;
+
+  padding:2.5%;
+
+  background:rgba(4,19,38,.7);
+
   overflow:hidden;
-
-  border:1px solid #555;
-  border-radius:6px;
-  padding:4%;
-
-  background:
-    linear-gradient(#242424,#121212);
-
-  box-shadow:
-    inset 0 0 8px rgba(0,0,0,.8);
 }
 
 .screenBox h3{
-  margin:0 0 5%;
-  font-size:9px;
-  line-height:1.15;
-  color:#aaa;
-  text-align:center;
-  white-space:nowrap;
+  margin:0 0 .3em;
+
+  color:#67d2ff;
+
+  font-size:clamp(9px,.75vw,13px);
+
+  line-height:1.1;
 }
 
 #name{
-  font-size:11px;
-  font-weight:bold;
-  text-align:center;
+  font-weight:700;
+
   white-space:nowrap;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
-  margin-bottom:3%;
+
+  font-size:clamp(9px,.75vw,13px);
 }
 
 #info{
-  font-size:8px;
+  font-size:clamp(10px,.82vw,14px);
+
   line-height:1.3;
-  color:#aaa;
-  text-align:center;
 
-  min-height:28px;
+  color:#d5e9f7;
 
-  overflow:hidden;
+  margin-top:.25em;
 }
+
+/* =========================================================
+   TAG BUTTON
+========================================================= */
 
 #editTagsBtn{
-  display:block;
-  width:100%;
+  margin-top:.5em;
 
-  margin-top:.35em;
-  padding:.28em .6em;
+  padding:.35em .7em;
 
-  font-size:7px;
-  line-height:1.2;
+  border:1px solid rgba(53,207,255,.7);
+
+  border-radius:999px;
+
+  background:rgba(8,32,54,.9);
+
+  color:#bdeeff;
+
+  font-weight:700;
+
+  font-size:clamp(8px,.65vw,11px);
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 0 10px rgba(53,207,255,.08);
+}
+
+#editTagsBtn:hover{
+  filter:brightness(1.18);
 }
 
 /* =========================================================
-   МЕТРИКИ ДО / ПОСЛЕ
-   ========================================================= */
+   METRICS A/B
+========================================================= */
 
 .metricsAB{
-  margin-top:1.8%;
-  padding:2.5%;
+  display:grid;
 
-  border-top:1px solid #444;
+  grid-template-columns:repeat(3,1fr);
 
-  font-size:7px;
-  line-height:1.25;
-  color:#aaa;
+  gap:2%;
 
-  text-align:center;
+  margin-top:2.5%;
+
+  font-size:clamp(8px,.62vw,11px);
+
+  color:#9fc4df;
 }
 
-.metricsAB strong{
+.metricsAB b{
+  display:block;
+
   color:#fff;
+
+  font-size:clamp(9px,.72vw,13px);
+
+  margin-top:2px;
 }
 
 /* =========================================================
-   СРАВНЕНИЕ
-   ========================================================= */
+   COMPARISON
+========================================================= */
 
 .compareRow{
   display:flex;
+
   gap:3%;
-  margin-bottom:5%;
+
+  margin-bottom:3%;
 }
 
 .compareRow button{
   flex:1;
-  min-width:0;
-  padding:5% 1%;
 
-  font-size:8px;
+  padding:.3em;
+
+  font-size:clamp(8px,.68vw,12px);
 }
 
 #compareStatus{
-  min-height:30px;
+  font-size:clamp(9px,.70vw,12px);
 
-  font-size:7px;
   line-height:1.3;
-  color:#aaa;
 
-  text-align:center;
+  color:#b8d9ed;
 }
 
 .featureMini{
-  display:flex;
-  flex-direction:column;
-  gap:2%;
+  font-size:clamp(8px,.64vw,11px);
 
-  margin-top:4%;
+  line-height:1.4;
 
-  font-size:7px;
-  line-height:1.25;
-  color:#bbb;
+  color:#bfe7ff;
+
+  margin-top:3%;
+}
+
+.featureMini span:before{
+  content:'✓ ';
+
+  color:#48ff84;
 }
 
 .featureMini span{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  display:block;
 }
 
 /* =========================================================
-   ОБЩИЕ МЕТРИКИ
-   ========================================================= */
+   MAIN METRICS
+========================================================= */
 
-#metrics{
+.masterMetrics{
   position:absolute;
-  left:4%;
-  right:4%;
-  bottom:3%;
 
-  min-height:12%;
-
-  padding:2%;
-
-  border:1px solid #444;
-  border-radius:5px;
-
-  background:#0d0d0d;
-
-  font-size:8px;
-  line-height:1.3;
-  color:#aaa;
-
-  text-align:center;
-}
-
-/* =========================================================
-   ПАНЕЛИ ПЛЕЕРОВ
-   ========================================================= */
-
-.playerPanel{
-  position:absolute;
-  top:49%;
-  width:29.2%;
-  height:17%;
-
-  border:1px solid #555;
-  border-radius:7px;
-
-  background:
-    linear-gradient(#292929,#111);
-
-  padding:1.5%;
-
-  box-shadow:
-    inset 0 0 10px rgba(0,0,0,.8);
-}
-
-#playerA{
   left:3%;
-}
-
-#playerB{
   right:3%;
+
+  bottom:1.2%;
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  gap:.8%;
 }
 
-.playerTitle{
+.metric{
+  padding:.2em .1em;
+
   text-align:center;
-  font-size:9px;
+
+  border-radius:3px;
+
+  background:#061326;
+
+  border:1px solid rgba(42,121,189,.45);
+}
+
+.metric .label{
+  color:#76a9cf;
+
+  font-size:clamp(7px,.59vw,10px);
+}
+
+.metric .value{
   font-weight:bold;
-  color:#bbb;
-  margin-bottom:3%;
-}
 
-.transport{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:2%;
+  font-size:clamp(8px,.67vw,12px);
 
-  margin-bottom:4%;
-}
-
-.transport button{
-  width:17%;
-  padding:3% 0;
-  font-size:9px;
-}
-
-.seek{
-  width:100%;
-}
-
-.timeRow{
-  display:flex;
-  justify-content:space-between;
-  margin-top:2%;
-
-  font-size:7px;
-  color:#888;
+  margin-top:1px;
 }
 
 /* =========================================================
-   КНОПКА МАСТЕРИНГА
-   ========================================================= */
+   MASTER BUTTON
+========================================================= */
 
 #master{
   position:absolute;
+
+  z-index:14;
+
   left:44.75%;
-  top:61%;
+
+  top:61.0%;
+
   width:10.5%;
   height:8.2%;
 
-  z-index:20;
+  border-radius:50%;
 
-  border:2px solid #aaa;
-  border-radius:8px;
+  background:rgba(0,35,74,.20);
 
-  background:
-    linear-gradient(#666,#222);
+  border:2px solid rgba(77,207,255,.75);
 
-  font-size:9px;
-  letter-spacing:.04em;
+  color:#fff;
+
+  font-weight:800;
+
+  font-size:clamp(7px,.62vw,11px);
+
+  text-shadow:0 0 7px #18a8ff;
 
   box-shadow:
-    0 0 12px rgba(255,255,255,.08),
-    inset 0 1px 0 rgba(255,255,255,.2);
+    inset 0 0 18px rgba(21,139,255,.25);
+}
+
+#master:hover{
+  background:rgba(4,57,111,.28);
 }
 
 /* =========================================================
-   СТАТУС
-   ========================================================= */
+   STATUS + MASTERING PROGRESS
+========================================================= */
 
 #status{
   position:absolute;
-  left:15%;
-  right:15%;
+
+  z-index:15;
+
+  left:31%;
+  width:38%;
+
   top:69.7%;
 
-  height:2%;
+  min-height:1.3em;
 
   text-align:center;
-  font-size:8px;
-  color:#aaa;
+
+  font-size:clamp(8px,.66vw,12px);
+
+  line-height:1.2;
+
+  font-weight:700;
+
+  color:#c6edff;
+
+  text-shadow:0 1px 4px #000;
+
+  white-space:nowrap;
 
   overflow:hidden;
+
+  text-overflow:ellipsis;
 }
 
 .progressTrack{
   position:absolute;
-  left:15%;
-  right:15%;
-  top:72%;
 
-  height:1.2%;
+  z-index:15;
 
-  border:1px solid #444;
-  border-radius:10px;
+  left:31%;
 
-  background:#080808;
-  overflow:hidden;
-}
+  top:72.0%;
 
-#progressBar{
-  width:0%;
-  height:100%;
-  background:#aaa;
-}
+  width:38%;
 
-/* =========================================================
-   EXPORT STATUS
-   ========================================================= */
+  height:10px;
 
-#exportStatus{
-  position:absolute;
-  left:15%;
-  right:15%;
-  top:73.8%;
+  background:rgba(2,14,28,.96);
 
-  height:1.5%;
+  border:1px solid #258bda;
 
-  text-align:center;
-  font-size:7px;
-  color:#888;
-
-  overflow:hidden;
-}
-
-#exportProgress{
-  position:absolute;
-  left:15%;
-  right:15%;
-  top:75.8%;
-
-  height:1%;
-
-  border:1px solid #333;
   border-radius:8px;
 
-  background:#080808;
   overflow:hidden;
+
+  box-shadow:
+    0 0 10px rgba(20,140,255,.35);
 }
 
-#exportProgressBar{
-  width:0%;
+#bar{
   height:100%;
-  background:#777;
+
+  width:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #22bfff,
+      #43ff8b
+    );
+
+  box-shadow:0 0 10px #36caff;
+
+  transition:width .12s;
+}
+
+#barText{
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  top:-.1em;
+
+  display:block;
+
+  text-align:center;
+
+  color:#fff;
+
+  font-weight:800;
+
+  font-size:clamp(8px,.63vw,11px);
+
+  text-shadow:0 1px 3px #000;
 }
 
 /* =========================================================
-   НИЖНЯЯ ПАНЕЛЬ
-   ========================================================= */
+   BOTTOM EXPORT PANEL
+========================================================= */
 
 #bottom{
   position:absolute;
 
-  left:3%;
-  right:3%;
+  z-index:16;
+
+  left:2.5%;
+  right:2.5%;
+
   top:78.5%;
 
   height:10.5%;
 
+  display:grid;
+
+  grid-template-columns:
+    1.15fr
+    1.05fr
+    .9fr
+    .9fr;
+
+  gap:.45%;
+
+  align-items:stretch;
+}
+
+.saveCard{
+  min-width:0;
+
+  padding:.18em .3em;
+
+  background:rgba(2,13,27,.96);
+
+  border:1px solid #2b7dc4;
+
+  border-radius:4px;
+
   display:flex;
-  align-items:center;
+
+  flex-direction:column;
+
   justify-content:center;
-  gap:2%;
 
-  border-top:1px solid #444;
+  gap:.08em;
 
-  padding-top:1%;
+  text-align:center;
 }
 
-#bottom button,
-#bottom select{
-  height:65%;
+#bottom .saveFormat{
+  width:100%;
 
-  padding:0 1.5%;
+  margin-bottom:1px;
 
-  border:1px solid #555;
-  border-radius:5px;
+  padding:3px 5px;
 
-  background:#1b1b1b;
-  color:#ddd;
+  border:1px solid #777;
 
-  font-size:8px;
-}
+  border-radius:3px;
 
-#bottom button{
+  background:#bdbdbd;
+
+  color:#000;
+
+  font-weight:700;
+
   cursor:pointer;
 }
 
-/* =========================================================
-   ФАЙЛ
-   ========================================================= */
+#bottom button{
+  font-weight:800;
 
-#file{
-  display:none;
-}
+  text-transform:uppercase;
 
-#chooseFileBtn{
-  position:absolute;
-  left:8%;
-  bottom:3%;
+  font-size:clamp(8px,.74vw,12px);
 
-  width:84%;
-  height:12%;
-
-  font-size:8px;
-}
-
-/* =========================================================
-   MODAL ТЕГОВ
-   ========================================================= */
-
-#tagModal{
-  position:absolute;
-  z-index:100;
-
-  display:none;
-
-  left:50%;
-  top:50%;
-
-  transform:translate(-50%,-50%);
-
-  width:48%;
-  height:62%;
-
-  padding:4%;
-
-  border:2px solid #777;
-  border-radius:10px;
+  padding:.28em;
 
   background:
-    linear-gradient(#2a2a2a,#101010);
-
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.9);
+    linear-gradient(
+      #10243c,
+      #06111f
+    );
 }
 
-#tagModal h2{
-  margin:0 0 5%;
+#bottom .qualityTitle,
+#bottom .saveTitle{
+  font-size:clamp(7px,.60vw,10px);
+
+  color:#8fbddd;
+
+  text-transform:uppercase;
+}
+
+#quality{
+  width:100%;
+
+  font-size:clamp(8px,.69vw,12px);
+
+  padding:.12em .25em;
+}
+
+#qualityInfo{
+  font-size:clamp(7px,.59vw,10px);
+
+  color:#bcecff;
+
+  min-height:1.2em;
+}
+
+#exportStatus{
+  position:absolute;
+
+  z-index:17;
+
+  left:31%;
+  width:38%;
+
+  top:73.8%;
+
+  height:1.7%;
+
   text-align:center;
-  font-size:14px;
+
+  font-size:clamp(8px,.63vw,11px);
+
+  color:#aee7ff;
+
+  text-shadow:0 1px 3px #000;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+#exportProgress{
+  position:absolute;
+
+  z-index:17;
+
+  left:31%;
+  width:38%;
+
+  top:75.8%;
+
+  height:8px;
+
+  background:rgba(0,15,28,.9);
+
+  border:1px solid rgba(55,153,225,.6);
+
+  border-radius:6px;
+
+  overflow:hidden;
+}
+
+#exportProgressBar{
+  height:100%;
+
+  width:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1bb8ff,
+      #45ff8d
+    );
+
+  box-shadow:0 0 9px #22c8ff;
+
+  transition:width .1s;
+}
+
+/* =========================================================
+   HIDDEN SETTINGS / RESULT
+========================================================= */
+
+#settings,
+#export,
+#decisions,
+#result{
+  display:none;
+}
+
+.good{
+  color:#64ff9c;
+}
+
+/* =========================================================
+   TAG MODAL
+========================================================= */
+
+#tagModal{
+  position:fixed;
+
+  inset:0;
+
+  z-index:1000;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(0,0,0,.72);
+
+  backdrop-filter:blur(5px);
+}
+
+#tagModal.open{
+  display:flex;
+}
+
+.tagDialog{
+  width:min(500px,90vw);
+
+  max-height:90vh;
+
+  overflow:auto;
+
+  padding:14px;
+
+  border:1px solid #258bda;
+
+  border-radius:8px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #071728,
+      #020912
+    );
+
+  box-shadow:
+    0 0 35px rgba(0,120,220,.28),
+    inset 0 0 20px rgba(0,90,180,.12);
+}
+
+.tagDialog h2{
+  margin:0 0 6px;
+
+  color:#75dcff;
+
+  font-size:16px;
+}
+
+.tagDialog .tagHint{
+  margin:0 0 10px;
+
+  color:#9cc7df;
+
+  font-size:11px;
+}
+
+.tagGrid{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:7px;
+}
+
+.tagGrid.three{
+  grid-template-columns:1fr 1fr 1fr;
 }
 
 .tagField{
-  margin-bottom:3%;
+  display:flex;
+
+  flex-direction:column;
+
+  gap:3px;
+}
+
+.tagField.full{
+  grid-column:1/-1;
 }
 
 .tagField label{
-  display:block;
-  margin-bottom:1%;
+  font-size:11px;
 
-  font-size:8px;
-  color:#aaa;
+  color:#9fdcff;
+
+  font-weight:700;
+}
+
+.tagField small{
+  font-size:9px;
+
+  color:#6f9ab5;
 }
 
 .tagField input{
   width:100%;
-  height:28px;
 
-  padding:0 7px;
+  box-sizing:border-box;
 
-  border:1px solid #555;
-  border-radius:4px;
+  padding:7px 8px;
 
-  background:#080808;
-  color:#fff;
+  border:1px solid #245b83;
 
-  font-size:9px;
+  border-radius:6px;
+
+  background:#03101c;
+
+  color:#e9f8ff;
+
+  outline:none;
 }
 
-.tagButtons{
+.tagField input:focus{
+  border-color:#35cfff;
+
+  box-shadow:
+    0 0 0 2px rgba(53,207,255,.1);
+}
+
+.trackIdRow{
+  display:grid;
+
+  grid-template-columns:1fr auto;
+
+  gap:8px;
+
+  align-items:end;
+}
+
+#tagTrackId{
+  font-family:monospace;
+
+  letter-spacing:.03em;
+}
+
+#randomTrackId{
+  height:38px;
+
+  padding:0 12px;
+
+  white-space:nowrap;
+}
+
+.tagActions{
   display:flex;
-  gap:3%;
-  margin-top:5%;
+
+  justify-content:flex-end;
+
+  gap:5px;
+
+  margin-top:10px;
 }
 
-.tagButtons button{
-  flex:1;
-  padding:3%;
-  font-size:8px;
+.tagActions button{
+  padding:7px 11px;
+
+  border-radius:7px;
+
+  border:1px solid #286b96;
+
+  background:#071d2f;
+
+  color:#dff7ff;
+
+  font-weight:700;
+
+  cursor:pointer;
+}
+
+#saveTags{
+  background:#0b3a48;
+
+  border-color:#35cfff;
+
+  color:#8fe6ff;
 }
 
 /* =========================================================
-   MOBILE / ЗАЩИТА РАЗМЕРА
-   ========================================================= */
+   MOBILE / VK
+========================================================= */
 
-@media(max-width:920px){
+@media(max-width:900px){
+
   body{
-    align-items:flex-start;
-    justify-content:flex-start;
     overflow:auto;
   }
 
   #app{
-    transform-origin:top left;
+    width:100vw;
+
+    height:calc(100vw * 600 / 900);
+
+    min-height:0;
+
+    max-height:none;
+
+    margin:0 auto;
   }
 }
+
+@media(max-width:600px){
+
+  #app{
+    width:100vw;
+
+    height:calc(100vw * 600 / 900);
+  }
+
+  #toast{
+    font-size:12px;
+
+    max-width:88vw;
+  }
+
+  .tagGrid{
+    grid-template-columns:1fr;
+  }
+
+  .tagGrid.three{
+    grid-template-columns:1fr;
+  }
+
+  .tagField.full{
+    grid-column:auto;
+  }
+
+  .trackIdRow{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -717,70 +1590,725 @@ button:disabled{
 <div id="app">
 
   <!-- =====================================================
-       ДЕКА A
-       ===================================================== -->
+       TOAST
+  ====================================================== -->
 
-  <section id="drop">
+  <div id="toast"></div>
 
-    <div class="deckTitle">
-      ДЕКА A • ОРИГИНАЛ
+
+  <!-- =====================================================
+       САЙТЫ ГЕНЕРАЦИИ
+  ====================================================== -->
+
+  <div id="generatorSites" class="generatorSites">
+
+    <label for="generatorSite">
+      САЙТЫ ГЕНЕРАЦИИ ПЕСЕН
+    </label>
+
+    <select
+      id="generatorSite"
+      aria-label="Переход на сайты генерации песен"
+    >
+
+      <option value="">
+        ВЫБРАТЬ САЙТ
+      </option>
+
+      <option value="https://treblo.com">
+        Treblo
+      </option>
+
+      <option value="https://musick.ai/">
+        Musick AI
+      </option>
+
+      <option value="https://www.musiccreator.ai/">
+        MusicCreator AI
+      </option>
+
+      <option value="https://www.openmusic.ai/">
+        OpenMusic AI
+      </option>
+
+      <option value="https://song-maker.ai/create-music">
+        Song-Maker AI
+      </option>
+
+      <option value="https://www.gsong.ai">
+        GSong AI
+      </option>
+
+      <option value="https://www.msong.ai/">
+        MSong AI
+      </option>
+
+      <option value="https://www.airapgen.com/">
+        AirapGen
+      </option>
+
+      <option value="https://www.csong.ai/">
+        CSong AI
+      </option>
+
+      <option value="https://www.textsong.ai/">
+        TextSong AI
+      </option>
+
+      <option value="https://www.aimusicgen.net/en">
+        AIMusicGen
+      </option>
+
+      <option value="https://tomusic.ai/music/">
+        ToMusic AI
+      </option>
+
+      <option value="https://myneuralnetworks.ru/music_generator?">
+        My Neural Networks
+      </option>
+
+      <option value="https://supermaker.ai/music/">
+        SuperMaker AI
+      </option>
+
+      <option value="https://musiceleven.ai/">
+        MusicEleven AI
+      </option>
+
+      <option value="https://memotune.com/ai-song-maker">
+        MemoTune
+      </option>
+
+      <option value="https://www.songmakerai.org/tools/ai-music-generator">
+        SongMakerAI
+      </option>
+
+      <option value="https://lyricsintosong.ai">
+        Lyrics Into Song
+      </option>
+
+      <option value="https://aisonggenerator.ai/create">
+        AI Song Generator
+      </option>
+
+      <option value="https://musicgeneratorai.com">
+        MusicGeneratorAI
+      </option>
+
+      <option value="https://aimusicgen.ai">
+        AIMusicGen AI
+      </option>
+
+      <option value="https://brev.ai/ru/app">
+        Brev AI
+      </option>
+
+      <option value="https://musichero.ai">
+        MusicHero AI
+      </option>
+
+      <option value="https://suno.com">
+        Suno
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- =====================================================
+       EXPORT / SAVE
+  ====================================================== -->
+
+  <div id="bottom">
+
+    <div class="saveCard">
+
+      <div class="saveTitle">
+        Готовый мастер
+      </div>
+
+      <select
+        id="saveFormat"
+        class="saveFormat"
+        aria-label="Формат сохранения"
+      >
+
+        <option value="wav">
+          WAV
+        </option>
+
+        <option value="mp3">
+          MP3
+        </option>
+
+      </select>
+
+      <button id="saveAudio" disabled>
+        СОХРАНИТЬ
+      </button>
+
+      <div
+        class="qualityTitle"
+        id="saveFormatHint"
+      >
+        WAV • без потерь
+      </div>
+
     </div>
 
-    <div class="cassette">
 
-      <div class="reel left"></div>
-      <div class="reel right"></div>
+    <div class="saveCard">
 
-      <div class="tapeWindow"></div>
+      <div class="qualityTitle">
+        Качество
+      </div>
+
+      <select
+        id="quality"
+        aria-label="Качество сохранения"
+      ></select>
+
+      <div id="qualityInfo">
+        PCM 16-bit • 44.1 kHz
+      </div>
 
     </div>
 
-    <button id="chooseFileBtn">
-      ЗАГРУЗИТЬ ТРЕК
-    </button>
+
+    <div class="saveCard">
+
+      <div class="qualityTitle">
+        Формат WAV
+      </div>
+
+      <div id="wavInfo">
+        PCM 16-bit
+      </div>
+
+      <div class="qualityTitle">
+        частота
+      </div>
+
+      <div id="wavRateInfo">
+        48.0 kHz
+      </div>
+
+    </div>
+
+
+    <div class="saveCard">
+
+      <div class="qualityTitle">
+        Формат MP3
+      </div>
+
+      <div id="mp3Info">
+        128 kbps
+      </div>
+
+      <div class="qualityTitle">
+        частота
+      </div>
+
+      <div id="mp3RateInfo">
+        44.1 kHz
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       DECK A
+  ====================================================== -->
+
+  <div id="drop">
+
+    <div class="cassette-label">
+      ДЕКА A
+    </div>
+
+    <div class="cassette-brand">
+      STUDIO TAPE
+    </div>
+
+    <div class="reel left"></div>
+
+    <div class="reel right"></div>
+
+    <div class="deck-side-label">
+      A • ДО МАСТЕРИНГА
+    </div>
 
     <input
       id="file"
       type="file"
-      accept="audio/*"
+      accept=".wav,.mp3,audio/wav,audio/mpeg,audio/x-wav,audio/mp3"
+      aria-label="Выбрать аудиотрек"
     >
 
-    <div class="deckLabel">
-      ИСХОДНЫЙ АУДИОФАЙЛ
+    <button
+      id="chooseFileBtn"
+      type="button"
+      class="chooseFileBtn"
+    >
+      ЗАГРУЗИТЬ MP3 / WAV
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       DECK B
+  ====================================================== -->
+
+  <div id="deckB">
+
+    <div class="cassette-label">
+      ДЕКА B
+    </div>
+
+    <div class="cassette-brand">
+      STUDIO TAPE
+    </div>
+
+    <div class="reel left"></div>
+
+    <div class="reel right"></div>
+
+    <div class="deck-side-label">
+      B • ПОСЛЕ МАСТЕРИНГА
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILE STATUS
+  ====================================================== -->
+
+  <div
+    id="fileStatus"
+    class="fileStatus a"
+  >
+    Нажмите на кассету Деки A для загрузки WAV / MP3
+  </div>
+
+  <div
+    id="afterStatus"
+    class="fileStatus b"
+  >
+    Дека B: мастер ещё не создан
+  </div>
+
+
+  <!-- =====================================================
+       PLAYER A
+  ====================================================== -->
+
+  <section
+    id="deckAPlayer"
+    class="playerPanel"
+  >
+
+    <div class="playerTitle a">
+      ПЛЕЕР • ДО МАСТЕРИНГА
+    </div>
+
+    <canvas
+      id="waveA"
+      class="wave"
+    ></canvas>
+
+    <div
+      id="deckAControls"
+      class="transport"
+    >
+
+      <button id="aPrev">
+        ⏮
+      </button>
+
+      <button id="aPause">
+        Ⅱ
+      </button>
+
+      <button id="aPlay">
+        ▶
+      </button>
+
+      <button id="aNext">
+        ⏭
+      </button>
+
+    </div>
+
+    <div class="timeline">
+
+      <span id="aTime">
+        0:00
+      </span>
+
+      <input
+        id="aSeek"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+      >
+
+      <span id="aDur">
+        0:00
+      </span>
+
     </div>
 
   </section>
 
 
   <!-- =====================================================
-       ДЕКА B
-       ===================================================== -->
+       PLAYER B
+  ====================================================== -->
 
-  <section id="deckB">
+  <section
+    id="deckBPlayer"
+    class="playerPanel"
+  >
 
-    <div class="deckTitle">
-      ДЕКА B • МАСТЕР
+    <div class="playerTitle b">
+      ПЛЕЕР • ПОСЛЕ МАСТЕРИНГА
     </div>
 
-    <div class="cassette">
+    <canvas
+      id="waveB"
+      class="wave"
+    ></canvas>
 
-      <div class="reel left"></div>
-      <div class="reel right"></div>
+    <div
+      id="deckBControls"
+      class="transport"
+    >
 
-      <div class="tapeWindow"></div>
+      <button id="bPrev">
+        ⏮
+      </button>
+
+      <button id="bPause">
+        Ⅱ
+      </button>
+
+      <button id="bPlay">
+        ▶
+      </button>
+
+      <button id="bNext">
+        ⏭
+      </button>
 
     </div>
 
-    <div class="deckLabel">
-      АВТОМАТИЧЕСКИЙ МАСТЕР
+    <div class="timeline b">
+
+      <span id="bTime">
+        0:00
+      </span>
+
+      <input
+        id="bSeek"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+      >
+
+      <span id="bDur">
+        0:00
+      </span>
+
     </div>
 
   </section>
 
 
   <!-- =====================================================
-       ЦЕНТРАЛЬНЫЙ ЭКРАН
-       ===================================================== -->
+       TAG MODAL
+  ====================================================== -->
+
+  <div
+    id="tagModal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="tagDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tagModalTitle"
+    >
+
+      <h2 id="tagModalTitle">
+        Теги трека
+      </h2>
+
+      <p class="tagHint">
+        Эти данные используются при отображении трека
+        и добавляются в экспортируемые WAV / MP3.
+      </p>
+
+      <div class="tagGrid">
+
+        <div class="tagField full">
+
+          <label for="tagTrackId">
+            Track ID
+          </label>
+
+          <div class="trackIdRow">
+
+            <input
+              id="tagTrackId"
+              autocomplete="off"
+              placeholder="muzer-play-26-00000"
+            >
+
+            <button
+              id="randomTrackId"
+              type="button"
+            >
+              🎲 СЛУЧАЙНЫЙ ID
+            </button>
+
+          </div>
+
+          <small>
+            По умолчанию: muzer-play-26-00000.
+            Кнопка создаёт новые 5 цифр.
+          </small>
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagArtist">
+            Исполнитель (Artist)
+          </label>
+
+          <input
+            id="tagArtist"
+            autocomplete="off"
+            placeholder="MUZER play"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagTitle">
+            Название (Title)
+          </label>
+
+          <input
+            id="tagTitle"
+            autocomplete="off"
+            placeholder="Название"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagAlbum">
+            Альбом (Album)
+          </label>
+
+          <input
+            id="tagAlbum"
+            autocomplete="off"
+            placeholder="Альбом"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagGenre">
+            Жанр (Genre)
+          </label>
+
+          <input
+            id="tagGenre"
+            autocomplete="off"
+            placeholder="Electronic"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagYear">
+            Год (Year)
+          </label>
+
+          <input
+            id="tagYear"
+            inputmode="numeric"
+            maxlength="4"
+            placeholder="2026"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagPublisher">
+            Издатель (Publisher)
+          </label>
+
+          <input
+            id="tagPublisher"
+            autocomplete="off"
+            placeholder="MUZER play"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagComposer">
+            Автор (Composer)
+          </label>
+
+          <input
+            id="tagComposer"
+            autocomplete="off"
+            placeholder="MUZER play"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagCopyright">
+            Авторские права (Copyright)
+          </label>
+
+          <input
+            id="tagCopyright"
+            autocomplete="off"
+            placeholder="© MUZER play"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagWebsite">
+            Сайт артиста (Artist URL)
+          </label>
+
+          <input
+            id="tagWebsite"
+            type="url"
+            autocomplete="off"
+            placeholder="https://example.com"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagTrackNumber">
+            Track Number
+          </label>
+
+          <input
+            id="tagTrackNumber"
+            autocomplete="off"
+            placeholder="1"
+          >
+
+        </div>
+
+
+        <div class="tagField">
+
+          <label for="tagIsrc">
+            ISRC
+          </label>
+
+          <input
+            id="tagIsrc"
+            autocomplete="off"
+            placeholder="ISRC"
+          >
+
+        </div>
+
+
+        <div class="tagField full">
+
+          <label for="tagComment">
+            Комментарий (Comment)
+          </label>
+
+          <input
+            id="tagComment"
+            autocomplete="off"
+            placeholder="Комментарий"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="tagActions">
+
+        <button
+          id="cancelTags"
+          type="button"
+        >
+          ОТМЕНА
+        </button>
+
+        <button
+          id="saveTags"
+          type="button"
+        >
+          СОХРАНИТЬ ТЕГИ
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       AUDIO
+  ====================================================== -->
+
+  <audio id="originalPlayer"></audio>
+
+  <audio id="player"></audio>
+
+
+  <!-- =====================================================
+       CENTRAL SCREEN
+  ====================================================== -->
 
   <section id="centerScreen">
 
@@ -788,9 +2316,13 @@ button:disabled{
       СТУДИЙНЫЙ АВТОМАСТЕРИНГ • ДО / ПОСЛЕ
     </div>
 
+
     <div class="screenGrid">
 
-      <!-- ИНФОРМАЦИЯ О ТРЕКЕ -->
+
+      <!-- =================================================
+           TRACK INFO
+      ================================================== -->
 
       <div class="screenBox">
 
@@ -806,22 +2338,71 @@ button:disabled{
           Файл не загружен
         </div>
 
-        <button id="editTagsBtn">
+        <button
+          id="editTagsBtn"
+          type="button"
+        >
           ✎ РЕДАКТИРОВАТЬ ТЕГИ ТРЕКА
         </button>
 
-        <div class="metricsAB">
-          ДО LUFS / TP / RMS
-        </div>
 
         <div class="metricsAB">
-          ПОСЛЕ LUFS / TP / RMS
+
+          <div>
+            ДО LUFS
+            <b id="beforeLufs">
+              —
+            </b>
+          </div>
+
+          <div>
+            TP
+            <b id="beforeTp">
+              —
+            </b>
+          </div>
+
+          <div>
+            RMS
+            <b id="beforeRms">
+              —
+            </b>
+          </div>
+
+        </div>
+
+
+        <div class="metricsAB">
+
+          <div>
+            ПОСЛЕ LUFS
+            <b id="afterLufs">
+              —
+            </b>
+          </div>
+
+          <div>
+            TP
+            <b id="afterTp">
+              —
+            </b>
+          </div>
+
+          <div>
+            RMS
+            <b id="afterRms">
+              —
+            </b>
+          </div>
+
         </div>
 
       </div>
 
 
-      <!-- СРАВНЕНИЕ -->
+      <!-- =================================================
+           COMPARISON
+      ================================================== -->
 
       <div class="screenBox">
 
@@ -835,19 +2416,27 @@ button:disabled{
             ДО
           </button>
 
-          <button id="compareMastered" disabled>
+          <button
+            id="compareMastered"
+            disabled
+          >
             ПОСЛЕ
           </button>
 
-          <button id="ab" disabled>
+          <button
+            id="ab"
+            disabled
+          >
             A↔B
           </button>
 
         </div>
 
+
         <div id="compareStatus">
           Загрузите трек в Деку A.
         </div>
+
 
         <div class="featureMini">
 
@@ -878,134 +2467,93 @@ button:disabled{
     </div>
 
 
-    <!-- ОБЩИЕ МЕТРИКИ -->
+    <!-- =================================================
+         MAIN METRICS
+    ================================================== -->
 
     <div
       id="metrics"
       class="masterMetrics"
     >
-      5 metrics
-    </div>
 
-  </section>
+      <div class="metric">
 
+        <div class="label">
+          LUFS
+        </div>
 
-  <!-- =====================================================
-       PLAYER A
-       ===================================================== -->
+        <div
+          id="lufs"
+          class="value"
+        >
+          —
+        </div>
 
-  <section
-    id="playerA"
-    class="playerPanel"
-  >
-
-    <div class="playerTitle">
-      PLAYER A • ORIGINAL
-    </div>
-
-    <div class="transport">
-
-      <button id="aPrev">
-        ◀
-      </button>
-
-      <button id="aPlay">
-        ▶
-      </button>
-
-      <button id="aPause">
-        ❚❚
-      </button>
-
-      <button id="aStop">
-        ■
-      </button>
-
-      <button id="aNext">
-        ▶
-      </button>
-
-    </div>
-
-    <input
-      id="seekA"
-      class="seek"
-      type="range"
-      min="0"
-      max="100"
-      value="0"
-    >
-
-    <div class="timeRow">
-
-      <span id="currentTimeA">
-        00:00
-      </span>
-
-      <span id="durationA">
-        00:00
-      </span>
-
-    </div>
-
-  </section>
+      </div>
 
 
-  <!-- =====================================================
-       PLAYER B
-       ===================================================== -->
+      <div class="metric">
 
-  <section
-    id="playerB"
-    class="playerPanel"
-  >
+        <div class="label">
+          TRUE PEAK
+        </div>
 
-    <div class="playerTitle">
-      PLAYER B • MASTER
-    </div>
+        <div
+          id="tp"
+          class="value"
+        >
+          —
+        </div>
 
-    <div class="transport">
+      </div>
 
-      <button id="bPrev">
-        ◀
-      </button>
 
-      <button id="bPlay">
-        ▶
-      </button>
+      <div class="metric">
 
-      <button id="bPause">
-        ❚❚
-      </button>
+        <div class="label">
+          RMS
+        </div>
 
-      <button id="bStop">
-        ■
-      </button>
+        <div
+          id="rms"
+          class="value"
+        >
+          —
+        </div>
 
-      <button id="bNext">
-        ▶
-      </button>
+      </div>
 
-    </div>
 
-    <input
-      id="seekB"
-      class="seek"
-      type="range"
-      min="0"
-      max="100"
-      value="0"
-    >
+      <div class="metric">
 
-    <div class="timeRow">
+        <div class="label">
+          CREST
+        </div>
 
-      <span id="currentTimeB">
-        00:00
-      </span>
+        <div
+          id="crest"
+          class="value"
+        >
+          —
+        </div>
 
-      <span id="durationB">
-        00:00
-      </span>
+      </div>
+
+
+      <div class="metric">
+
+        <div class="label">
+          SAMPLE RATE
+        </div>
+
+        <div
+          id="sr"
+          class="value"
+        >
+          —
+        </div>
+
+      </div>
 
     </div>
 
@@ -1013,228 +2561,161 @@ button:disabled{
 
 
   <!-- =====================================================
-       MASTER
-       ===================================================== -->
+       MASTERING STATUS
+  ====================================================== -->
+
+  <div id="status">
+    Готов. Загрузите трек в Деку A.
+  </div>
+
+
+  <div class="progressTrack">
+
+    <div id="bar">
+
+      <span id="barText"></span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MASTER BUTTON
+  ====================================================== -->
 
   <button id="master">
-    MASTER
+
+    СТУДИЙНЫЙ
+    <br>
+    АВТОМАСТЕРИНГ
+
   </button>
 
 
   <!-- =====================================================
-       STATUS
-       ===================================================== -->
+       HIDDEN SETTINGS
+  ====================================================== -->
 
-  <div id="status">
-    Готово к работе
+  <div id="settings">
+
+    <select id="target">
+
+      <option value="-14">
+        -14 LUFS
+      </option>
+
+      <option
+        value="-12"
+        selected
+      >
+        -12 LUFS
+      </option>
+
+      <option value="-10">
+        -10 LUFS
+      </option>
+
+    </select>
+
   </div>
 
-  <div class="progressTrack">
-    <div id="progressBar"></div>
+
+  <div id="result">
+
+    <div id="decisions"></div>
+
   </div>
 
 
   <!-- =====================================================
-       EXPORT
-       ===================================================== -->
+       EXPORT STATUS
+  ====================================================== -->
 
   <div id="exportStatus">
-    Экспорт не запущен
+    После мастеринга здесь появится статус сохранения файла.
   </div>
+
 
   <div id="exportProgress">
+
     <div id="exportProgressBar"></div>
-  </div>
-
-
-  <!-- =====================================================
-       BOTTOM
-       ===================================================== -->
-
-  <div id="bottom">
-
-    <button id="saveAudio">
-      СОХРАНИТЬ
-    </button>
-
-    <select id="saveFormat">
-      <option value="wav">
-        WAV
-      </option>
-
-      <option value="mp3">
-        MP3
-      </option>
-
-      <option value="ogg">
-        OGG
-      </option>
-    </select>
-
-    <select id="quality">
-
-      <option value="128">
-        128 kbps
-      </option>
-
-      <option value="192">
-        192 kbps
-      </option>
-
-      <option value="256">
-        256 kbps
-      </option>
-
-      <option value="320">
-        320 kbps
-      </option>
-
-    </select>
 
   </div>
-
-
-  <!-- =====================================================
-       TAG MODAL
-       ===================================================== -->
-
-  <div id="tagModal">
-
-    <h2>
-      РЕДАКТИРОВАНИЕ ТЕГОВ
-    </h2>
-
-    <div class="tagField">
-
-      <label for="tagTitle">
-        Название
-      </label>
-
-      <input
-        id="tagTitle"
-        type="text"
-      >
-
-    </div>
-
-    <div class="tagField">
-
-      <label for="tagArtist">
-        Исполнитель
-      </label>
-
-      <input
-        id="tagArtist"
-        type="text"
-      >
-
-    </div>
-
-    <div class="tagField">
-
-      <label for="tagAlbum">
-        Альбом
-      </label>
-
-      <input
-        id="tagAlbum"
-        type="text"
-      >
-
-    </div>
-
-    <div class="tagField">
-
-      <label for="tagGenre">
-        Жанр
-      </label>
-
-      <input
-        id="tagGenre"
-        type="text"
-      >
-
-    </div>
-
-    <div class="tagField">
-
-      <label for="tagYear">
-        Год
-      </label>
-
-      <input
-        id="tagYear"
-        type="text"
-      >
-
-    </div>
-
-    <div class="tagButtons">
-
-      <button id="saveTagsBtn">
-        СОХРАНИТЬ
-      </button>
-
-      <button id="cancelTagsBtn">
-        ОТМЕНА
-      </button>
-
-      <button id="randomIdBtn">
-        RANDOM ID
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       AUDIO
-       ===================================================== -->
-
-  <audio
-    id="audioA"
-    preload="metadata"
-  ></audio>
-
-  <audio
-    id="audioB"
-    preload="metadata"
-  ></audio>
-
 
 </div>
 
 
-<!-- =======================================================
+<!-- =========================================================
      LAMEJS
-     ======================================================= -->
+========================================================= -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"
+></script>
 
 
-<!-- =======================================================
+<!-- =========================================================
      VK BRIDGE
-     ======================================================= -->
+========================================================= -->
 
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
 <script>
-try{
-  if(window.vkBridge){
-    vkBridge.send("VKWebAppInit");
+
+(function(){
+
+  try{
+
+    if(
+      window.vkBridge &&
+      typeof window.vkBridge.send === "function"
+    ){
+
+      window.vkBridge
+        .send("VKWebAppInit")
+        .then(function(){
+
+          document.documentElement
+            .classList
+            .add("vk-ready");
+
+        })
+        .catch(function(err){
+
+          console.warn(
+            "VK Bridge init failed:",
+            err
+          );
+
+        });
+
+    }
+
+  }catch(err){
+
+    console.warn(
+      "VK Bridge unavailable:",
+      err
+    );
+
   }
-}catch(e){
-  console.log("VK Bridge:",e);
-}
+
+})();
+
 </script>
 
 
-<!-- =======================================================
-     ОСНОВНАЯ ЛОГИКА ПРИЛОЖЕНИЯ
-     ======================================================= -->
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
 
-<script src="app.js"></script>
+<script
+  defer
+  src="app.js"
+></script>
 
 </body>
 </html>
+```
