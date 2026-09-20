@@ -2,544 +2,281 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>MUZER play</title>
 
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.all.min.js"></script>
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
 <style>
 *{
-  box-sizing:border-box;
+    box-sizing:border-box;
 }
 
-html,
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        linear-gradient(rgba(20,15,10,.94),rgba(20,15,10,.97)),
+        repeating-linear-gradient(
+            90deg,
+            #3a2416 0,
+            #3a2416 8px,
+            #422a1a 9px,
+            #2e1c11 18px
+        );
+    color:#eee;
+}
+
 body{
-  width:100%;
-  height:100%;
-  margin:0;
-  overflow:hidden;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:
-    linear-gradient(rgba(45,22,8,.25),rgba(45,22,8,.25)),
-    repeating-linear-gradient(
-      90deg,
-      #7b431d 0,
-      #8d5228 35px,
-      #6d3715 70px,
-      #92552b 105px
-    );
-  color:#24150b;
-  padding:10px;
-}
-
-button,
-input,
-select{
-  font:inherit;
+    padding:14px;
 }
 
 .app{
-  width:min(1180px,100%);
-  height:calc(100vh - 20px);
-  margin:auto;
-  display:flex;
-  flex-direction:column;
-  background:#d7a263;
-  border:5px solid #4a2612;
-  border-radius:12px;
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.45),
-    inset 0 0 0 2px #b8783b;
-  overflow:hidden;
+    width:100%;
+    max-width:1200px;
+    margin:auto;
 }
 
 .header{
-  min-height:60px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:8px 14px;
-  background:
-    linear-gradient(#a86632,#754018);
-  color:#fff3dc;
-  border-bottom:4px solid #4a2612;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 18px;
+    margin-bottom:12px;
+    border:1px solid #5f4128;
+    border-radius:12px;
+    background:linear-gradient(180deg,#302116,#21170f);
+    box-shadow:0 8px 25px rgba(0,0,0,.4);
 }
 
 .logo{
-  font-size:28px;
-  font-weight:900;
-  letter-spacing:1px;
-  text-shadow:2px 2px #3a1c0c;
-}
-
-.logo span{
-  color:#ffd889;
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#ff9f32;
 }
 
 .status{
-  font-size:12px;
-  font-weight:bold;
-  text-align:right;
+    font-size:12px;
+    color:#aaa;
 }
 
-.workspace{
-  flex:1;
-  min-height:0;
-  display:grid;
-  grid-template-columns:1.05fr .95fr;
-  gap:10px;
-  padding:10px;
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
 }
 
 .panel{
-  min-height:0;
-  background:
-    linear-gradient(rgba(255,220,165,.38),rgba(255,220,165,.38)),
-    repeating-linear-gradient(
-      0deg,
-      #bd7d40 0,
-      #bd7d40 4px,
-      #b57438 4px,
-      #b57438 8px
-    );
-  border:3px solid #603313;
-  border-radius:9px;
-  box-shadow:
-    inset 0 0 0 2px rgba(255,221,166,.35),
-    0 4px 10px rgba(0,0,0,.22);
-  padding:10px;
-  overflow:auto;
+    border:1px solid #5f4128;
+    border-radius:12px;
+    padding:15px;
+    background:linear-gradient(180deg,#2b1d13,#1e1510);
+    box-shadow:0 8px 25px rgba(0,0,0,.35);
 }
 
-.panel::-webkit-scrollbar{
-  width:7px;
-}
-
-.panel::-webkit-scrollbar-thumb{
-  background:#70401e;
-  border-radius:10px;
-}
-
-.section-title{
-  margin:0 0 7px;
-  font-size:14px;
-  font-weight:900;
-  text-transform:uppercase;
-  color:#44220e;
-  letter-spacing:.6px;
+.panel h2{
+    margin:0 0 14px;
+    font-size:15px;
+    color:#ff9f32;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 .file-box{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:7px;
-  align-items:center;
-  margin-bottom:8px;
+    border:1px dashed #8a6037;
+    border-radius:10px;
+    padding:15px;
+    text-align:center;
+    background:#17100c;
+    margin-bottom:12px;
 }
 
-.file-label{
-  display:block;
-  padding:9px 11px;
-  background:#f2cf9b;
-  border:2px solid #633617;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:bold;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
+input[type=file]{
+    width:100%;
+    color:#ccc;
 }
 
-.file-label:hover{
-  background:#ffe0ad;
+.file-name{
+    margin-top:10px;
+    font-size:12px;
+    color:#aaa;
+    word-break:break-all;
 }
 
-.file-input{
-  display:none;
+.controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
 }
 
-.filename{
-  min-width:0;
-  padding:8px;
-  background:#422310;
-  color:#ffe7bd;
-  border-radius:5px;
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+button,
+select,
+input[type=text],
+input[type=number]{
+    border:1px solid #674727;
+    border-radius:7px;
+    background:#21160f;
+    color:#eee;
+    padding:9px 10px;
+    outline:none;
 }
 
-.transport{
-  display:grid;
-  grid-template-columns:1.3fr .7fr;
-  gap:7px;
-  margin-bottom:8px;
+button{
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.play-button,
-.ab-button{
-  border:3px solid #42200e;
-  border-radius:7px;
-  padding:11px 8px;
-  font-weight:900;
-  cursor:pointer;
-  box-shadow:0 3px 0 #2a1308;
+button:hover{
+    background:#3a2718;
 }
 
-.play-button{
-  background:#e2a62f;
-  color:#301805;
-  font-size:18px;
+button.active{
+    background:#b86116;
+    border-color:#e88425;
 }
 
-.play-button:active,
-.ab-button:active,
-.mode-button:active,
-.export-button:active,
-.random-button:active{
-  transform:translateY(2px);
-  box-shadow:0 1px 0 #2a1308;
+button.primary{
+    background:#b86116;
+    border-color:#e88425;
 }
 
-.ab-button{
-  background:#7d431d;
-  color:#fff0cf;
+button.primary:hover{
+    background:#d1711b;
 }
 
-.ab-controls{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-bottom:9px;
-}
-
-.mode-button{
-  border:2px solid #5a2d13;
-  border-radius:5px;
-  background:#c18446;
-  color:#321707;
-  padding:7px;
-  cursor:pointer;
-  font-weight:900;
-}
-
-.mode-button.active{
-  background:#f3c66c;
-  box-shadow:inset 0 0 0 2px #6b3615;
+button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
 }
 
 .control{
-  margin-bottom:7px;
+    margin-bottom:13px;
 }
 
 .control-row{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center;
-  font-size:12px;
-  font-weight:900;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:5px;
+}
+
+label{
+    font-size:12px;
+    color:#bbb;
 }
 
 .value{
-  min-width:55px;
-  text-align:right;
-  color:#54260e;
+    color:#ffad45;
+    font-size:12px;
 }
 
-input[type="range"]{
-  width:100%;
-  accent-color:#633313;
-  cursor:pointer;
+input[type=range]{
+    width:100%;
+    accent-color:#e4771b;
 }
 
-select,
-input[type="text"]{
-  width:100%;
-  border:2px solid #653617;
-  border-radius:5px;
-  background:#f5d6a3;
-  color:#2c1608;
-  padding:7px 8px;
-  outline:none;
-}
-
-select:focus,
-input[type="text"]:focus{
-  border-color:#351706;
-  background:#ffe5ba;
-}
-
-.preset-wrap{
-  margin-top:8px;
-}
-
-.metadata{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
+.meta-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
 }
 
 .field{
-  min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
 }
 
 .field.full{
-  grid-column:1 / -1;
+    grid-column:1/-1;
 }
 
-.field label{
-  display:block;
-  margin-bottom:3px;
-  font-size:11px;
-  font-weight:900;
-  color:#48220d;
-}
-
-.uuid-row{
-  display:grid;
-  grid-template-columns:1fr 42px;
-  gap:5px;
-}
-
-.random-button{
-  border:2px solid #54290f;
-  border-radius:5px;
-  background:#d99746;
-  color:#2e1507;
-  cursor:pointer;
-  font-size:18px;
-  font-weight:900;
+.field input{
+    width:100%;
 }
 
 .export-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:9px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:12px;
 }
 
 .export-box{
-  padding:8px;
-  border:2px solid #603313;
-  border-radius:6px;
-  background:rgba(255,224,177,.45);
+    border:1px solid #503720;
+    border-radius:9px;
+    padding:10px;
+    background:#17100c;
 }
 
-.export-title{
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:5px;
+.export-box strong{
+    display:block;
+    color:#ff9f32;
+    font-size:12px;
+    margin-bottom:7px;
 }
 
-.export-button{
-  width:100%;
-  margin-top:6px;
-  padding:9px;
-  border:3px solid #42200e;
-  border-radius:6px;
-  background:#d88e28;
-  color:#2c1506;
-  font-weight:900;
-  cursor:pointer;
-  box-shadow:0 3px 0 #2a1308;
+.export-row{
+    display:flex;
+    gap:6px;
 }
 
-.export-button:disabled,
-.play-button:disabled,
-.ab-button:disabled,
-.mode-button:disabled,
-.random-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
+.export-row select{
+    flex:1;
 }
 
-.progress-area{
-  margin-top:9px;
-  padding:8px;
-  background:#4a2814;
-  color:#ffe6bd;
-  border-radius:6px;
+.progress-wrap{
+    margin-top:15px;
 }
 
-.progress-top{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  font-size:11px;
-  font-weight:900;
-  margin-bottom:5px;
+.progress{
+    width:100%;
+    height:8px;
+    background:#100c09;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #3e2a1b;
 }
 
-.progress-track{
-  height:10px;
-  overflow:hidden;
-  background:#251307;
-  border:1px solid #1a0c04;
-  border-radius:10px;
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:#e4771b;
+    transition:width .08s linear;
 }
 
-.progress-fill{
-  width:0%;
-  height:100%;
-  background:#e9ae4e;
-  transition:width .15s linear;
-}
-
-.progress-fill.indeterminate{
-  width:35%;
-  animation:progressMove 1s linear infinite;
-}
-
-@keyframes progressMove{
-  0%{transform:translateX(-120%);}
-  100%{transform:translateX(380%);}
+.time{
+    display:flex;
+    justify-content:space-between;
+    color:#999;
+    font-size:11px;
+    margin-top:5px;
 }
 
 .footer{
-  flex:none;
-  padding:5px 10px;
-  background:#4c2813;
-  color:#eac58d;
-  font-size:10px;
-  text-align:center;
-  border-top:3px solid #311607;
+    text-align:center;
+    color:#777;
+    font-size:11px;
+    padding:14px;
 }
 
-@media(max-width:850px){
-  html,
-  body{
-    overflow:auto;
-    height:auto;
-    min-height:100%;
-  }
+@media(max-width:800px){
+    .grid{
+        grid-template-columns:1fr;
+    }
 
-  body{
-    padding:6px;
-  }
+    .meta-grid{
+        grid-template-columns:1fr;
+    }
 
-  .app{
-    height:auto;
-    min-height:calc(100vh - 12px);
-  }
-
-  .workspace{
-    grid-template-columns:1fr;
-  }
-
-  .panel{
-    overflow:visible;
-  }
-}
-
-@media(max-width:500px){
-  .header{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .status{
-    text-align:left;
-  }
-
-  .metadata,
-  .export-grid{
-    grid-template-columns:1fr;
-  }
-
-  .field.full{
-    grid-column:auto;
-  }
-
-  .file-box{
-    grid-template-columns:1fr;
-  }
-}
-
-/* =========================================================
-   MUZER PLAY — COMPACT DARK WOOD / STUDIO UI
-========================================================= */
-:root{
-  --wood0:#090604;--wood1:#120b07;--wood2:#1b1009;--wood3:#24150c;
-  --line:#4b2b17;--line2:#6a3b1e;--text:#eee2d0;--muted:#aa9279;
-  --accent:#c58a45;--accent2:#8e5b2b;--input:#0d0906;
-}
-html,body{background:
-  radial-gradient(ellipse at 50% 0%,rgba(124,70,32,.20),transparent 55%),
-  repeating-linear-gradient(2deg,rgba(255,255,255,.018) 0 1px,transparent 1px 7px),
-  repeating-linear-gradient(88deg,#0b0704 0 46px,#130b06 46px 92px,#0d0805 92px 138px)!important;
-color:var(--text)!important;}
-body{padding:8px!important;font-size:12px!important;}
-.app{width:min(980px,100%)!important;height:calc(100vh - 16px)!important;background:
-  linear-gradient(rgba(25,13,7,.82),rgba(13,8,5,.94)),
-  repeating-linear-gradient(90deg,#321b0e 0 90px,#241208 90px 180px)!important;
- border:2px solid #3a2112!important;border-radius:8px!important;
- box-shadow:0 16px 45px rgba(0,0,0,.72),inset 0 0 35px rgba(0,0,0,.45)!important;}
-.header{min-height:46px!important;padding:7px 12px!important;background:
- linear-gradient(90deg,#1a0e08,#29150b,#170b06)!important;
- border-bottom:2px solid #5a3219!important;color:var(--text)!important;box-shadow:inset 0 -1px rgba(255,191,105,.08)!important;}
-.logo{font-size:20px!important;text-shadow:0 2px 3px #000!important;letter-spacing:.5px!important;}
-.logo span{color:#d29a56!important;}
-.status{font-size:10px!important;color:var(--muted)!important;}
-.workspace{grid-template-columns:1fr 1fr!important;gap:7px!important;padding:7px!important;}
-.panel{background:
- linear-gradient(rgba(35,19,10,.90),rgba(19,11,7,.94)),
- repeating-linear-gradient(0deg,rgba(255,196,120,.025) 0 2px,transparent 2px 9px)!important;
- border:1px solid var(--line2)!important;border-radius:6px!important;
- box-shadow:inset 0 0 0 1px rgba(255,180,90,.035),0 5px 14px rgba(0,0,0,.30)!important;padding:8px!important;}
-.section-title{font-size:11px!important;letter-spacing:.8px!important;color:#d2b28c!important;margin:4px 0 7px!important;}
-.file-box{gap:6px!important;}
-.file-label,.export-button,.play-button,.ab-button,.mode-button,.random-button{border-radius:4px!important;border:1px solid var(--line2)!important;box-shadow:inset 0 1px rgba(255,220,170,.05),0 2px 4px rgba(0,0,0,.35)!important;}
-.file-label{background:linear-gradient(#2a180d,#1a0e08)!important;color:#ead7bd!important;padding:8px!important;}
-.file-label:hover{background:linear-gradient(#35200f,#211109)!important;}
-.filename{background:#0b0705!important;border:1px solid #3b2111!important;color:var(--muted)!important;padding:8px!important;border-radius:4px!important;}
-.transport,.ab-controls{gap:5px!important;margin:6px 0!important;}
-.play-button{background:linear-gradient(#bd8140,#875326)!important;color:#fff0dc!important;padding:8px 12px!important;}
-.ab-button,.mode-button{background:linear-gradient(#2b180d,#1a0e08)!important;color:#c9b39a!important;padding:7px 10px!important;}
-.mode-button.active{background:linear-gradient(#4b2b16,#2c180c)!important;color:#f0c98e!important;border-color:#8b5b2d!important;}
-.control,.preset-wrap,.export-box{background:rgba(19,10,6,.78)!important;border:1px solid #3b2112!important;border-radius:4px!important;padding:7px!important;margin-bottom:5px!important;}
-.control-row{font-size:11px!important;color:#c4ad94!important;}
-.value{color:#d6a76d!important;}
-input[type=range]{height:3px!important;accent-color:#a96e34!important;}
-select,input[type=text]{width:100%;background:#0d0805!important;color:var(--text)!important;border:1px solid #4a2915!important;border-radius:4px!important;padding:6px 7px!important;outline:none;}
-select:focus,input[type=text]:focus{border-color:#9a6431!important;box-shadow:0 0 0 1px rgba(181,116,55,.15)!important;}
-.metadata{gap:5px!important;}
-.field label{font-size:9px!important;color:#a88e73!important;margin-bottom:3px!important;}
-.uuid-row{gap:5px!important;}
-.random-button{background:#25140b!important;color:#d4a56c!important;}
-.export-grid{gap:5px!important;}
-.export-title{font-size:10px!important;color:#b99e7f!important;margin-bottom:5px!important;}
-.export-button{margin-top:5px!important;background:linear-gradient(#34200f,#1c0f08)!important;color:#e8d7c0!important;padding:7px!important;}
-.export-button:not(:disabled):hover{background:linear-gradient(#432711,#241308)!important;}
-button:disabled{opacity:.38!important;}
-.progress-area{background:#0d0805!important;border:1px solid #402313!important;}
-.progress-fill{background:linear-gradient(90deg,#875326,#d09a56,#875326)!important;}
-.footer{background:#100905!important;color:#9b8065!important;border-top:1px solid #3b2112!important;}
-::-webkit-scrollbar{width:5px!important;height:5px!important;}
-::-webkit-scrollbar-track{background:#0b0704!important;}
-::-webkit-scrollbar-thumb{background:#553019!important;border-radius:8px!important;}
-@media(max-width:760px){.workspace{grid-template-columns:1fr!important;overflow:auto!important}.app{height:auto;min-height:calc(100vh - 16px)!important}.panel{overflow:visible!important}}
-
-/* MUZER play — plain text logo */
-.logo{
-  display:inline-flex;
-  align-items:center;
-  width:auto;
-  height:auto;
-  padding:0;
-  background:none;
-  border:0;
-  box-shadow:none;
-  color:#f0d2a5;
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.5px;
-  text-shadow:0 1px 2px #000;
+    .export-grid{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
@@ -548,294 +285,201 @@ button:disabled{opacity:.38!important;}
 
 <div class="app">
 
-  <header class="header">
-    <div class="logo">COMPACT DARK \ <span>WOOD </span></div>
-    <div class="status" id="status">ГОТОВ К РАБОТЕ</div>
-  </header>
+    <div class="header">
+        <div class="logo">MUZER play</div>
+        <div class="status" id="status">Готов</div>
+    </div>
 
-  <main class="workspace">
+    <div class="grid">
 
-    <!-- LEFT -->
-    <section class="panel">
+        <!-- LEFT -->
+        <section class="panel">
 
-      <h2 class="section-title">Трек</h2>
+            <h2>Аудио</h2>
 
-      <div class="file-box">
-        <label class="file-label">
-          📂 ВЫБРАТЬ АУДИО
-          <input
-            class="file-input"
-            id="fileInput"
-            type="file"
-            accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg"
-          >
-        </label>
+            <div class="file-box">
+                <input id="fileInput" type="file" accept="audio/*">
+                <div class="file-name" id="fileName">
+                    Файл не выбран
+                </div>
+            </div>
 
-        <div class="filename" id="fileName">
-          Файл не выбран
-        </div>
-      </div>
+            <div class="controls">
+                <button id="playBtn" class="primary" disabled>
+                    ▶ PLAY
+                </button>
 
-      <div class="transport">
-        <button class="play-button" id="playButton" disabled>
-          ▶ PLAY
-        </button>
+                <button id="abBtn" disabled>
+                    A/B: PROCESSED
+                </button>
 
-        <button class="ab-button" id="abButton" disabled>
-          A/B
-        </button>
-      </div>
+                <button id="modeBtn" disabled>
+                    MODE A/B
+                </button>
+            </div>
 
-      <div class="ab-controls">
-        <button class="mode-button active" id="modeA" disabled>
-          A · ДО
-        </button>
+            <h2>Mastering</h2>
 
-        <button class="mode-button" id="modeB" disabled>
-          B · ПОСЛЕ
-        </button>
-      </div>
+            <div class="control">
+                <div class="control-row">
+                    <label>Bass</label>
+                    <span class="value" id="bassValue">0 dB</span>
+                </div>
+                <input id="bass" type="range" min="-12" max="12" step=".1" value="0">
+            </div>
 
-      <h2 class="section-title">Mastering</h2>
+            <div class="control">
+                <div class="control-row">
+                    <label>Mid</label>
+                    <span class="value" id="midValue">0 dB</span>
+                </div>
+                <input id="mid" type="range" min="-12" max="12" step=".1" value="0">
+            </div>
 
-      <div class="control">
-        <div class="control-row">
-          <span>Bass</span>
-          <span class="value" id="bassValue">0.0 dB</span>
-        </div>
-        <input
-          id="bass"
-          type="range"
-          min="-12"
-          max="12"
-          step="0.1"
-          value="0"
-        >
-      </div>
+            <div class="control">
+                <div class="control-row">
+                    <label>Treble</label>
+                    <span class="value" id="trebleValue">0 dB</span>
+                </div>
+                <input id="treble" type="range" min="-12" max="12" step=".1" value="0">
+            </div>
 
-      <div class="control">
-        <div class="control-row">
-          <span>Mid</span>
-          <span class="value" id="midValue">0.0 dB</span>
-        </div>
-        <input
-          id="mid"
-          type="range"
-          min="-12"
-          max="12"
-          step="0.1"
-          value="0"
-        >
-      </div>
+            <div class="control">
+                <div class="control-row">
+                    <label>Intensity</label>
+                    <span class="value" id="intensityValue">50%</span>
+                </div>
+                <input id="intensity" type="range" min="0" max="100" step="1" value="50">
+            </div>
 
-      <div class="control">
-        <div class="control-row">
-          <span>Treble</span>
-          <span class="value" id="trebleValue">0.0 dB</span>
-        </div>
-        <input
-          id="treble"
-          type="range"
-          min="-12"
-          max="12"
-          step="0.1"
-          value="0"
-        >
-      </div>
+            <div class="control">
+                <div class="control-row">
+                    <label>Master</label>
+                    <span class="value" id="masterValue">0 dB</span>
+                </div>
+                <input id="master" type="range" min="-12" max="6" step=".1" value="0">
+            </div>
 
-      <div class="control">
-        <div class="control-row">
-          <span>Intensity</span>
-          <span class="value" id="intensityValue">100%</span>
-        </div>
-        <input
-          id="intensity"
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          value="100"
-        >
-      </div>
+            <div class="control">
+                <label>Preset</label>
+                <select id="preset" style="width:100%;margin-top:5px">
+                    <option value="manual">Manual</option>
+                    <option value="balanced">Balanced</option>
+                    <option value="warm">Warm</option>
+                    <option value="bright">Bright</option>
+                    <option value="clear-studio">Clear Studio</option>
+                </select>
+            </div>
 
-      <div class="control">
-        <div class="control-row">
-          <span>Master</span>
-          <span class="value" id="masterValue">0.0 dB</span>
-        </div>
-        <input
-          id="master"
-          type="range"
-          min="-12"
-          max="6"
-          step="0.1"
-          value="0"
-        >
-      </div>
+            <div class="progress-wrap">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
 
-      <div class="preset-wrap">
-        <div class="control-row">
-          <span>Preset</span>
-        </div>
+                <div class="time">
+                    <span id="currentTime">00:00</span>
+                    <span id="duration">00:00</span>
+                </div>
+            </div>
 
-        <select id="preset">
-          <option value="manual">Manual</option>
-          <option value="balanced">Balanced</option>
-          <option value="warm">Warm</option>
-          <option value="bright">Bright</option>
-          <option value="clear-studio" selected>CLEAR STUDIO</option>
-        </select>
-      </div>
+        </section>
 
-    </section>
+        <!-- RIGHT -->
+        <section class="panel">
 
+            <h2>Metadata</h2>
 
-    <!-- RIGHT -->
-    <section class="panel">
+            <div class="meta-grid">
 
-      <h2 class="section-title">Metadata</h2>
+                <div class="field full">
+                    <label>Title</label>
+                    <input id="title" type="text" placeholder="Название трека">
+                </div>
 
-      <div class="metadata">
+                <div class="field">
+                    <label>Artist</label>
+                    <input id="artist" type="text" value="MUZER play">
+                </div>
 
-        <div class="field full">
-          <label for="title">Title — оригинальное название</label>
-          <input id="title" type="text" autocomplete="off">
-        </div>
+                <div class="field">
+                    <label>Album</label>
+                    <input id="album" type="text" value="MUZER play">
+                </div>
 
-        <div class="field">
-          <label for="artist">Artist — оригинальный артист / исполнитель</label>
-          <input id="artist" type="text" autocomplete="off">
-        </div>
+                <div class="field">
+                    <label>Track Number</label>
+                    <input id="trackNumber" type="number" min="1" value="1">
+                </div>
 
-        <div class="field">
-          <label for="album">Album — альбом</label>
-          <input id="album" type="text" autocomplete="off">
-        </div>
+                <div class="field">
+                    <label>Composer</label>
+                    <input id="composer" type="text" value="MUZER play">
+                </div>
 
-        <div class="field">
-          <label for="trackNumber">Track Number — номер трека</label>
-          <input
-            id="trackNumber"
-            type="text"
-            inputmode="numeric"
-            autocomplete="off"
-          >
-        </div>
+                <div class="field">
+                    <label>Album Artist</label>
+                    <input id="albumArtist" type="text" value="MUZER play">
+                </div>
 
-        <div class="field">
-          <label for="composer">Composer — автор</label>
-          <input id="composer" type="text" autocomplete="off">
-        </div>
+                <div class="field">
+                    <label>MusicBrainz Track ID</label>
+                    <input id="musicbrainz" type="text">
+                </div>
 
-        <div class="field">
-          <label for="albumArtist">Album Artist</label>
-          <input id="albumArtist" type="text" autocomplete="off">
-        </div>
+                <div class="field">
+                    <label>Random ID</label>
+                    <input id="randomId" type="text">
+                </div>
 
-        <div class="field full">
-          <label for="uuid">
-            MusicBrainz Track ID / Random ID
-          </label>
+            </div>
 
-          <div class="uuid-row">
-            <input id="uuid" type="text" autocomplete="off">
+            <div class="export-grid">
 
-            <button
-              class="random-button"
-              id="randomId"
-              type="button"
-              title="Создать новый UUID"
-            >
-              🎲
-            </button>
-          </div>
-        </div>
+                <div class="export-box">
+                    <strong>MP3 EXPORT</strong>
 
-      </div>
+                    <div class="export-row">
+                        <select id="mp3Bitrate">
+                            <option value="320">320 kbps</option>
+                            <option value="256">256 kbps</option>
+                            <option value="192">192 kbps</option>
+                            <option value="160">160 kbps</option>
+                            <option value="128">128 kbps</option>
+                        </select>
 
+                        <button id="mp3Btn" disabled>
+                            MP3
+                        </button>
+                    </div>
+                </div>
 
-      <h2 class="section-title" style="margin-top:10px;">
-        Export
-      </h2>
+                <div class="export-box">
+                    <strong>WAV EXPORT</strong>
 
-      <div class="export-grid">
+                    <div class="export-row">
+                        <select id="wavFormat">
+                            <option value="16">16 bit</option>
+                            <option value="24">24 bit</option>
+                            <option value="32">32 bit float</option>
+                        </select>
 
-        <div class="export-box">
+                        <button id="wavBtn" disabled>
+                            WAV
+                        </button>
+                    </div>
+                </div>
 
-          <div class="export-title">
-            MP3
-          </div>
+            </div>
 
-          <select id="mp3Quality">
-            <option value="320">320 kbps</option>
-            <option value="256">256 kbps</option>
-            <option value="192" selected>192 kbps</option>
-            <option value="160">160 kbps</option>
-            <option value="128">128 kbps</option>
-          </select>
+        </section>
 
-          <button
-            class="export-button"
-            id="exportMp3"
-            disabled
-          >
-            💾 SAVE MP3
-          </button>
+    </div>
 
-        </div>
-
-
-        <div class="export-box">
-
-          <div class="export-title">
-            WAV
-          </div>
-
-          <select id="wavQuality">
-            <option value="16" selected>16-bit PCM</option>
-            <option value="24">24-bit PCM</option>
-            <option value="32">32-bit Float</option>
-          </select>
-
-          <button
-            class="export-button"
-            id="exportWav"
-            disabled
-          >
-            💾 SAVE WAV
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="progress-area">
-
-        <div class="progress-top">
-          <span id="progressText">ГОТОВ</span>
-          <span id="progressPercent">0%</span>
-        </div>
-
-        <div class="progress-track">
-          <div
-            class="progress-fill"
-            id="progressFill"
-          ></div>
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    MUZER play · Audio
-  </footer>
+    <div class="footer">
+        MUZER play · Audio
+    </div>
 
 </div>
-
 
 <script>
 "use strict";
@@ -848,6 +492,24 @@ const DEFAULT_ARTIST = "MUZER play";
 const DEFAULT_COMPOSER = "MUZER play";
 const DEFAULT_ALBUM_ARTIST = "MUZER play";
 
+let audioContext = null;
+let sourceNode = null;
+
+let originalBuffer = null;
+let audioElement = null;
+
+let isPlaying = false;
+let processedMode = true;
+
+let startTime = 0;
+let pauseOffset = 0;
+
+let lowshelf = null;
+let midEQ = null;
+let highshelf = null;
+let compressor = null;
+let masterGain = null;
+let processedGain = null;
 
 /* =========================================================
    DOM
@@ -855,12 +517,11 @@ const DEFAULT_ALBUM_ARTIST = "MUZER play";
 
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("fileName");
+const statusEl = document.getElementById("status");
 
-const playButton = document.getElementById("playButton");
-const abButton = document.getElementById("abButton");
-
-const modeA = document.getElementById("modeA");
-const modeB = document.getElementById("modeB");
+const playBtn = document.getElementById("playBtn");
+const abBtn = document.getElementById("abBtn");
+const modeBtn = document.getElementById("modeBtn");
 
 const bass = document.getElementById("bass");
 const mid = document.getElementById("mid");
@@ -882,319 +543,306 @@ const albumInput = document.getElementById("album");
 const trackNumberInput = document.getElementById("trackNumber");
 const composerInput = document.getElementById("composer");
 const albumArtistInput = document.getElementById("albumArtist");
-const uuidInput = document.getElementById("uuid");
+const musicbrainzInput = document.getElementById("musicbrainz");
+const randomIdInput = document.getElementById("randomId");
 
-const randomIdButton = document.getElementById("randomId");
+const mp3Bitrate = document.getElementById("mp3Bitrate");
+const wavFormat = document.getElementById("wavFormat");
 
-const mp3Quality = document.getElementById("mp3Quality");
-const wavQuality = document.getElementById("wavQuality");
+const mp3Btn = document.getElementById("mp3Btn");
+const wavBtn = document.getElementById("wavBtn");
 
-const exportMp3 = document.getElementById("exportMp3");
-const exportWav = document.getElementById("exportWav");
-
-const status = document.getElementById("status");
-
-const progressText = document.getElementById("progressText");
-const progressPercent = document.getElementById("progressPercent");
-const progressFill = document.getElementById("progressFill");
-
+const progressBar = document.getElementById("progressBar");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
 
 /* =========================================================
-   STATE
+   HELPERS
 ========================================================= */
 
-let audioContext = null;
-
-let audioBuffer = null;
-
-let originalSource = null;
-let processedSource = null;
-
-let originalGain = null;
-let processedGain = null;
-
-let bassFilter = null;
-let midFilter = null;
-let trebleFilter = null;
-
-let compressor = null;
-let limiter = null;
-let masterGain = null;
-
-let isPlaying = false;
-let activeMode = "A";
-
-let playbackOffset = 0;
-let playbackStartedAt = 0;
-
-let sourceDuration = 0;
-
-let currentFile = null;
-
-let exporting = false;
-
-
-/* =========================================================
-   AUDIO CONTEXT
-========================================================= */
-
-function ensureAudioContext(){
-  if(!audioContext){
-    const AudioCtx =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if(!AudioCtx){
-      throw new Error(
-        "Web Audio API не поддерживается этим браузером."
-      );
+function uuidv4(){
+    if(window.crypto && crypto.randomUUID){
+        return crypto.randomUUID();
     }
 
-    audioContext = new AudioCtx();
-  }
+    if(window.crypto && crypto.getRandomValues){
+        const bytes = new Uint8Array(16);
+        crypto.getRandomValues(bytes);
 
-  return audioContext;
-}
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
 
-
-/* =========================================================
-   UUID v4
-========================================================= */
-
-function generateMusicBrainzTrackId(){
-
-  if(
-    window.crypto &&
-    typeof crypto.randomUUID === "function"
-  ){
-    return crypto.randomUUID();
-  }
-
-  const bytes = new Uint8Array(16);
-
-  if(
-    window.crypto &&
-    typeof crypto.getRandomValues === "function"
-  ){
-    crypto.getRandomValues(bytes);
-  }else{
-    for(let i = 0; i < 16; i++){
-      bytes[i] = Math.floor(Math.random() * 256);
+        return [...bytes].map((b,i)=>{
+            const s = b.toString(16).padStart(2,"0");
+            return ([4,6,8,10].includes(i) ? "-" : "") + s;
+        }).join("");
     }
-  }
 
-  bytes[6] =
-    (bytes[6] & 0x0f) | 0x40;
-
-  bytes[8] =
-    (bytes[8] & 0x3f) | 0x80;
-
-  const hex = Array.from(bytes)
-    .map(
-      b => b.toString(16).padStart(2,"0")
-    )
-    .join("");
-
-  return (
-    hex.slice(0,8) + "-" +
-    hex.slice(8,12) + "-" +
-    hex.slice(12,16) + "-" +
-    hex.slice(16,20) + "-" +
-    hex.slice(20,32)
-  );
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+        const r = Math.random()*16|0;
+        const v = c === "x" ? r : (r&3)|8;
+        return v.toString(16);
+    });
 }
 
+function formatTime(seconds){
+    if(!Number.isFinite(seconds)){
+        return "00:00";
+    }
+
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+
+    return String(m).padStart(2,"0") + ":" +
+           String(s).padStart(2,"0");
+}
+
+function dbToGain(db){
+    return Math.pow(10,db/20);
+}
+
+function setStatus(text){
+    statusEl.textContent = text;
+}
+
+function filename(ext){
+    const artist =
+        artistInput.value.trim() || DEFAULT_ARTIST;
+
+    const title =
+        titleInput.value.trim() || "Untitled";
+
+    return `${artist} - ${title}.${ext}`;
+}
+
+function resetProgress(){
+    progressBar.style.width = "0%";
+    currentTimeEl.textContent = "00:00";
+    durationEl.textContent = "00:00";
+}
 
 /* =========================================================
    METADATA
 ========================================================= */
 
 function resetMetadata(){
-
-  titleInput.value = "";
-
-  artistInput.value =
-    DEFAULT_ARTIST;
-
-  albumInput.value = "";
-
-  trackNumberInput.value = "1";
-
-  composerInput.value =
-    DEFAULT_COMPOSER;
-
-  albumArtistInput.value =
-    DEFAULT_ALBUM_ARTIST;
-
-
-  uuidInput.value =
-    generateMusicBrainzTrackId();
+    titleInput.value = "";
+    artistInput.value = DEFAULT_ARTIST;
+    albumInput.value = DEFAULT_ARTIST;
+    trackNumberInput.value = "1";
+    composerInput.value = DEFAULT_COMPOSER;
+    albumArtistInput.value = DEFAULT_ALBUM_ARTIST;
+    musicbrainzInput.value = "";
+    randomIdInput.value = uuidv4();
 }
 
-
-function titleFromFilename(name){
-
-  if(!name){
-    return "";
-  }
-
-  return name.replace(
-    /\.[^/.]+$/,
-    ""
-  );
+function cleanText(value){
+    return String(value || "")
+        .replace(/\0/g,"")
+        .trim();
 }
-
 
 /* =========================================================
-   FILE NAME
-   IMPORTANT:
-   ONLY ONE "ARTIST - TITLE"
+   ID3 READER
 ========================================================= */
 
-function safeFileName(value){
-
-  return String(value || "")
-    .replace(/[<>:"/\\|?*\x00-\x1F]/g,"")
-    .replace(/\s+/g," ")
-    .trim()
-    .replace(/[. ]+$/,"");
+function readSynchsafe(bytes){
+    return (
+        ((bytes[0] & 0x7f) << 21) |
+        ((bytes[1] & 0x7f) << 14) |
+        ((bytes[2] & 0x7f) << 7) |
+        (bytes[3] & 0x7f)
+    );
 }
 
+function decodeText(bytes){
+    if(!bytes || !bytes.length){
+        return "";
+    }
 
-function makeFileName(extension){
+    const encoding = bytes[0];
 
-  const artist =
-    safeFileName(
-      artistInput.value.trim()
-    );
+    try{
+        if(encoding === 0){
+            return new TextDecoder("iso-8859-1")
+                .decode(bytes.slice(1))
+                .replace(/\0/g,"")
+                .trim();
+        }
 
-  const title =
-    safeFileName(
-      titleInput.value.trim()
-    );
+        if(encoding === 1){
+            return new TextDecoder("utf-16")
+                .decode(bytes.slice(1))
+                .replace(/\0/g,"")
+                .trim();
+        }
 
-  let name = "";
+        if(encoding === 2){
+            return new TextDecoder("utf-16be")
+                .decode(bytes.slice(1))
+                .replace(/\0/g,"")
+                .trim();
+        }
 
-  if(artist && title){
+        return new TextDecoder("utf-8")
+            .decode(bytes.slice(1))
+            .replace(/\0/g,"")
+            .trim();
 
-    name =
-      artist +
-      " - " +
-      title;
-
-  }else if(title){
-
-    name = title;
-
-  }else if(artist){
-
-    name = artist;
-
-  }else{
-
-    name = "MUZER play";
-  }
-
-  return name + "." + extension;
+    }catch{
+        return "";
+    }
 }
 
+function parseID3(buffer){
+    const bytes = new Uint8Array(buffer);
+
+    if(
+        bytes.length < 10 ||
+        bytes[0] !== 0x49 ||
+        bytes[1] !== 0x44 ||
+        bytes[2] !== 0x33
+    ){
+        return {};
+    }
+
+    const version = bytes[3];
+    const size = readSynchsafe(bytes.slice(6,10));
+
+    let offset = 10;
+    const end = Math.min(bytes.length,10 + size);
+
+    const result = {};
+
+    while(offset + 10 <= end){
+
+        const id = String.fromCharCode(
+            bytes[offset],
+            bytes[offset+1],
+            bytes[offset+2],
+            bytes[offset+3]
+        );
+
+        let frameSize;
+
+        if(version >= 4){
+            frameSize = readSynchsafe(
+                bytes.slice(offset+4,offset+8)
+            );
+        }else{
+            frameSize =
+                (bytes[offset+4] << 24) |
+                (bytes[offset+5] << 16) |
+                (bytes[offset+6] << 8) |
+                bytes[offset+7];
+        }
+
+        if(!frameSize || offset + 10 + frameSize > end){
+            break;
+        }
+
+        const data = bytes.slice(
+            offset + 10,
+            offset + 10 + frameSize
+        );
+
+        if(id === "TIT2"){
+            result.title = decodeText(data);
+        }
+
+        if(id === "TPE1"){
+            result.artist = decodeText(data);
+        }
+
+        if(id === "TCOM"){
+            result.composer = decodeText(data);
+        }
+
+        offset += 10 + frameSize;
+    }
+
+    return result;
+}
 
 /* =========================================================
-   PROGRESS
+   AUDIO GRAPH
 ========================================================= */
 
-function resetProgress(){
+async function ensureAudioContext(){
 
-  progressText.textContent = "ГОТОВ";
-  progressPercent.textContent = "0%";
+    if(!audioContext){
+        audioContext = new AudioContext();
 
-  progressFill.classList.remove(
-    "indeterminate"
-  );
+        lowshelf =
+            audioContext.createBiquadFilter();
 
-  progressFill.style.width = "0%";
+        lowshelf.type = "lowshelf";
+        lowshelf.frequency.value = 120;
+
+        midEQ =
+            audioContext.createBiquadFilter();
+
+        midEQ.type = "peaking";
+        midEQ.frequency.value = 1000;
+        midEQ.Q.value = .8;
+
+        highshelf =
+            audioContext.createBiquadFilter();
+
+        highshelf.type = "highshelf";
+        highshelf.frequency.value = 6500;
+
+        compressor =
+            audioContext.createDynamicsCompressor();
+
+        compressor.threshold.value = -10;
+        compressor.knee.value = 10;
+        compressor.ratio.value = 3;
+        compressor.attack.value = .003;
+        compressor.release.value = .12;
+
+        processedGain =
+            audioContext.createGain();
+
+        masterGain =
+            audioContext.createGain();
+
+        lowshelf.connect(midEQ);
+        midEQ.connect(highshelf);
+        highshelf.connect(compressor);
+        compressor.connect(masterGain);
+        masterGain.connect(processedGain);
+        processedGain.connect(audioContext.destination);
+
+        updateAudioParameters();
+    }
+
+    if(audioContext.state === "suspended"){
+        await audioContext.resume();
+    }
 }
 
+function updateAudioParameters(){
 
-function setProgress(
-  percent,
-  textValue,
-  indeterminate = false
-){
+    if(!audioContext){
+        return;
+    }
 
-  progressText.textContent =
-    textValue || "";
+    lowshelf.gain.value =
+        Number(bass.value);
 
-  if(indeterminate){
+    midEQ.gain.value =
+        Number(mid.value);
 
-    progressPercent.textContent =
-      "…";
+    highshelf.gain.value =
+        Number(treble.value);
 
-    progressFill.classList.add(
-      "indeterminate"
-    );
+    masterGain.gain.value =
+        dbToGain(Number(master.value));
 
-  }else{
-
-    progressFill.classList.remove(
-      "indeterminate"
-    );
-
-    const p =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          Number(percent) || 0
-        )
-      );
-
-    progressPercent.textContent =
-      Math.round(p) + "%";
-
-    progressFill.style.width =
-      p + "%";
-  }
+    processedGain.gain.value =
+        processedMode ? 1 : 0;
 }
-
-
-function finishProgress(){
-
-  progressFill.classList.remove(
-    "indeterminate"
-  );
-
-  progressFill.style.width = "100%";
-  progressPercent.textContent = "100%";
-}
-
-
-/* =========================================================
-   UI VALUES
-========================================================= */
-
-function updateControlLabels(){
-
-  bassValue.textContent =
-    Number(bass.value).toFixed(1) +
-    " dB";
-
-  midValue.textContent =
-    Number(mid.value).toFixed(1) +
-    " dB";
-
-  trebleValue.textContent =
-    Number(treble.value).toFixed(1) +
-    " dB";
-
-  intensityValue.textContent =
-    intensity.value + "%";
-
-  masterValue.textContent =
-    Number(master.value).toFixed(1) +
-    " dB";
-}
-
 
 /* =========================================================
    PRESETS
@@ -1202,2383 +850,1148 @@ function updateControlLabels(){
 
 const presets = {
 
-  manual:{
-    bass:0,
-    mid:0,
-    treble:0,
-    intensity:100,
-    master:0
-  },
+    manual:{
+        bass:0,
+        mid:0,
+        treble:0,
+        intensity:50,
+        master:0
+    },
 
-  balanced:{
-    bass:1.5,
-    mid:1.0,
-    treble:1.5,
-    intensity:85,
-    master:-1
-  },
+    balanced:{
+        bass:2,
+        mid:0,
+        treble:2,
+        intensity:55,
+        master:-1
+    },
 
-  warm:{
-    bass:3,
-    mid:1,
-    treble:-1,
-    intensity:82,
-    master:-1.5
-  },
+    warm:{
+        bass:4,
+        mid:1,
+        treble:-2,
+        intensity:60,
+        master:-1
+    },
 
-  bright:{
-    bass:0.5,
-    mid:1.5,
-    treble:3,
-    intensity:85,
-    master:-1.5
-  },
+    bright:{
+        bass:1,
+        mid:0,
+        treble:5,
+        intensity:60,
+        master:-2
+    },
 
-  "clear-studio":{
-    /* Нейтральный студийный мастеринг: минимальная окраска,
-       сохранение транзиентов и запас по пикам. */
-    bass:0.5,
-    mid:0.3,
-    treble:0.8,
-    intensity:100,
-    master:-1.0
-  }
+    "clear-studio":{
+        bass:1,
+        mid:0,
+        treble:3,
+        intensity:45,
+        master:-2
+    }
 };
-
 
 function applyPreset(name){
 
-  const p = presets[name];
+    const p = presets[name];
 
-  if(!p){
-    return;
-  }
+    if(!p){
+        return;
+    }
 
-  bass.value = p.bass;
-  mid.value = p.mid;
-  treble.value = p.treble;
-  intensity.value = p.intensity;
-  master.value = p.master;
+    bass.value = p.bass;
+    mid.value = p.mid;
+    treble.value = p.treble;
+    intensity.value = p.intensity;
+    master.value = p.master;
 
-  updateControlLabels();
-
-  updateAudioProcessing();
+    updateControlLabels();
+    updateAudioParameters();
 }
 
+function updateControlLabels(){
+
+    bassValue.textContent =
+        `${Number(bass.value).toFixed(1)} dB`;
+
+    midValue.textContent =
+        `${Number(mid.value).toFixed(1)} dB`;
+
+    trebleValue.textContent =
+        `${Number(treble.value).toFixed(1)} dB`;
+
+    intensityValue.textContent =
+        `${intensity.value}%`;
+
+    masterValue.textContent =
+        `${Number(master.value).toFixed(1)} dB`;
+}
 
 /* =========================================================
-   CREATE LIVE PROCESSING CHAIN
+   PLAYBACK
 ========================================================= */
 
-function createProcessingChain(){
+async function stopPlayback(){
 
-  const ctx = ensureAudioContext();
+    if(sourceNode){
+        try{
+            sourceNode.stop();
+        }catch{}
 
-  bassFilter =
-    ctx.createBiquadFilter();
+        sourceNode.disconnect();
+        sourceNode = null;
+    }
 
-  bassFilter.type =
-    "lowshelf";
+    isPlaying = false;
+    pauseOffset = 0;
 
-  bassFilter.frequency.value =
-    120;
-
-  bassFilter.gain.value =
-    Number(bass.value);
-
-
-  midFilter =
-    ctx.createBiquadFilter();
-
-  midFilter.type =
-    "peaking";
-
-  midFilter.frequency.value =
-    1000;
-
-  midFilter.Q.value =
-    0.8;
-
-  midFilter.gain.value =
-    Number(mid.value);
-
-
-  trebleFilter =
-    ctx.createBiquadFilter();
-
-  trebleFilter.type =
-    "highshelf";
-
-  trebleFilter.frequency.value =
-    6500;
-
-  trebleFilter.gain.value =
-    Number(treble.value);
-
-
-  compressor =
-    ctx.createDynamicsCompressor();
-
-  compressor.threshold.value =
-    -18;
-
-  compressor.knee.value =
-    10;
-
-  compressor.ratio.value =
-    3;
-
-  compressor.attack.value =
-    0.003;
-
-  compressor.release.value =
-    0.15;
-
-
-  limiter =
-    ctx.createDynamicsCompressor();
-
-  limiter.threshold.value =
-    -2;
-
-  limiter.knee.value =
-    0;
-
-  limiter.ratio.value =
-    20;
-
-  limiter.attack.value =
-    0.001;
-
-  limiter.release.value =
-    0.08;
-
-
-  masterGain =
-    ctx.createGain();
-
-  masterGain.gain.value =
-    dbToGain(
-      Number(master.value)
-    );
-
-
-  bassFilter.connect(midFilter);
-  midFilter.connect(trebleFilter);
-  trebleFilter.connect(compressor);
-  compressor.connect(limiter);
-  limiter.connect(masterGain);
+    playBtn.textContent = "▶ PLAY";
 }
-
-
-function dbToGain(db){
-
-  return Math.pow(
-    10,
-    Number(db) / 20
-  );
-}
-
-
-function updateAudioProcessing(){
-
-  if(!audioContext){
-    return;
-  }
-
-  if(!bassFilter){
-    return;
-  }
-
-  bassFilter.gain.setTargetAtTime(
-    Number(bass.value),
-    audioContext.currentTime,
-    0.01
-  );
-
-  midFilter.gain.setTargetAtTime(
-    Number(mid.value),
-    audioContext.currentTime,
-    0.01
-  );
-
-  trebleFilter.gain.setTargetAtTime(
-    Number(treble.value),
-    audioContext.currentTime,
-    0.01
-  );
-
-  masterGain.gain.setTargetAtTime(
-    dbToGain(
-      Number(master.value)
-    ),
-    audioContext.currentTime,
-    0.01
-  );
-}
-
-
-/* =========================================================
-   LIVE PLAYBACK
-========================================================= */
-
-function buildPlaybackGraph(){
-
-  const ctx = ensureAudioContext();
-
-  createProcessingChain();
-
-  originalGain =
-    ctx.createGain();
-
-  processedGain =
-    ctx.createGain();
-
-  originalGain.gain.value =
-    activeMode === "A" ? 1 : 0;
-
-  processedGain.gain.value =
-    activeMode === "B" ? 1 : 0;
-
-  /*
-    Original:
-    source -> originalGain -> destination
-  */
-
-  /*
-    Processed:
-    source -> EQ -> compressor -> limiter
-           -> master -> processedGain -> destination
-  */
-
-  originalGain.connect(
-    ctx.destination
-  );
-
-  masterGain.connect(
-    processedGain
-  );
-
-  processedGain.connect(
-    ctx.destination
-  );
-}
-
 
 async function startPlayback(){
 
-  if(!audioBuffer){
-    return;
-  }
-
-  const ctx = ensureAudioContext();
-
-  if(ctx.state === "suspended"){
-    await ctx.resume();
-  }
-
-  stopPlaybackSources(false);
-
-  buildPlaybackGraph();
-
-  const remaining =
-    Math.max(
-      0,
-      audioBuffer.duration -
-      playbackOffset
-    );
-
-  if(remaining <= 0.01){
-    playbackOffset = 0;
-  }
-
-  const offset =
-    playbackOffset;
-
-  originalSource =
-    ctx.createBufferSource();
-
-  processedSource =
-    ctx.createBufferSource();
-
-  originalSource.buffer =
-    audioBuffer;
-
-  processedSource.buffer =
-    audioBuffer;
-
-
-  originalSource.connect(
-    originalGain
-  );
-
-  processedSource.connect(
-    bassFilter
-  );
-
-
-  const now =
-    ctx.currentTime;
-
-  originalSource.start(
-    now,
-    offset
-  );
-
-  processedSource.start(
-    now,
-    offset
-  );
-
-  playbackStartedAt =
-    now - offset;
-
-  isPlaying = true;
-
-  playButton.textContent =
-    "❚❚ PAUSE";
-
-  status.textContent =
-    activeMode === "A"
-      ? "ИГРАЕТ · ДО"
-      : "ИГРАЕТ · ПОСЛЕ";
-
-
-  originalSource.onended = () => {
-
-    if(!isPlaying){
-      return;
+    if(!originalBuffer){
+        return;
     }
 
-    const elapsed =
-      ctx.currentTime -
-      playbackStartedAt;
+    await ensureAudioContext();
 
-    if(
-      elapsed >=
-      audioBuffer.duration - 0.05
-    ){
+    await stopPlayback();
 
-      isPlaying = false;
+    sourceNode =
+        audioContext.createBufferSource();
 
-      playbackOffset = 0;
+    sourceNode.buffer = originalBuffer;
 
-      playButton.textContent =
-        "▶ PLAY";
-
-      status.textContent =
-        "ГОТОВ";
+    if(processedMode){
+        sourceNode.connect(lowshelf);
+    }else{
+        sourceNode.connect(
+            audioContext.destination
+        );
     }
-  };
+
+    const offset =
+        Math.min(
+            pauseOffset,
+            Math.max(0,originalBuffer.duration-.001)
+        );
+
+    startTime =
+        audioContext.currentTime - offset;
+
+    sourceNode.start(0,offset);
+
+    isPlaying = true;
+
+    playBtn.textContent = "⏸ PAUSE";
+
+    sourceNode.onended = ()=>{
+        if(isPlaying){
+            isPlaying = false;
+            pauseOffset = 0;
+            playBtn.textContent = "▶ PLAY";
+        }
+    };
+
+    updateProgress();
 }
-
-
-function stopPlaybackSources(
-  resetPosition = false
-){
-
-  if(originalSource){
-
-    try{
-      originalSource.onended = null;
-      originalSource.stop();
-    }catch(e){}
-
-    originalSource.disconnect();
-    originalSource = null;
-  }
-
-  if(processedSource){
-
-    try{
-      processedSource.stop();
-    }catch(e){}
-
-    processedSource.disconnect();
-    processedSource = null;
-  }
-
-  if(audioContext){
-
-    if(
-      originalGain
-    ){
-      try{
-        originalGain.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      processedGain
-    ){
-      try{
-        processedGain.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      masterGain
-    ){
-      try{
-        masterGain.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      bassFilter
-    ){
-      try{
-        bassFilter.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      midFilter
-    ){
-      try{
-        midFilter.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      trebleFilter
-    ){
-      try{
-        trebleFilter.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      compressor
-    ){
-      try{
-        compressor.disconnect();
-      }catch(e){}
-    }
-
-    if(
-      limiter
-    ){
-      try{
-        limiter.disconnect();
-      }catch(e){}
-    }
-  }
-
-  if(resetPosition){
-    playbackOffset = 0;
-  }
-}
-
-
-function pausePlayback(){
-
-  if(!isPlaying){
-    return;
-  }
-
-  const ctx =
-    ensureAudioContext();
-
-  playbackOffset =
-    Math.max(
-      0,
-      Math.min(
-        audioBuffer.duration,
-        ctx.currentTime -
-        playbackStartedAt
-      )
-    );
-
-  isPlaying = false;
-
-  stopPlaybackSources(false);
-
-  playButton.textContent =
-    "▶ PLAY";
-
-  status.textContent =
-    "ПАУЗА";
-}
-
 
 async function togglePlayback(){
 
-  if(!audioBuffer){
-    return;
-  }
+    if(!originalBuffer){
+        return;
+    }
 
-  if(isPlaying){
-    pausePlayback();
-  }else{
+    if(isPlaying){
+
+        pauseOffset =
+            audioContext.currentTime - startTime;
+
+        await stopPlayback();
+
+        return;
+    }
+
     await startPlayback();
-  }
 }
 
+function updateProgress(){
 
-/* =========================================================
-   REALTIME A/B
-========================================================= */
+    if(!isPlaying || !originalBuffer){
+        return;
+    }
 
-function switchMode(mode){
+    const current =
+        audioContext.currentTime - startTime;
 
-  activeMode =
-    mode === "B"
-      ? "B"
-      : "A";
+    const duration =
+        originalBuffer.duration;
 
-  modeA.classList.toggle(
-    "active",
-    activeMode === "A"
-  );
+    const percent =
+        Math.min(100,Math.max(0,current/duration*100));
 
-  modeB.classList.toggle(
-    "active",
-    activeMode === "B"
-  );
+    progressBar.style.width =
+        percent + "%";
 
-  if(
-    isPlaying &&
-    audioContext &&
-    originalGain &&
-    processedGain
-  ){
+    currentTimeEl.textContent =
+        formatTime(current);
 
-    const now =
-      audioContext.currentTime;
+    durationEl.textContent =
+        formatTime(duration);
 
-    const fade =
-      0.008;
+    requestAnimationFrame(updateProgress);
+}
 
-    if(activeMode === "A"){
+async function switchAB(){
 
-      originalGain.gain.cancelScheduledValues(now);
-      processedGain.gain.cancelScheduledValues(now);
+    processedMode = !processedMode;
 
-      originalGain.gain.setTargetAtTime(
-        1,
-        now,
-        fade
-      );
+    abBtn.textContent =
+        processedMode
+            ? "A/B: PROCESSED"
+            : "A/B: ORIGINAL";
 
-      processedGain.gain.setTargetAtTime(
-        0,
-        now,
-        fade
-      );
+    if(isPlaying){
+        pauseOffset =
+            audioContext.currentTime - startTime;
 
-      status.textContent =
-        "ИГРАЕТ · ДО";
-
+        await startPlayback();
     }else{
-
-      originalGain.gain.cancelScheduledValues(now);
-      processedGain.gain.cancelScheduledValues(now);
-
-      originalGain.gain.setTargetAtTime(
-        0,
-        now,
-        fade
-      );
-
-      processedGain.gain.setTargetAtTime(
-        1,
-        now,
-        fade
-      );
-
-      status.textContent =
-        "ИГРАЕТ · ПОСЛЕ";
+        updateAudioParameters();
     }
-
-  }else{
-
-    status.textContent =
-      activeMode === "A"
-        ? "РЕЖИМ · ДО"
-        : "РЕЖИМ · ПОСЛЕ";
-  }
 }
 
+async function toggleMode(){
+
+    await switchAB();
+}
 
 /* =========================================================
-   ORIGINAL METADATA READER
-   Show original file metadata and keep it on export.
-   Hidden AI and license tags are removed when exporting MP3.
+   FILE LOAD
 ========================================================= */
 
-let originalId3Bytes = null;
-let originalMetadata = {
-  title: "",
-  artist: "",
-  composer: ""
-};
+fileInput.addEventListener("change",async()=>{
 
-function readSynchsafe(bytes, offset){
-  return ((bytes[offset] & 0x7f) << 21) |
-    ((bytes[offset + 1] & 0x7f) << 14) |
-    ((bytes[offset + 2] & 0x7f) << 7) |
-    (bytes[offset + 3] & 0x7f);
-}
+    const file = fileInput.files[0];
 
-function decodeId3Text(bytes){
-  if(!bytes || !bytes.length) return "";
-  const enc = bytes[0];
-  const body = bytes.slice(1);
-  try{
-    if(enc === 0) return new TextDecoder("iso-8859-1").decode(body).replace(/\0/g, "").trim();
-    if(enc === 1) return new TextDecoder("utf-16").decode(body).replace(/\0/g, "").trim();
-    if(enc === 2) return new TextDecoder("utf-16be").decode(body).replace(/\0/g, "").trim();
-    return new TextDecoder("utf-8").decode(body).replace(/\0/g, "").trim();
-  }catch(e){ return ""; }
-}
-
-function isHiddenAiTxxx(description){
-  const d = String(description || "").trim().toLowerCase();
-  return d === "ai" || d === "ai tag" || d === "ai-tag" || d === "aitag" || d === "hidden ai";
-}
-
-function parseOriginalId3(arrayBuffer){
-  const bytes = new Uint8Array(arrayBuffer);
-  if(bytes.length < 10 || bytes[0] !== 0x49 || bytes[1] !== 0x44 || bytes[2] !== 0x33){
-    return {metadata:{}, tagBytes:null};
-  }
-  const version = bytes[3];
-  const flags = bytes[5];
-  const tagSize = readSynchsafe(bytes, 6);
-  const end = Math.min(bytes.length, 10 + tagSize);
-  const metadata = {};
-  let pos = 10;
-  while(pos + 10 <= end){
-    if(bytes[pos] === 0 && bytes[pos+1] === 0 && bytes[pos+2] === 0 && bytes[pos+3] === 0) break;
-    const id = String.fromCharCode(bytes[pos],bytes[pos+1],bytes[pos+2],bytes[pos+3]);
-    let size;
-    if(version >= 4) size = readSynchsafe(bytes, pos + 4);
-    else size = ((bytes[pos+4] << 24) >>> 0) + (bytes[pos+5] << 16) + (bytes[pos+6] << 8) + bytes[pos+7];
-    if(size <= 0 || pos + 10 + size > end) break;
-    const payload = bytes.slice(pos + 10, pos + 10 + size);
-    if(id === "TIT2") metadata.title = decodeId3Text(payload);
-    else if(id === "TPE1") metadata.artist = decodeId3Text(payload);
-    else if(id === "TCOM") metadata.composer = decodeId3Text(payload);
-    pos += 10 + size;
-  }
-  return {
-    metadata,
-    tagBytes: bytes.slice(0, end),
-    version,
-    flags
-  };
-}
-
-function isLicenseFrame(id, payload){
-  if(id === "COMM"){
-    const value = decodeId3Text(payload.slice(4));
-    return /license|licence|rights|copyright/i.test(value);
-  }
-  if(id === "TXXX"){
-    const enc=payload[0];
-    let zero=-1;
-    for(let i=1;i<payload.length;i++){ if(payload[i]===0){zero=i;break;} }
-    if(zero>0){
-      const desc=decodeId3Text(new Uint8Array([enc,...payload.slice(1,zero)]));
-      return /license|licence|rights|copyright/i.test(desc);
+    if(!file){
+        return;
     }
-  }
-  return false;
-}
 
-function ensureCopyrightInId3(tagBytes){
-  const copyright = "MUZER play";
+    try{
 
-  if(!tagBytes || tagBytes.length < 10){
-    return createCleanId3Tag();
-  }
+        setStatus("Загрузка...");
 
-  const bytes = new Uint8Array(tagBytes);
-  if(bytes[0] !== 0x49 || bytes[1] !== 0x44 || bytes[2] !== 0x33){
-    return createCleanId3Tag();
-  }
+        fileName.textContent = file.name;
 
-  const version = bytes[3];
-  const tagSize = readSynchsafe(bytes, 6);
-  const end = Math.min(bytes.length, 10 + tagSize);
-  const frames = [];
-  let pos = 10;
-  let hasCopyright = false;
+        const arrayBuffer =
+            await file.arrayBuffer();
 
-  while(pos + 10 <= end){
-    if(bytes[pos] === 0 && bytes[pos+1] === 0 && bytes[pos+2] === 0 && bytes[pos+3] === 0) break;
+        const metadata =
+            parseID3(arrayBuffer);
 
-    const id = String.fromCharCode(bytes[pos],bytes[pos+1],bytes[pos+2],bytes[pos+3]);
-    const size = version >= 4
-      ? readSynchsafe(bytes,pos+4)
-      : ((bytes[pos+4]<<24)>>>0)+(bytes[pos+5]<<16)+(bytes[pos+6]<<8)+bytes[pos+7];
+        if(metadata.title){
+            titleInput.value =
+                metadata.title;
+        }
 
-    if(size <= 0 || pos + 10 + size > end) break;
+        if(metadata.artist){
+            artistInput.value =
+                metadata.artist;
+        }
 
-    const frame = bytes.slice(pos,pos+10+size);
-    if(id === "TCOP") hasCopyright = true;
-    frames.push(frame);
-    pos += 10 + size;
-  }
+        if(metadata.composer){
+            composerInput.value =
+                metadata.composer;
+        }
 
-  if(hasCopyright) return bytes.slice(0,end);
+        if(!titleInput.value.trim()){
+            titleInput.value =
+                file.name
+                    .replace(/\.[^/.]+$/,"")
+                    .replace(/_/g," ");
+        }
 
-  // ID3v2.4 uses UTF-8 text frames, so add the default copyright tag cleanly.
-  if(version >= 4){
-    frames.push(createId3Frame("TCOP", copyright));
+        randomIdInput.value =
+            uuidv4();
 
-    let totalSize = 0;
-    for(const frame of frames) totalSize += frame.length;
+        await ensureAudioContext();
 
-    const header = bytes.slice(0,10);
-    header.set(synchsafe(totalSize),6);
+        originalBuffer =
+            await audioContext.decodeAudioData(
+                arrayBuffer.slice(0)
+            );
 
-    const out = new Uint8Array(10 + totalSize);
-    out.set(header,0);
-    let offset = 10;
-    for(const frame of frames){
-      out.set(frame,offset);
-      offset += frame.length;
+        playBtn.disabled = false;
+        abBtn.disabled = false;
+        modeBtn.disabled = false;
+        mp3Btn.disabled = false;
+        wavBtn.disabled = false;
+
+        pauseOffset = 0;
+
+        durationEl.textContent =
+            formatTime(originalBuffer.duration);
+
+        progressBar.style.width = "0%";
+
+        setStatus("Готово");
+
+    }catch(error){
+
+        console.error(error);
+
+        setStatus("Ошибка загрузки");
+
+        alert(
+            "Не удалось открыть аудиофайл.\n\n" +
+            "Попробуйте MP3 или WAV."
+        );
     }
-    return out;
-  }
-
-  // For ID3v2.3, rebuild the tag while keeping the original frames.
-  const value = encodeUtf8(copyright);
-  const payload = new Uint8Array(1 + value.length);
-  payload[0] = 3;
-  payload.set(value,1);
-  const frame = new Uint8Array(10 + payload.length);
-  frame.set([0x54,0x43,0x4f,0x50],0);
-  frame[4] = (payload.length >>> 24) & 0xff;
-  frame[5] = (payload.length >>> 16) & 0xff;
-  frame[6] = (payload.length >>> 8) & 0xff;
-  frame[7] = payload.length & 0xff;
-  frame.set(payload,10);
-  frames.push(frame);
-
-  let totalSize = 0;
-  for(const f of frames) totalSize += f.length;
-  const header = bytes.slice(0,10);
-  header.set([
-    (totalSize >>> 21) & 0x7f,
-    (totalSize >>> 14) & 0x7f,
-    (totalSize >>> 7) & 0x7f,
-    totalSize & 0x7f
-  ],6);
-  const out = new Uint8Array(10 + totalSize);
-  out.set(header,0);
-  let offset = 10;
-  for(const f of frames){ out.set(f,offset); offset += f.length; }
-  return out;
-}
-
-function filterHiddenAiFromId3(tagBytes){
-  if(!tagBytes || tagBytes.length < 10) return null;
-  const bytes = new Uint8Array(tagBytes);
-  if(bytes[0] !== 0x49 || bytes[1] !== 0x44 || bytes[2] !== 0x33) return bytes;
-  const version = bytes[3];
-  const tagSize = readSynchsafe(bytes, 6);
-  const end = Math.min(bytes.length, 10 + tagSize);
-  const frames = [];
-  let pos = 10;
-  while(pos + 10 <= end){
-    if(bytes[pos] === 0 && bytes[pos+1] === 0 && bytes[pos+2] === 0 && bytes[pos+3] === 0) break;
-    const id = String.fromCharCode(bytes[pos],bytes[pos+1],bytes[pos+2],bytes[pos+3]);
-    const size = version >= 4 ? readSynchsafe(bytes,pos+4) : ((bytes[pos+4]<<24)>>>0)+(bytes[pos+5]<<16)+(bytes[pos+6]<<8)+bytes[pos+7];
-    if(size <= 0 || pos + 10 + size > end) break;
-    const frame = bytes.slice(pos,pos+10+size);
-    let remove = false;
-    const payload = bytes.slice(pos+10,pos+10+size);
-    if(id === "TXXX"){
-      let zero=-1;
-      for(let i=1;i<payload.length;i++){ if(payload[i]===0){zero=i;break;} }
-      if(zero>0){
-        const enc=payload[0];
-        const desc=decodeId3Text(new Uint8Array([enc,...payload.slice(1,zero)]));
-        remove=isHiddenAiTxxx(desc);
-      }
-    }
-    if(isLicenseFrame(id,payload)) remove=true;
-    if(!remove) frames.push(frame);
-    pos += 10 + size;
-  }
-  let total=0; for(const f of frames) total+=f.length;
-  const out=new Uint8Array(10+total);
-  out.set(bytes.slice(0,10),0);
-  out.set(new Uint8Array([0x49,0x44,0x33,bytes[3],bytes[4],bytes[5],...synchsafe(total)]),0);
-  let o=10; for(const f of frames){out.set(f,o);o+=f.length;}
-  return out;
-}
-
-function showOriginalMetadata(parsed, file){
-  originalMetadata = parsed.metadata || {};
-  titleInput.value = originalMetadata.title || titleFromFilename(file.name);
-  artistInput.value = originalMetadata.artist || "";
-  composerInput.value = originalMetadata.composer || "";
-  albumInput.value = "";
-  trackNumberInput.value = "";
-  albumArtistInput.value = "";
-  uuidInput.value = "";
-}
-
+});
 
 /* =========================================================
-   LOAD FILE
+   CONTROLS
 ========================================================= */
 
-async function loadAudioFile(file){
+playBtn.addEventListener(
+    "click",
+    togglePlayback
+);
 
-  if(!file){
-    return;
-  }
+abBtn.addEventListener(
+    "click",
+    switchAB
+);
 
-  currentFile = file;
+modeBtn.addEventListener(
+    "click",
+    toggleMode
+);
 
-  fileName.textContent =
-    file.name;
+[
+    bass,
+    mid,
+    treble,
+    intensity,
+    master
+].forEach(control=>{
 
-  originalId3Bytes = null;
-  originalMetadata = {};
+    control.addEventListener("input",()=>{
 
-  /* Read original tags before decoding audio. */
-  try{
-    const originalBytes = await file.arrayBuffer();
-    const parsed = parseOriginalId3(originalBytes);
-    originalId3Bytes = parsed.tagBytes;
-    showOriginalMetadata(parsed, file);
-  }catch(e){
-    titleInput.value = titleFromFilename(file.name);
-    artistInput.value = "";
-    composerInput.value = "";
-      albumInput.value = "";
-    trackNumberInput.value = "";
-    albumArtistInput.value = "";
-    uuidInput.value = "";
-  }
+        preset.value = "manual";
 
-  status.textContent =
-    "ЗАГРУЗКА...";
+        updateControlLabels();
+        updateAudioParameters();
 
-  resetProgress();
+    });
+});
 
-  try{
-
-    const ctx =
-      ensureAudioContext();
-
-    if(ctx.state === "suspended"){
-      await ctx.resume();
+preset.addEventListener(
+    "change",
+    ()=>{
+        applyPreset(preset.value);
     }
-
-    const arrayBuffer =
-      await file.arrayBuffer();
-
-    audioBuffer =
-      await ctx.decodeAudioData(
-        arrayBuffer.slice(0)
-      );
-
-    sourceDuration =
-      audioBuffer.duration;
-
-    playbackOffset = 0;
-
-    activeMode = "A";
-
-    modeA.classList.add("active");
-    modeB.classList.remove("active");
-
-    playButton.disabled = false;
-    abButton.disabled = false;
-
-    modeA.disabled = false;
-    modeB.disabled = false;
-
-    exportMp3.disabled = false;
-    exportWav.disabled = false;
-
-    status.textContent =
-      "ГОТОВ · " +
-      formatDuration(sourceDuration);
-
-  }catch(error){
-
-    console.error(error);
-
-    audioBuffer = null;
-
-    playButton.disabled = true;
-    abButton.disabled = true;
-
-    modeA.disabled = true;
-    modeB.disabled = true;
-
-    exportMp3.disabled = true;
-    exportWav.disabled = true;
-
-    status.textContent =
-      "ОШИБКА ЗАГРУЗКИ";
-
-    alert(
-      "Не удалось открыть аудиофайл.\n\n" +
-      error.message
-    );
-  }
-}
-
-
-function formatDuration(seconds){
-
-  if(!Number.isFinite(seconds)){
-    return "0:00";
-  }
-
-  const total =
-    Math.floor(seconds);
-
-  const minutes =
-    Math.floor(total / 60);
-
-  const secs =
-    total % 60;
-
-  return (
-    minutes +
-    ":" +
-    String(secs).padStart(2,"0")
-  );
-}
-
+);
 
 /* =========================================================
    OFFLINE MASTERING
 ========================================================= */
 
-async function renderMasteredAudio(){
+async function renderMasteredBuffer(){
 
-  if(!audioBuffer){
-    throw new Error(
-      "Аудиофайл не загружен."
-    );
-  }
+    if(!originalBuffer){
+        throw new Error("Нет аудиофайла");
+    }
 
-  const channels =
-    audioBuffer.numberOfChannels;
+    const channels =
+        originalBuffer.numberOfChannels;
 
-  const sampleRate =
-    audioBuffer.sampleRate;
+    const sampleRate =
+        originalBuffer.sampleRate;
 
-  const length =
-    audioBuffer.length;
+    const offline =
+        new OfflineAudioContext(
+            channels,
+            originalBuffer.length,
+            sampleRate
+        );
 
-  const OfflineCtx =
-    window.OfflineAudioContext ||
-    window.webkitOfflineAudioContext;
+    const source =
+        offline.createBufferSource();
 
-  if(!OfflineCtx){
-    throw new Error(
-      "OfflineAudioContext не поддерживается."
-    );
-  }
+    source.buffer = originalBuffer;
 
-  const offline =
-    new OfflineCtx(
-      channels,
-      length,
-      sampleRate
-    );
+    const low =
+        offline.createBiquadFilter();
 
-  /*
-    Source
-  */
+    low.type = "lowshelf";
+    low.frequency.value = 120;
+    low.gain.value =
+        Number(bass.value);
 
-  const source =
-    offline.createBufferSource();
+    const middle =
+        offline.createBiquadFilter();
 
-  source.buffer =
-    audioBuffer;
+    middle.type = "peaking";
+    middle.frequency.value = 1000;
+    middle.Q.value = .8;
+    middle.gain.value =
+        Number(mid.value);
 
+    const high =
+        offline.createBiquadFilter();
 
-  /*
-    Processed chain
-  */
+    high.type = "highshelf";
+    high.frequency.value = 6500;
+    high.gain.value =
+        Number(treble.value);
 
-  const bassNode =
-    offline.createBiquadFilter();
+    const comp =
+        offline.createDynamicsCompressor();
 
-  bassNode.type =
-    "lowshelf";
+    const intensityValue =
+        Number(intensity.value);
 
-  bassNode.frequency.value =
-    120;
+    const compression =
+        intensityValue / 100;
 
-  bassNode.gain.value =
-    Number(bass.value);
+    comp.threshold.value =
+        -6 - compression * 18;
 
+    comp.knee.value =
+        8 + compression * 20;
 
-  const midNode =
-    offline.createBiquadFilter();
+    comp.ratio.value =
+        1.5 + compression * 6;
 
-  midNode.type =
-    "peaking";
+    comp.attack.value =
+        .003;
 
-  midNode.frequency.value =
-    1000;
+    comp.release.value =
+        .12;
 
-  midNode.Q.value =
-    0.8;
+    const gain =
+        offline.createGain();
 
-  midNode.gain.value =
-    Number(mid.value);
+    gain.gain.value =
+        dbToGain(Number(master.value));
 
+    source.connect(low);
+    low.connect(middle);
+    middle.connect(high);
+    high.connect(comp);
+    comp.connect(gain);
+    gain.connect(offline.destination);
 
-  const trebleNode =
-    offline.createBiquadFilter();
+    source.start(0);
 
-  trebleNode.type =
-    "highshelf";
-
-  trebleNode.frequency.value =
-    6500;
-
-  trebleNode.gain.value =
-    Number(treble.value);
-
-
-  const comp =
-    offline.createDynamicsCompressor();
-
-  /* Студийная мягкая компрессия: контролирует пики без
-     заметного "зажатия" транзиентов. */
-  comp.threshold.value =
-    -14;
-
-  comp.knee.value =
-    8;
-
-  comp.ratio.value =
-    2;
-
-  comp.attack.value =
-    0.015;
-
-  comp.release.value =
-    0.18;
-
-
-  const lim =
-    offline.createDynamicsCompressor();
-
-  /* True-peak-подобный запас: оставляем около 1 dB до цифрового 0. */
-  lim.threshold.value =
-    -1;
-
-  lim.knee.value =
-    0;
-
-  lim.ratio.value =
-    20;
-
-  lim.attack.value =
-    0.001;
-
-  lim.release.value =
-    0.08;
-
-
-  const gain =
-    offline.createGain();
-
-  gain.gain.value =
-    dbToGain(
-      Number(master.value)
-    );
-
-
-  /*
-    Dry
-  */
-
-  const dryGain =
-    offline.createGain();
-
-  dryGain.gain.value =
-    1 -
-    Number(intensity.value) / 100;
-
-
-  /*
-    Wet
-  */
-
-  const wetGain =
-    offline.createGain();
-
-  wetGain.gain.value =
-    Number(intensity.value) / 100;
-
-
-  /*
-    Connections
-  */
-
-  source.connect(
-    dryGain
-  );
-
-  source.connect(
-    bassNode
-  );
-
-  bassNode.connect(
-    midNode
-  );
-
-  midNode.connect(
-    trebleNode
-  );
-
-  trebleNode.connect(
-    comp
-  );
-
-  comp.connect(
-    lim
-  );
-
-  lim.connect(
-    gain
-  );
-
-  gain.connect(
-    wetGain
-  );
-
-  dryGain.connect(
-    offline.destination
-  );
-
-  wetGain.connect(
-    offline.destination
-  );
-
-
-  source.start(0);
-
-
-  /*
-    Browser API doesn't expose actual
-    OfflineAudioContext render percentage,
-    therefore use indeterminate progress.
-  */
-
-  setProgress(
-    0,
-    "МАСТЕРИНГ...",
-    true
-  );
-
-  const rendered =
-    await offline.startRendering();
-
-  finishProgress();
-
-  return rendered;
+    return await offline.startRendering();
 }
-
 
 /* =========================================================
    WAV ENCODER
 ========================================================= */
 
-function writeAscii(
-  view,
-  offset,
-  text
-){
+function writeString(view,offset,string){
 
-  for(let i = 0; i < text.length; i++){
-
-    view.setUint8(
-      offset + i,
-      text.charCodeAt(i)
-    );
-  }
+    for(let i=0;i<string.length;i++){
+        view.setUint8(
+            offset+i,
+            string.charCodeAt(i)
+        );
+    }
 }
 
+function encodeWAV(buffer,bitDepth){
 
-function encodeWav(
-  buffer,
-  bitDepth
-){
+    const channels =
+        buffer.numberOfChannels;
 
-  const channels =
-    buffer.numberOfChannels;
+    const sampleRate =
+        buffer.sampleRate;
 
-  const sampleRate =
-    buffer.sampleRate;
+    const float32 =
+        bitDepth === 32;
 
-  const frameCount =
-    buffer.length;
+    const bytesPerSample =
+        float32 ? 4 : bitDepth / 8;
 
-  const isFloat =
-    bitDepth === 32;
+    const blockAlign =
+        channels * bytesPerSample;
 
-  const bytesPerSample =
-    bitDepth / 8;
+    const dataSize =
+        buffer.length * blockAlign;
 
-  const blockAlign =
-    channels *
-    bytesPerSample;
+    const arrayBuffer =
+        new ArrayBuffer(
+            44 + dataSize
+        );
 
-  const dataSize =
-    frameCount *
-    blockAlign;
+    const view =
+        new DataView(arrayBuffer);
 
-  const headerSize =
-    44;
-
-  const arrayBuffer =
-    new ArrayBuffer(
-      headerSize + dataSize
+    writeString(view,0,"RIFF");
+    view.setUint32(
+        4,
+        36 + dataSize,
+        true
     );
 
-  const view =
-    new DataView(arrayBuffer);
+    writeString(view,8,"WAVE");
+    writeString(view,12,"fmt ");
 
+    view.setUint32(16,16,true);
 
-  /*
-    RIFF
-  */
-
-  writeAscii(
-    view,
-    0,
-    "RIFF"
-  );
-
-  view.setUint32(
-    4,
-    36 + dataSize,
-    true
-  );
-
-  writeAscii(
-    view,
-    8,
-    "WAVE"
-  );
-
-
-  /*
-    fmt
-  */
-
-  writeAscii(
-    view,
-    12,
-    "fmt "
-  );
-
-  view.setUint32(
-    16,
-    16,
-    true
-  );
-
-  view.setUint16(
-    20,
-    isFloat ? 3 : 1,
-    true
-  );
-
-  view.setUint16(
-    22,
-    channels,
-    true
-  );
-
-  view.setUint32(
-    24,
-    sampleRate,
-    true
-  );
-
-  view.setUint32(
-    28,
-    sampleRate *
-    blockAlign,
-    true
-  );
-
-  view.setUint16(
-    32,
-    blockAlign,
-    true
-  );
-
-  view.setUint16(
-    34,
-    bitDepth,
-    true
-  );
-
-
-  /*
-    data
-  */
-
-  writeAscii(
-    view,
-    36,
-    "data"
-  );
-
-  view.setUint32(
-    40,
-    dataSize,
-    true
-  );
-
-
-  /*
-    Interleave channels
-  */
-
-  const channelData = [];
-
-  for(
-    let ch = 0;
-    ch < channels;
-    ch++
-  ){
-
-    channelData.push(
-      buffer.getChannelData(ch)
+    view.setUint16(
+        20,
+        float32 ? 3 : 1,
+        true
     );
-  }
 
+    view.setUint16(
+        22,
+        channels,
+        true
+    );
 
-  let offset = 44;
+    view.setUint32(
+        24,
+        sampleRate,
+        true
+    );
 
-  for(
-    let i = 0;
-    i < frameCount;
-    i++
-  ){
+    view.setUint32(
+        28,
+        sampleRate * blockAlign,
+        true
+    );
+
+    view.setUint16(
+        32,
+        blockAlign,
+        true
+    );
+
+    view.setUint16(
+        34,
+        bitDepth,
+        true
+    );
+
+    writeString(view,36,"data");
+
+    view.setUint32(
+        40,
+        dataSize,
+        true
+    );
+
+    let offset = 44;
 
     for(
-      let ch = 0;
-      ch < channels;
-      ch++
+        let i=0;
+        i<buffer.length;
+        i++
     ){
 
-      let sample =
-        channelData[ch][i];
+        for(
+            let ch=0;
+            ch<channels;
+            ch++
+        ){
 
-      sample =
-        Math.max(
-          -1,
-          Math.min(1,sample)
-        );
+            const data =
+                buffer.getChannelData(ch);
 
+            let sample =
+                Math.max(
+                    -1,
+                    Math.min(1,data[i])
+                );
 
-      if(isFloat){
+            if(float32){
 
-        view.setFloat32(
-          offset,
-          sample,
-          true
-        );
+                view.setFloat32(
+                    offset,
+                    sample,
+                    true
+                );
 
-        offset += 4;
+                offset += 4;
 
-      }else if(bitDepth === 24){
+            }else if(bitDepth === 16){
 
-        let value =
-          Math.round(
-            sample < 0
-              ? sample * 8388608
-              : sample * 8388607
-          );
+                const value =
+                    sample < 0
+                        ? sample * 32768
+                        : sample * 32767;
 
-        if(value < 0){
-          value += 16777216;
+                view.setInt16(
+                    offset,
+                    value,
+                    true
+                );
+
+                offset += 2;
+
+            }else{
+
+                const value =
+                    sample < 0
+                        ? sample * 8388608
+                        : sample * 8388607;
+
+                let v =
+                    Math.round(value);
+
+                if(v < 0){
+                    v += 16777216;
+                }
+
+                view.setUint8(
+                    offset,
+                    v & 255
+                );
+
+                view.setUint8(
+                    offset+1,
+                    (v >> 8) & 255
+                );
+
+                view.setUint8(
+                    offset+2,
+                    (v >> 16) & 255
+                );
+
+                offset += 3;
+            }
         }
-
-        view.setUint8(
-          offset,
-          value & 0xff
-        );
-
-        view.setUint8(
-          offset + 1,
-          (value >> 8) & 0xff
-        );
-
-        view.setUint8(
-          offset + 2,
-          (value >> 16) & 0xff
-        );
-
-        offset += 3;
-
-      }else{
-
-        const value =
-          sample < 0
-            ? sample * 32768
-            : sample * 32767;
-
-        view.setInt16(
-          offset,
-          Math.round(value),
-          true
-        );
-
-        offset += 2;
-      }
     }
-  }
 
-  return new Blob(
-    [arrayBuffer],
-    {type:"audio/wav"}
-  );
+    return new Blob(
+        [arrayBuffer],
+        {type:"audio/wav"}
+    );
 }
-
 
 /* =========================================================
-   MP3 ENCODER
+   ID3 WRITER
 ========================================================= */
 
-function floatTo16BitPCM(
-  buffer,
-  channel
-){
+function synchsafe(size){
 
-  const data =
-    buffer.getChannelData(channel);
-
-  const result =
-    new Int16Array(
-      data.length
-    );
-
-  for(
-    let i = 0;
-    i < data.length;
-    i++
-  ){
-
-    let sample =
-      Math.max(
-        -1,
-        Math.min(
-          1,
-          data[i]
-        )
-      );
-
-    result[i] =
-      sample < 0
-        ? sample * 32768
-        : sample * 32767;
-  }
-
-  return result;
+    return new Uint8Array([
+        (size >> 21) & 0x7f,
+        (size >> 14) & 0x7f,
+        (size >> 7) & 0x7f,
+        size & 0x7f
+    ]);
 }
 
+function textFrame(id,text){
 
-function encodeMp3(
-  buffer,
-  kbps
-){
+    text = cleanText(text);
 
-  if(
-    typeof lamejs === "undefined"
-  ){
+    const encoded =
+        new TextEncoder().encode(text);
 
-    throw new Error(
-      "Библиотека MP3-кодирования не загрузилась."
-    );
-  }
-
-  const channels =
-    Math.min(
-      2,
-      buffer.numberOfChannels
-    );
-
-  const sampleRate =
-    buffer.sampleRate;
-
-  const encoder =
-    new lamejs.Mp3Encoder(
-      channels,
-      sampleRate,
-      Number(kbps)
-    );
-
-  const left =
-    floatTo16BitPCM(
-      buffer,
-      0
-    );
-
-  const right =
-    channels > 1
-      ? floatTo16BitPCM(
-          buffer,
-          1
-        )
-      : null;
-
-  const sampleBlock =
-    1152;
-
-  const mp3Data = [];
-
-  for(
-    let i = 0;
-    i < left.length;
-    i += sampleBlock
-  ){
-
-    const leftChunk =
-      left.subarray(
-        i,
-        Math.min(
-          i + sampleBlock,
-          left.length
-        )
-      );
-
-    let encoded;
-
-    if(channels === 2){
-
-      const rightChunk =
-        right.subarray(
-          i,
-          Math.min(
-            i + sampleBlock,
-            right.length
-          )
+    const data =
+        new Uint8Array(
+            encoded.length + 1
         );
 
-      encoded =
-        encoder.encodeBuffer(
-          leftChunk,
-          rightChunk
+    data[0] = 3;
+
+    data.set(encoded,1);
+
+    const frame =
+        new Uint8Array(
+            10 + data.length
         );
 
-    }else{
-
-      encoded =
-        encoder.encodeBuffer(
-          leftChunk
-        );
+    for(let i=0;i<4;i++){
+        frame[i] =
+            id.charCodeAt(i);
     }
 
-    if(encoded.length > 0){
-      mp3Data.push(encoded);
-    }
+    frame.set(
+        synchsafe(data.length),
+        4
+    );
 
-    if(
-      i % (sampleBlock * 20) === 0
-    ){
+    frame.set(data,10);
 
-      const percent =
-        Math.round(
-          (i / left.length) * 100
-        );
-
-      setProgress(
-        percent,
-        "КОДИРОВАНИЕ MP3..."
-      );
-    }
-  }
-
-  const end =
-    encoder.flush();
-
-  if(end.length > 0){
-    mp3Data.push(end);
-  }
-
-  return new Blob(
-    mp3Data,
-    {type:"audio/mpeg"}
-  );
+    return frame;
 }
-
-
-/* =========================================================
-   ID3v2.4
-   CLEAN TAGS
-========================================================= */
-
-function encodeUtf8(text){
-
-  return new TextEncoder()
-    .encode(
-      String(text || "")
-    );
-}
-
-
-function synchsafe(value){
-
-  return new Uint8Array([
-    (value >> 21) & 0x7f,
-    (value >> 14) & 0x7f,
-    (value >> 7) & 0x7f,
-    value & 0x7f
-  ]);
-}
-
-
-function createId3Frame(
-  id,
-  text,
-  description = null
-){
-
-  let payload;
-
-  if(id === "TXXX"){
-
-    const desc =
-      encodeUtf8(
-        description || ""
-      );
-
-    const value =
-      encodeUtf8(
-        text || ""
-      );
-
-    payload =
-      new Uint8Array(
-        1 +
-        desc.length +
-        1 +
-        value.length
-      );
-
-    payload[0] = 3;
-
-    payload.set(
-      desc,
-      1
-    );
-
-    payload[
-      1 + desc.length
-    ] = 0;
-
-    payload.set(
-      value,
-      2 + desc.length
-    );
-
-  }else{
-
-    const value =
-      encodeUtf8(
-        text || ""
-      );
-
-    payload =
-      new Uint8Array(
-        1 + value.length
-      );
-
-    payload[0] = 3;
-
-    payload.set(
-      value,
-      1
-    );
-  }
-
-
-  const frame =
-    new Uint8Array(
-      10 + payload.length
-    );
-
-  for(
-    let i = 0;
-    i < 4;
-    i++
-  ){
-
-    frame[i] =
-      id.charCodeAt(i);
-  }
-
-  const size =
-    synchsafe(
-      payload.length
-    );
-
-  frame.set(
-    size,
-    4
-  );
-
-  frame[8] = 0;
-  frame[9] = 0;
-
-  frame.set(
-    payload,
-    10
-  );
-
-  return frame;
-}
-
 
 function createCleanId3Tag(){
 
-  const frames = [];
-
-  /*
-    IMPORTANT:
-    TIT2 = ONLY TITLE
-    TPE1 = ONLY ARTIST
-
-    No "artist - title" is inserted
-    into tags.
-  */
-
-  const title =
-    titleInput.value.trim();
-
-  const artist =
-    artistInput.value.trim();
-
-  const album =
-    albumInput.value.trim();
-
-  const track =
-    trackNumberInput.value.trim();
-
-  const composer =
-    composerInput.value.trim();
-
-  const albumArtist =
-    albumArtistInput.value.trim();
-
-  const uuid =
-    uuidInput.value.trim();
-
-
-  if(title){
+    const frames = [];
 
     frames.push(
-      createId3Frame(
-        "TIT2",
-        title
-      )
-    );
-  }
-
-
-  if(artist){
-
-    frames.push(
-      createId3Frame(
-        "TPE1",
-        artist
-      )
-    );
-  }
-
-
-  if(album){
-
-    frames.push(
-      createId3Frame(
-        "TALB",
-        album
-      )
-    );
-  }
-
-
-  if(track){
-
-    frames.push(
-      createId3Frame(
-        "TRCK",
-        track
-      )
-    );
-  }
-
-
-  if(composer){
-
-    frames.push(
-      createId3Frame(
-        "TCOM",
-        composer
-      )
-    );
-  }
-
-
-  if(albumArtist){
-
-    frames.push(
-      createId3Frame(
-        "TPE2",
-        albumArtist
-      )
-    );
-  }
-
-
-  if(uuid){
-
-    frames.push(
-      createId3Frame(
-        "TXXX",
-        uuid,
-        "MusicBrainz Track ID"
-      )
+        textFrame(
+            "TIT2",
+            titleInput.value
+        )
     );
 
     frames.push(
-      createId3Frame(
-        "TXXX",
-        uuid,
-        "RANDOM_ID"
-      )
-    );
-  }
-
-  // Copyright is added by default to every exported MP3 tag.
-  frames.push(
-    createId3Frame(
-      "TCOP",
-      "MUZER play"
-    )
-  );
-
-
-  let totalSize = 0;
-
-  for(const frame of frames){
-    totalSize += frame.length;
-  }
-
-
-  /*
-    ID3v2.4 header
-  */
-
-  const header =
-    new Uint8Array(10);
-
-  header[0] = 0x49;
-  header[1] = 0x44;
-  header[2] = 0x33;
-
-  header[3] = 4;
-  header[4] = 0;
-
-  /*
-    Flags = 0
-  */
-
-  header[5] = 0;
-
-  header.set(
-    synchsafe(totalSize),
-    6
-  );
-
-
-  const tag =
-    new Uint8Array(
-      10 + totalSize
+        textFrame(
+            "TPE1",
+            artistInput.value ||
+            DEFAULT_ARTIST
+        )
     );
 
-  tag.set(
-    header,
-    0
-  );
-
-  let offset = 10;
-
-  for(
-    const frame of frames
-  ){
-
-    tag.set(
-      frame,
-      offset
+    frames.push(
+        textFrame(
+            "TALB",
+            albumInput.value ||
+            DEFAULT_ARTIST
+        )
     );
 
-    offset +=
-      frame.length;
-  }
+    frames.push(
+        textFrame(
+            "TRCK",
+            trackNumberInput.value || "1"
+        )
+    );
 
-  return tag;
+    frames.push(
+        textFrame(
+            "TCOM",
+            composerInput.value ||
+            DEFAULT_COMPOSER
+        )
+    );
+
+    frames.push(
+        textFrame(
+            "TPE2",
+            albumArtistInput.value ||
+            DEFAULT_ALBUM_ARTIST
+        )
+    );
+
+    frames.push(
+        textFrame(
+            "TCOP",
+            "MUZER play"
+        )
+    );
+
+    const mbid =
+        cleanText(musicbrainzInput.value);
+
+    if(mbid){
+        frames.push(
+            textFrame(
+                "TXXX",
+                "MusicBrainz Track ID: " + mbid
+            )
+        );
+    }
+
+    const randomId =
+        cleanText(randomIdInput.value);
+
+    if(randomId){
+        frames.push(
+            textFrame(
+                "TXXX",
+                "RANDOM_ID: " + randomId
+            )
+        );
+    }
+
+    let total = 0;
+
+    frames.forEach(
+        frame=>{
+            total += frame.length;
+        }
+    );
+
+    const header =
+        new Uint8Array(10);
+
+    header[0] = 0x49;
+    header[1] = 0x44;
+    header[2] = 0x33;
+
+    header[3] = 4;
+    header[4] = 0;
+    header[5] = 0;
+
+    header.set(
+        synchsafe(total),
+        6
+    );
+
+    const result =
+        new Uint8Array(
+            10 + total
+        );
+
+    result.set(header,0);
+
+    let offset = 10;
+
+    frames.forEach(frame=>{
+        result.set(frame,offset);
+        offset += frame.length;
+    });
+
+    return result;
 }
-
-
-/* =========================================================
-   DOWNLOAD
-========================================================= */
-
-function downloadBlob(
-  blob,
-  filename
-){
-
-  const url =
-    URL.createObjectURL(blob);
-
-  const a =
-    document.createElement("a");
-
-  a.href = url;
-
-  a.download =
-    filename;
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  setTimeout(
-    () => URL.revokeObjectURL(url),
-    1500
-  );
-}
-
 
 /* =========================================================
    MP3 EXPORT
 ========================================================= */
 
-async function exportMp3File(){
-
-  if(!audioBuffer || exporting){
-    return;
-  }
-
-  exporting = true;
-
-  exportMp3.disabled = true;
-  exportWav.disabled = true;
-
-  try{
-
-    setProgress(
-      5,
-      "ПОДГОТОВКА MP3..."
-    );
-
-    await new Promise(
-      resolve => setTimeout(
-        resolve,
-        50
-      )
-    );
-
-
-    /*
-      Render mastered audio
-    */
-
-    const mastered =
-      await renderMasteredAudio();
-
-
-    setProgress(
-      65,
-      "КОДИРОВАНИЕ MP3..."
-    );
-
-
-    const mp3 =
-      encodeMp3(
-        mastered,
-        Number(mp3Quality.value)
-      );
-
-
-    setProgress(
-      92,
-      "ДОБАВЛЕНИЕ ID3..."
-    );
-
-
-    /*
-      Preserve the original ID3 metadata.
-      Remove hidden AI tags and license tags, if present.
-    */
-
-    const cleanedOriginalId3 =
-      filterHiddenAiFromId3(originalId3Bytes);
-
-    const id3 =
-      ensureCopyrightInId3(cleanedOriginalId3) ||
-      createCleanId3Tag();
-
-
-    const finalBlob =
-      new Blob(
-        [
-          id3,
-          mp3
-        ],
-        {
-          type:"audio/mpeg"
-        }
-      );
-
-
-    setProgress(
-      97,
-      "СОХРАНЕНИЕ..."
-    );
-
-
-    /*
-      IMPORTANT:
-      Filename contains exactly one:
-      ARTIST - TITLE.mp3
-    */
-
-    downloadBlob(
-      finalBlob,
-      makeFileName("mp3")
-    );
-
-
-    finishProgress();
-
-    progressText.textContent =
-      "MP3 СОХРАНЁН";
-
-    status.textContent =
-      "MP3 ГОТОВ";
-
-  }catch(error){
-
-    console.error(error);
-
-    status.textContent =
-      "ОШИБКА MP3";
-
-    setProgress(
-      0,
-      "ОШИБКА"
-    );
-
-    alert(
-      "Ошибка сохранения MP3:\n\n" +
-      error.message
-    );
-
-  }finally{
-
-    exporting = false;
-
-    exportMp3.disabled =
-      !audioBuffer;
-
-    exportWav.disabled =
-      !audioBuffer;
-  }
-}
-
-
-/* =========================================================
-   WAV EXPORT
-========================================================= */
-
-async function exportWavFile(){
-
-  if(!audioBuffer || exporting){
-    return;
-  }
-
-  exporting = true;
-
-  exportMp3.disabled = true;
-  exportWav.disabled = true;
-
-  try{
-
-    setProgress(
-      5,
-      "ПОДГОТОВКА WAV..."
-    );
-
-
-    const mastered =
-      await renderMasteredAudio();
-
-
-    setProgress(
-      70,
-      "СОЗДАНИЕ WAV..."
-    );
-
-
-    const bitDepth =
-      Number(
-        wavQuality.value
-      );
-
-
-    const wav =
-      encodeWav(
-        mastered,
-        bitDepth
-      );
-
-
-    setProgress(
-      95,
-      "СОХРАНЕНИЕ..."
-    );
-
-
-    /*
-      WAV does not use ID3 tags.
-      Filename is exactly ARTIST - TITLE.wav
-    */
-
-    downloadBlob(
-      wav,
-      makeFileName("wav")
-    );
-
-
-    finishProgress();
-
-    progressText.textContent =
-      "WAV СОХРАНЁН";
-
-    status.textContent =
-      "WAV ГОТОВ";
-
-  }catch(error){
-
-    console.error(error);
-
-    status.textContent =
-      "ОШИБКА WAV";
-
-    setProgress(
-      0,
-      "ОШИБКА"
-    );
-
-    alert(
-      "Ошибка сохранения WAV:\n\n" +
-      error.message
-    );
-
-  }finally{
-
-    exporting = false;
-
-    exportMp3.disabled =
-      !audioBuffer;
-
-    exportWav.disabled =
-      !audioBuffer;
-  }
-}
-
-
-/* =========================================================
-   EVENTS
-========================================================= */
-
-fileInput.addEventListener(
-  "change",
-  async event => {
-
-    const file =
-      event.target.files &&
-      event.target.files[0];
-
-    await loadAudioFile(file);
-  }
-);
-
-
-playButton.addEventListener(
-  "click",
-  async () => {
-
-    try{
-
-      await togglePlayback();
-
-    }catch(error){
-
-      console.error(error);
-
-      alert(
-        "Ошибка воспроизведения:\n\n" +
-        error.message
-      );
+function audioBufferToMp3(
+    buffer,
+    bitrate
+){
+
+    if(typeof lamejs === "undefined"){
+        throw new Error(
+            "LameJS не загружен"
+        );
     }
-  }
-);
 
+    const channels =
+        Math.min(
+            2,
+            buffer.numberOfChannels
+        );
 
-abButton.addEventListener(
-  "click",
-  () => {
+    const sampleRate =
+        buffer.sampleRate;
 
-    switchMode(
-      activeMode === "A"
-        ? "B"
-        : "A"
-    );
-  }
-);
+    const encoder =
+        new lamejs.Mp3Encoder(
+            channels,
+            sampleRate,
+            bitrate
+        );
 
+    const left =
+        buffer.getChannelData(0);
 
-modeA.addEventListener(
-  "click",
-  () => switchMode("A")
-);
+    const right =
+        channels > 1
+            ? buffer.getChannelData(1)
+            : left;
 
+    const sampleBlock = 1152;
 
-modeB.addEventListener(
-  "click",
-  () => switchMode("B")
-);
+    const mp3Data = [];
 
+    for(
+        let i=0;
+        i<buffer.length;
+        i += sampleBlock
+    ){
 
-[bass,mid,treble,intensity,master]
-.forEach(
-  control => {
+        const end =
+            Math.min(
+                i + sampleBlock,
+                buffer.length
+            );
 
-    control.addEventListener(
-      "input",
-      () => {
+        const leftChunk =
+            new Int16Array(
+                end - i
+            );
 
-        updateControlLabels();
-        updateAudioProcessing();
+        const rightChunk =
+            new Int16Array(
+                end - i
+            );
 
-        if(
-          preset.value !== "manual"
+        for(
+            let j=i;
+            j<end;
+            j++
         ){
 
-          preset.value = "manual";
+            let l =
+                Math.max(
+                    -1,
+                    Math.min(1,left[j])
+                );
+
+            let r =
+                Math.max(
+                    -1,
+                    Math.min(1,right[j])
+                );
+
+            leftChunk[j-i] =
+                l < 0
+                    ? l * 32768
+                    : l * 32767;
+
+            rightChunk[j-i] =
+                r < 0
+                    ? r * 32768
+                    : r * 32767;
         }
-      }
+
+        let encoded;
+
+        if(channels === 1){
+
+            encoded =
+                encoder.encodeBuffer(
+                    leftChunk
+                );
+
+        }else{
+
+            encoded =
+                encoder.encodeBuffer(
+                    leftChunk,
+                    rightChunk
+                );
+        }
+
+        if(encoded.length > 0){
+            mp3Data.push(encoded);
+        }
+    }
+
+    const final =
+        encoder.flush();
+
+    if(final.length > 0){
+        mp3Data.push(final);
+    }
+
+    const id3 =
+        createCleanId3Tag();
+
+    return new Blob(
+        [id3,...mp3Data],
+        {type:"audio/mpeg"}
     );
-  }
-);
-
-
-preset.addEventListener(
-  "change",
-  () => {
-
-    applyPreset(
-      preset.value
-    );
-  }
-);
-
-
-randomIdButton.addEventListener(
-  "click",
-  () => {
-
-    uuidInput.value =
-      generateMusicBrainzTrackId();
-  }
-);
-
-
-exportMp3.addEventListener(
-  "click",
-  exportMp3File
-);
-
-
-exportWav.addEventListener(
-  "click",
-  exportWavFile
-);
-
+}
 
 /* =========================================================
-   SPACE = PLAY / PAUSE
+   DOWNLOAD
+========================================================= */
+
+function downloadBlob(blob,name){
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+    a.download = name;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    setTimeout(()=>{
+        URL.revokeObjectURL(url);
+    },1000);
+}
+
+/* =========================================================
+   EXPORT WAV
+========================================================= */
+
+wavBtn.addEventListener(
+    "click",
+    async()=>{
+
+        if(!originalBuffer){
+            return;
+        }
+
+        try{
+
+            wavBtn.disabled = true;
+
+            setStatus(
+                "Рендеринг WAV..."
+            );
+
+            const rendered =
+                await renderMasteredBuffer();
+
+            const bits =
+                Number(wavFormat.value);
+
+            const blob =
+                encodeWAV(
+                    rendered,
+                    bits
+                );
+
+            downloadBlob(
+                blob,
+                filename("wav")
+            );
+
+            setStatus(
+                "WAV готов"
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            setStatus(
+                "Ошибка WAV"
+            );
+
+            alert(
+                "Ошибка экспорта WAV."
+            );
+
+        }finally{
+
+            wavBtn.disabled = false;
+        }
+    }
+);
+
+/* =========================================================
+   EXPORT MP3
+========================================================= */
+
+mp3Btn.addEventListener(
+    "click",
+    async()=>{
+
+        if(!originalBuffer){
+            return;
+        }
+
+        try{
+
+            mp3Btn.disabled = true;
+
+            setStatus(
+                "Рендеринг MP3..."
+            );
+
+            const rendered =
+                await renderMasteredBuffer();
+
+            const bitrate =
+                Number(
+                    mp3Bitrate.value
+                );
+
+            const blob =
+                audioBufferToMp3(
+                    rendered,
+                    bitrate
+                );
+
+            downloadBlob(
+                blob,
+                filename("mp3")
+            );
+
+            setStatus(
+                "MP3 готов"
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            setStatus(
+                "Ошибка MP3"
+            );
+
+            alert(
+                "Ошибка экспорта MP3.\n\n" +
+                error.message
+            );
+
+        }finally{
+
+            mp3Btn.disabled = false;
+        }
+    }
+);
+
+/* =========================================================
+   SPACEBAR
 ========================================================= */
 
 document.addEventListener(
-  "keydown",
-  async event => {
+    "keydown",
+    event=>{
 
-    if(event.code !== "Space"){
-      return;
+        if(
+            event.code === "Space" &&
+            !["INPUT","SELECT"].includes(
+                document.activeElement.tagName
+            )
+        ){
+
+            event.preventDefault();
+
+            togglePlayback();
+        }
     }
+);
 
-    const tag =
-      document.activeElement &&
-      document.activeElement.tagName;
+/* =========================================================
+   VK BRIDGE
+========================================================= */
 
-    if(
-      tag === "INPUT" ||
-      tag === "TEXTAREA" ||
-      tag === "SELECT"
-    ){
-      return;
-    }
-
-    event.preventDefault();
-
-    if(!audioBuffer){
-      return;
-    }
+async function initVKBridge(){
 
     try{
 
-      await togglePlayback();
+        await vkBridge.send(
+            "VKWebAppInit"
+        );
+
+        console.log(
+            "VK Bridge инициализирован"
+        );
 
     }catch(error){
 
-      console.error(error);
+        console.error(
+            "Ошибка VK Bridge:",
+            error
+        );
     }
-  }
-);
-
+}
 
 /* =========================================================
-   INITIALIZATION
+   INIT
 ========================================================= */
 
 resetMetadata();
 
-applyPreset("clear-studio");
+applyPreset(
+    "clear-studio"
+);
 
 updateControlLabels();
 
 resetProgress();
+
+initVKBridge();
 
 </script>
 
